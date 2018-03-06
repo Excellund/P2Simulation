@@ -1,3 +1,6 @@
+import GFX.Display;
+import SimulationPackage.Simulation;
+
 public class Main {
     public static void main(String[] args) {
         Display display = new Display("Test", 1920, 1080);

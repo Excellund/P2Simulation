@@ -1,3 +1,9 @@
+package SimulationPackage;
+
+import GFX.ColorRGB;
+import GFX.Display;
+import VectorPackage.Vector;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

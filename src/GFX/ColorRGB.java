@@ -1,3 +1,5 @@
+package GFX;
+
 public class ColorRGB {
     public int r, g, b;
 

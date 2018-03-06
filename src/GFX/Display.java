@@ -1,12 +1,16 @@
+package GFX;
+
+import GFX.Canvas;
+import GFX.ColorRGB;
+import SimulationPackage.Field;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 
 public class Display {
     private JFrame frame;
-    private Canvas canvas;
+    private GFX.Canvas canvas;
     private int width, height;
     private String title;
 

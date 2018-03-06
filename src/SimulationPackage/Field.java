@@ -1,7 +1,12 @@
+package SimulationPackage;
+
+import GFX.ColorRGB;
+import VectorPackage.Vector;
+
 public class Field {
-    protected Vector position;
-    protected int radius;
-    protected ColorRGB color;
+    public Vector position;
+    public int radius;
+    public ColorRGB color;
 
     public Field(Vector position, int radius, ColorRGB color) {
         this.position = position;

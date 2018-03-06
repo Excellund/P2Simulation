@@ -1,3 +1,5 @@
+package VectorPackage;
+
 public class Vector {
     public int x, y;
 
