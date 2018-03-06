@@ -14,30 +14,31 @@ public class Field {
         this.color = color;
     }
 
-    public boolean collides(Field subject) {
-        return Math.sqrt(Math.pow((position.x - subject.position.x), 2) + Math.pow(position.y - subject.position.y, 2)) < radius + subject.radius;
+    // Methods:
+    public boolean isColliding(Field entity) {
+        return Math.sqrt(Math.pow((position.x - entity.position.x), 2) + Math.pow(position.y - entity.position.y, 2)) < radius + entity.radius;
     }
 
-    //access private fields
-
+    // Getters:
     public Vector getPosition() {
         return position;
-    }
-
-    public void setPosition(Vector position) {
-        this.position = position;
     }
 
     public int getRadius() {
         return radius;
     }
 
-    public void setRadius(int radius) {
-        this.radius = radius;
-    }
-
     public ColorRGB getColor() {
         return color;
+    }
+
+    // Setters:
+    public void setPosition(Vector position) {
+        this.position = position;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     public void setColor(ColorRGB color) {

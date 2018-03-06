@@ -29,16 +29,16 @@ public class Display {
 
     }
 
-    public void drawFrame(ArrayList<Field> subjects) {
+    public void drawFrame(ArrayList<Field> entities) {
         canvas.clear(new ColorRGB(0, 0, 0));
 
-        for (Field subject : subjects) {
-            canvas.drawField(subject);
+        for (Field entity : entities) {
+            canvas.drawField(entity);
         }
 
-        Graphics g = canvas.getG();
+        Graphics g = canvas.getGraphics();
         g.setColor(Color.CYAN);
-        g.drawString("Number: " + subjects.size(), 10, 10);
+        g.drawString("Number: " + entities.size(), 10, 10);
         canvas.repaint();
     }
 
