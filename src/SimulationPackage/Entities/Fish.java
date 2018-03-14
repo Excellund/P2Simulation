@@ -1,17 +1,17 @@
 package SimulationPackage.Entities;
 
-public class Fish implements FishInterface {
+public class Fish extends Field implements FishInterface {
     // Fields:
     private double weight;
     private double length;
-    private double bwd;
+    private double foodPerDay;
     private double age;
 
     // Constructor:
-    public Fish(double weight, double length, double bwd, double age) {
+    public Fish(double weight, double length, double foodPerDay, double age) {
         this.weight = weight;
         this.length = length;
-        this.bwd = bwd;
+        this.foodPerDay = foodPerDay;
         this.age = age;
     }
 
@@ -19,6 +19,10 @@ public class Fish implements FishInterface {
     public double calculateMortalityRate() {
         //TODO: Implement the logic.
         return 0;
+    }
+
+    public double calculateBwd() {
+        return foodPerDay / weight;
     }
 
     // Getters:
@@ -30,8 +34,8 @@ public class Fish implements FishInterface {
         return length;
     }
 
-    public double getBwd() {
-        return bwd;
+    public double getFoodPerDay() {
+        return foodPerDay;
     }
 
     public double getAge() {
@@ -47,8 +51,8 @@ public class Fish implements FishInterface {
         this.length = length;
     }
 
-    public void setBwd(double bwd) {
-        this.bwd = bwd;
+    public void setFoodPerDay(double foodPerDay) {
+        this.foodPerDay = foodPerDay;
     }
 
     public void setAge(double age) {

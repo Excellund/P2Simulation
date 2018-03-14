@@ -1,12 +1,16 @@
-package SimulationPackage;
+package SimulationPackage.Entities;
 
 import GFX.ColorRGB;
 import VectorPackage.Vector;
 
 public class Field {
+    // Fields:
     public Vector position;
     public int radius;
     public ColorRGB color;
+
+    // Constructors:
+    public Field() {}
 
     public Field(Vector position, int radius, ColorRGB color) {
         this.position = position;

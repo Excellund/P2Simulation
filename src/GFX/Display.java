@@ -1,8 +1,6 @@
 package GFX;
 
-import GFX.Canvas;
-import GFX.ColorRGB;
-import SimulationPackage.Field;
+import SimulationPackage.Entities.Field;
 
 import javax.swing.*;
 import java.awt.*;

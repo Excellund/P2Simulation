@@ -1,6 +1,7 @@
 package SimulationPackage;
 
 import GFX.ColorRGB;
+import SimulationPackage.Entities.Field;
 import VectorPackage.Vector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
