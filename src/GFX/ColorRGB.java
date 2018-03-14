@@ -3,8 +3,10 @@ package GFX;
 import java.util.Objects;
 
 public class ColorRGB {
+    // Fields:
     public int r, g, b;
 
+    // Constructor:
     public ColorRGB(int r, int g, int b) {
         this.r = r;
         this.g = g;
@@ -23,6 +25,7 @@ public class ColorRGB {
 
     @Override
     public int hashCode() {
+
         return Objects.hash(r, g, b);
     }
 }

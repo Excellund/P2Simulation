@@ -7,11 +7,13 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Display {
+    // Fields:
     private JFrame frame;
     private GFX.Canvas canvas;
     private int width, height;
     private String title;
 
+    // Constructor:
     public Display(String title, int width, int height) {
         this.title = title;
         this.width = width;
@@ -27,16 +29,17 @@ public class Display {
 
     }
 
-    public void drawFrame(ArrayList<Field> entities) {
+    // Methods:
+    public void drawFrame(ArrayList<Field> subjects) {
         canvas.clear(new ColorRGB(0, 0, 0));
 
-        for (Field entity : entities) {
-            canvas.drawField(entity);
+        for (Field subject : subjects) {
+            canvas.drawField(subject);
         }
 
-        Graphics g = canvas.getGraphics();
-        g.setColor(Color.CYAN);
-        g.drawString("Number: " + entities.size(), 10, 10);
+        Graphics gfx = canvas.getGFX();
+        gfx.setColor(Color.CYAN);
+        gfx.drawString("Number: " + subjects.size(), 10, 10);
         canvas.repaint();
     }
 
@@ -45,26 +48,26 @@ public class Display {
         frame.dispose();
     }
 
-    //access private fields
-
+    // Getters:
     public int getWidth() {
         return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    // Setters:
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public void setTitle(String title) {

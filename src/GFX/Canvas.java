@@ -37,16 +37,7 @@ public class Canvas extends JPanel {
         return scene;
     }
 
-    public Graphics getGraphics() {
+    public Graphics getGFX() {
         return graphics;
-    }
-
-    // Setters:
-    public void setScene(BufferedImage scene) {
-        this.scene = scene;
-    }
-
-    public void setGraphics(Graphics graphics) {
-        this.graphics = graphics;
     }
 }

@@ -9,9 +9,7 @@ public class Field {
     public int radius;
     public ColorRGB color;
 
-    // Constructors:
-    public Field() {}
-
+    // Constructor:
     public Field(Vector position, int radius, ColorRGB color) {
         this.position = position;
         this.radius = radius;
@@ -19,11 +17,12 @@ public class Field {
     }
 
     // Methods:
-    public boolean isColliding(Field entity) {
-        return Math.sqrt(Math.pow((position.x - entity.position.x), 2) + Math.pow(position.y - entity.position.y, 2)) < radius + entity.radius;
+    public boolean isColliding(Field subject) {
+        return Math.sqrt(Math.pow((position.x - subject.position.x), 2) + Math.pow(position.y - subject.position.y, 2)) < radius + subject.radius;
     }
 
     // Getters:
+
     public Vector getPosition() {
         return position;
     }
@@ -37,6 +36,7 @@ public class Field {
     }
 
     // Setters:
+
     public void setPosition(Vector position) {
         this.position = position;
     }
