@@ -1,16 +1,17 @@
 package SimulationPackage.Entities;
 
-import GFX.ColorRGB;
 import VectorPackage.Vector;
+
+import java.awt.*;
 
 public class Field {
     // Fields:
     public Vector position;
     public int radius;
-    public ColorRGB color;
+    public Color color;
 
     // Constructor:
-    public Field(Vector position, int radius, ColorRGB color) {
+    public Field(Vector position, int radius, Color color) {
         this.position = position;
         this.radius = radius;
         this.color = color;
@@ -31,7 +32,7 @@ public class Field {
         return radius;
     }
 
-    public ColorRGB getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -45,7 +46,7 @@ public class Field {
         this.radius = radius;
     }
 
-    public void setColor(ColorRGB color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 }

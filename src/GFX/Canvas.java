@@ -5,6 +5,7 @@ import SimulationPackage.Entities.Field;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class Canvas extends JPanel {
     // Fields:
@@ -18,17 +19,17 @@ public class Canvas extends JPanel {
     }
 
     // Methods:
-    public void paintComponent(Graphics g) {
-        g.drawImage(scene, 0, 0, null);
+    public void paintComponent(Graphics gfx) {
+        gfx.drawImage(scene, 0, 0, null);
     }
 
-    public void clear(ColorRGB color) {
-        graphics.setColor(new Color(color.r, color.g, color.b));
+    public void clear(Color color) {
+        graphics.setColor(color);
         graphics.fillRect(0, 0, getWidth(), getHeight());
     }
 
     public void drawField(Field subject) {
-        graphics.setColor(new Color(subject.color.r, subject.color.g, subject.color.b));
+        graphics.setColor(subject.color);
         graphics.fillOval(subject.position.x - subject.radius, subject.position.y - subject.radius, subject.radius * 2, subject.radius * 2);
     }
 

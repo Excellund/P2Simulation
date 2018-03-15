@@ -1,21 +1,22 @@
-package SimulationPackage;
+package SimulationPackage.Entities;
 
-import GFX.ColorRGB;
 import SimulationPackage.Entities.Field;
 import VectorPackage.Vector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FieldTest {
-    private Field subject01 = null;
-    private Field subject02 = null;
+    private Field subject01;
+    private Field subject02;
 
     @BeforeEach
     public void beforeEach() {
-        subject01 = new Field(new Vector(0, 0), 2, new ColorRGB(0, 0, 0));
-        subject02 = new Field(new Vector(0, 0), 3, new ColorRGB(0, 0, 0));
+        subject01 = new Field(new Vector(0, 0), 2, new Color(0, 0, 0));
+        subject02 = new Field(new Vector(0, 0), 3, new Color(0, 0, 0));
     }
 
     @Test
@@ -31,7 +32,7 @@ public class FieldTest {
 
     @Test
     public void getColor() {
-        ColorRGB testColor = new ColorRGB(0, 0, 0);
+        Color testColor = new Color(0, 0, 0);
         assertTrue(subject01.getColor().equals(testColor));
     }
 
@@ -50,7 +51,7 @@ public class FieldTest {
 
     @Test
     public void setColor() {
-        ColorRGB testColor = new ColorRGB(10, 50, 20);
+        Color testColor = new Color(10, 50, 20);
         subject01.setColor(testColor);
         assertTrue(subject01.getColor().equals(testColor));
     }

@@ -1,11 +1,11 @@
 package SimulationPackage;
 
-import GFX.ColorRGB;
 import GFX.Display;
 import SimulationPackage.Entities.Field;
 import VectorPackage.Vector;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -29,13 +29,14 @@ public class Simulation implements Runnable {
         subjects = new ArrayList<>();
 
         for (int i = 0; i < 1000; ++i) {
-            Field subject = new Field(new Vector(0, 0), 0, new ColorRGB(0, 0, 0));
+            Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0));
             subject.radius = random.nextInt(15) + 2;
             subject.position.x = random.nextInt(scene.getWidth());
             subject.position.y = random.nextInt(scene.getHeight());
-            subject.color.r = random.nextInt(120) + 20;
-            subject.color.g = random.nextInt(235) + 20;
-            subject.color.b = random.nextInt(120) + 20;
+            int r = random.nextInt(120) + 20;
+            int g = random.nextInt(235) + 20;
+            int b = random.nextInt(120) + 20;
+            subject.color = new Color(r, g, b);
             subjects.add(i, subject);
         }
     }

@@ -31,7 +31,7 @@ public class Display {
 
     // Methods:
     public void drawFrame(ArrayList<Field> subjects) {
-        canvas.clear(new ColorRGB(0, 0, 0));
+        canvas.clear(new Color(0, 0 ,0));
 
         for (Field subject : subjects) {
             canvas.drawField(subject);
