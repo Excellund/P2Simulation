@@ -28,7 +28,9 @@ public class Simulation implements Runnable {
 
         subjects = new ArrayList<>();
 
-        for (int i = 0; i < 1000; ++i) {
+        int populationInit = 1000;
+
+        for (int i = 0; i < populationInit; ++i) {
             Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0));
             subject.radius = random.nextInt(15) + 2;
             subject.position.x = random.nextInt(scene.getWidth());
@@ -86,5 +88,26 @@ public class Simulation implements Runnable {
     public void stop() {
         isRunning = false;
         scene.close();
+    }
+
+    // Getters:
+    public Field getSubject(int index) {
+        return this.subjects.get(index);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public Display getScene() {
+        return scene;
+    }
+
+    public int getFramesPerSecond() {
+        return framesPerSecond;
+    }
+
+    public int getMovesPerFrame() {
+        return movesPerFrame;
     }
 }

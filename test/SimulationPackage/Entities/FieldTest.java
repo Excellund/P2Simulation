@@ -57,12 +57,12 @@ public class FieldTest {
     }
 
     @Test
-    public void setCollidingTrue() {
+    public void isCollidingTrue() {
         assertTrue(subject01.isColliding(subject02));
     }
 
     @Test
-    public void setCollidingFalse() {
+    public void isCollidingFalse() {
         Vector newPos = new Vector(10, 10);
         subject02.setPosition(newPos);
         assertFalse(subject01.isColliding(subject02));
