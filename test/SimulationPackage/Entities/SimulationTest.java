@@ -25,13 +25,23 @@ public class SimulationTest {
     }
 
     @Test
-    public void run() {
-
-    }
-
-    @Test
     public void stop() {
         simulation.stop();
         assertFalse(simulation.isRunning());
+    }
+
+    @Test
+    public void run() {
+        simulation.run();
+        assertTrue(simulation.getT().isRunning());
+    }
+
+    @Test
+    public void runSceneStopped() {
+        simulation.stop();
+        // TODO: Make a custom exception for this.
+        assertThrows(NullPointerException.class, () -> {
+            simulation.getT().isRunning();
+        });
     }
 }

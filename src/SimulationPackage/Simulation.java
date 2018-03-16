@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Simulation implements Runnable {
     // Fields:
-    private boolean isRunning = true;
+    private boolean isRunning;
     private Display scene;
     private int framesPerSecond, movesPerFrame;
     private Timer t;
@@ -22,6 +22,7 @@ public class Simulation implements Runnable {
 
     // Constructor:
     public Simulation(Display scene, int framesPerSecond, int movesPerFrame) {
+        isRunning = true;
         this.scene = scene;
         this.framesPerSecond = framesPerSecond;
         this.movesPerFrame = movesPerFrame;
@@ -99,15 +100,7 @@ public class Simulation implements Runnable {
         return isRunning;
     }
 
-    public Display getScene() {
-        return scene;
-    }
-
-    public int getFramesPerSecond() {
-        return framesPerSecond;
-    }
-
-    public int getMovesPerFrame() {
-        return movesPerFrame;
+    public Timer getT() {
+        return t;
     }
 }
