@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Display {
     // Fields:
+    private boolean isRunning;
     private JFrame frame;
     private GFX.Canvas canvas;
     private int width, height;
@@ -30,21 +31,28 @@ public class Display {
     }
 
     // Methods:
-    public void drawFrame(ArrayList<Field> subjects) {
+    public int drawFrame(ArrayList<Field> subjects) {
+        int count = 0;
+
         canvas.clear(new Color(0, 0 ,0));
 
         for (Field subject : subjects) {
             canvas.drawField(subject);
+
+            // For testing
+            count++;
         }
 
         Graphics gfx = canvas.getGFX();
         gfx.setColor(Color.CYAN);
         gfx.drawString("Number: " + subjects.size(), 10, 10);
         canvas.repaint();
+
+        return count;
     }
 
     public void close() {
-        frame.setVisible(false);
+        frame.setVisible(!isRunning);
         frame.dispose();
     }
 
@@ -59,6 +67,10 @@ public class Display {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean isRunning(){
+        return isRunning;
     }
 
     // Setters:
