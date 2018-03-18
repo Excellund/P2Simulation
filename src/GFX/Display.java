@@ -65,24 +65,7 @@ public class Display {
         return height;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public boolean isRunning(){
         return isRunning;
-    }
-
-    // Setters:
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }
