@@ -44,7 +44,9 @@ public class Canvas extends JPanel
         {
             for (int x = 0; x < tiles[0].length; ++x)
             {
-                scene.setRGB(x, y,  ((int)(((double) tiles[y][x].getMuDensity() / 1000000) * 80)) << 8);
+                double green = (((double) tiles[y][x].getMuDensity() / 1000000) * 80);
+                green = Math.pow(green / 255.0, 0.5)*255; //Gamma correction
+                scene.setRGB(x, y, (int) green << 8);
             }
         }
     }
