@@ -323,7 +323,7 @@ public class ArraySimulation implements Runnable
                 lastGraphUpdate++;
             }
 
-            scene.drawFrame(activeSubjects, tiles, graphPoints, graphWidth, 1);
+            scene.drawFrame(activeSubjects, tiles, graphPoints, graphWidth);
 
             if (!isRunning)
             {

@@ -33,7 +33,7 @@ public class Display
     }
 
     // Methods:
-    public void drawFrame(ArrayList<Field> subjects, Tile[][] tiles, int[] graphPoints, int size, int scale)
+    public void drawFrame(ArrayList<Field> subjects, Tile[][] tiles, int[] graphPoints, int size)
     {
         canvas.drawTiles(tiles);
 
