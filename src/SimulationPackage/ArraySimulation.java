@@ -22,6 +22,10 @@ public class ArraySimulation implements Runnable
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
 
+    public final static int NUM_INITIAL_SUBJECTS = 1200;
+    public final static int PLANKTION_GROWTH_PER_MOVE = 300;
+    public final static int FISH_HEALTH_CONSUMPTION = 300;
+
     // Constructor:
     public ArraySimulation(Display scene, int framesPerSecond, int movesPerFrame)
     {
@@ -40,7 +44,7 @@ public class ArraySimulation implements Runnable
             }
         }
 
-        for (int i = 0; i < 1500; ++i)
+        for (int i = 0; i < NUM_INITIAL_SUBJECTS; ++i)
         {
             addSubject();
         }
@@ -246,7 +250,7 @@ public class ArraySimulation implements Runnable
         {
             for (int x = 0; x < tiles[0].length; ++x)
             {
-                tiles[y][x].addDensity(150);
+                tiles[y][x].addDensity(PLANKTION_GROWTH_PER_MOVE);
             }
         }
     }
@@ -269,7 +273,7 @@ public class ArraySimulation implements Runnable
 
                         if (subject.getHealth() >= 250)
                         {
-                            subject.subtractHealth(100);
+                            subject.subtractHealth(FISH_HEALTH_CONSUMPTION);
                             ++count;
                         }
 
