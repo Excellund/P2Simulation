@@ -246,7 +246,7 @@ public class ArraySimulation implements Runnable
         {
             for (int x = 0; x < tiles[0].length; ++x)
             {
-                tiles[y][x].addDensity(175);
+                tiles[y][x].addDensity(150);
             }
         }
     }
