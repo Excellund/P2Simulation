@@ -8,11 +8,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Random;
 
-public class Simulation implements Runnable {
+public class Simulation implements Runnable
+{
     // Fields:
-    private boolean isRunning;
+    private boolean isRunning = true;
     private Display scene;
     private int framesPerSecond, movesPerFrame;
     private Timer t;
@@ -21,18 +23,17 @@ public class Simulation implements Runnable {
     private ArrayList<Field> subjects;
 
     // Constructor:
-    public Simulation(Display scene, int framesPerSecond, int movesPerFrame) {
-        isRunning = true;
+    public Simulation(Display scene, int framesPerSecond, int movesPerFrame)
+    {
         this.scene = scene;
         this.framesPerSecond = framesPerSecond;
         this.movesPerFrame = movesPerFrame;
 
         subjects = new ArrayList<>();
 
-        int populationInit = 1000;
-
-        for (int i = 0; i < populationInit; ++i) {
-            Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0));
+        for (int i = 0; i < 1000; ++i)
+        {
+            Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0), 100);
             subject.radius = random.nextInt(15) + 2;
             subject.position.x = random.nextInt(scene.getWidth());
             subject.position.y = random.nextInt(scene.getHeight());
@@ -45,9 +46,12 @@ public class Simulation implements Runnable {
     }
 
     // Methods:
-    public void moveSubjects() {
-        Iterator<Field> i1 = subjects.iterator();
-        while (i1.hasNext()) {
+    public void moveSubjects()
+    {
+        ListIterator<Field> i1 = subjects.listIterator();
+
+        while (i1.hasNext())
+        {
             Field subject = i1.next();
             int newX = random.nextInt(2) == 1 ? 1 : -1;
             int newY = random.nextInt(2) == 1 ? 1 : -1;
@@ -55,10 +59,23 @@ public class Simulation implements Runnable {
             subject.position.x += newX;
             subject.position.y += newY;
 
-            Iterator<Field> i2 = subjects.iterator();
-            while (i2.hasNext()) {
+            if (subject.position.x <= 0 || subject.position.x >= scene.getWidth())
+            {
+                subject.position.x -= newX;
+            }
+
+            if (subject.position.y <= 0 || subject.position.y >= scene.getHeight())
+            {
+                subject.position.y -= newY;
+            }
+
+            ListIterator<Field> i2 = subjects.listIterator();
+
+            while (i2.hasNext())
+            {
                 Field other = i2.next();
-                if (subject != other && subject.isColliding(other) && subject.getRadius() <= other.getRadius()) {
+                if (subject != other && subject.isColliding(other) && subject.getRadius() <= other.getRadius())
+                {
                     other.setRadius(other.getRadius() + 1);
                     i1.remove();
                     break;
@@ -68,17 +85,21 @@ public class Simulation implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         int sleepTime = 1000 / framesPerSecond;
 
-        t = new Timer(sleepTime, e -> {
-            for (int i = 0; i < movesPerFrame; ++i) {
+        t = new Timer(sleepTime, e ->
+        {
+            for (int i = 0; i < movesPerFrame; ++i)
+            {
                 moveSubjects();
             }
 
-            scene.drawFrame(subjects);
+            //scene.drawFrame(subjects);
 
-            if (!isRunning) {
+            if (!isRunning)
+            {
                 t.stop();
             }
         });
@@ -86,21 +107,9 @@ public class Simulation implements Runnable {
         t.start();
     }
 
-    public void stop() {
+    public void stop()
+    {
         isRunning = false;
         scene.close();
-    }
-
-    // Getters:
-    public Field getSubject(int index) {
-        return this.subjects.get(index);
-    }
-
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public Timer getT() {
-        return t;
     }
 }

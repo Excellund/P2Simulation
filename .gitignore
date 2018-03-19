@@ -1,3 +1,6 @@
 .idea
 out
 EvolutionPrototype.iml
+production
+debug
+.DS_Store

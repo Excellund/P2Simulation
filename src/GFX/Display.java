@@ -1,21 +1,23 @@
 package GFX;
 
 import SimulationPackage.Entities.Field;
+import SimulationPackage.Entities.Tile;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Display {
+public class Display
+{
     // Fields:
-    private boolean isRunning;
     private JFrame frame;
     private GFX.Canvas canvas;
     private int width, height;
     private String title;
 
     // Constructor:
-    public Display(String title, int width, int height) {
+    public Display(String title, int width, int height)
+    {
         this.title = title;
         this.width = width;
         this.height = height;
@@ -31,41 +33,56 @@ public class Display {
     }
 
     // Methods:
-    public int drawFrame(ArrayList<Field> subjects) {
-        int count = 0;
+    public void drawFrame(ArrayList<Field> subjects, Tile[][] tiles)
+    {
+        canvas.drawTiles(tiles);
 
-        canvas.clear(new Color(0, 0 ,0));
-
-        for (Field subject : subjects) {
+        for (Field subject : subjects)
+        {
             canvas.drawField(subject);
-
-            // For testing
-            count++;
         }
 
         Graphics gfx = canvas.getGFX();
         gfx.setColor(Color.CYAN);
         gfx.drawString("Number: " + subjects.size(), 10, 10);
         canvas.repaint();
-
-        return count;
     }
 
-    public void close() {
-        frame.setVisible(!isRunning);
+    public void close()
+    {
+        frame.setVisible(false);
         frame.dispose();
     }
 
     // Getters:
-    public int getWidth() {
+    public int getWidth()
+    {
         return width;
     }
 
-    public int getHeight() {
+    public int getHeight()
+    {
         return height;
     }
 
-    public boolean isRunning(){
-        return isRunning;
+    public String getTitle()
+    {
+        return title;
+    }
+
+    // Setters:
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 }
