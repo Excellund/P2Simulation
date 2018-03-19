@@ -40,7 +40,7 @@ public class ArraySimulation implements Runnable
             }
         }
 
-        for (int i = 0; i < 200; ++i)
+        for (int i = 0; i < 1500; ++i)
         {
             addSubject();
         }
@@ -54,8 +54,8 @@ public class ArraySimulation implements Runnable
         subject.radius = random.nextInt(15) + 2;
         subject.position.x = random.nextInt(scene.getWidth());
         subject.position.y = random.nextInt(scene.getHeight());
-        int r = random.nextInt(235) + 20;
-        int b = random.nextInt(235) + 20;
+        int r = random.nextInt(155) + 100;
+        int b = random.nextInt(155) + 100;
         subject.color = new Color(r, 0, b);
     
         tiles[subject.position.y][subject.position.x].addSubject(subject);
@@ -122,8 +122,6 @@ public class ArraySimulation implements Runnable
 
             xOffset = random.nextInt(xHigher - xLower);
             yOffset = random.nextInt(yHigher - yLower);
-            //xOffset = 0;
-            //yOffset = 0;
 
             for (int i = yLower + yOffset; i <= yHigher + yOffset; ++i)
             {
@@ -157,15 +155,13 @@ public class ArraySimulation implements Runnable
 
             xOffset = random.nextInt(xHigher - xLower);
             yOffset = random.nextInt(yHigher - yLower);
-            //xOffset = 0;
-            //yOffset = 0;
 
             for (int i = yLower + yOffset; i <= yHigher + yOffset; ++i)
             {
                 for (int j = xLower + xOffset; j <= xHigher + xOffset; ++j)
                 {
-                    int ic = i > yHigher ? i - yOffset - (yHigher - yLower) : i;
-                    int jc = j > xHigher ? j - xOffset - (xHigher - xLower) : j;
+                    int ic = i > yHigher ? i - 3 : i;
+                    int jc = j > xHigher ? j - 3 : j;
 
                     if (tiles[ic][jc].getMuDensity() > last)
                     {
@@ -250,7 +246,7 @@ public class ArraySimulation implements Runnable
         {
             for (int x = 0; x < tiles[0].length; ++x)
             {
-                tiles[y][x].addDensity(100);
+                tiles[y][x].addDensity(175);
             }
         }
     }
