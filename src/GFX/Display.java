@@ -33,7 +33,7 @@ public class Display
     }
 
     // Methods:
-    public void drawFrame(ArrayList<Field> subjects, Tile[][] tiles)
+    public void drawFrame(ArrayList<Field> subjects, Tile[][] tiles, int[] graphPoints, int size, int scale)
     {
         canvas.drawTiles(tiles);
 
@@ -45,6 +45,15 @@ public class Display
         Graphics gfx = canvas.getGFX();
         gfx.setColor(Color.CYAN);
         gfx.drawString("Number: " + subjects.size(), 10, 10);
+
+        for (int i = 0; i < size; i++) {
+            int y = (-graphPoints[i] / 10 + this.height / 7 * 6);
+            y = y < 0 ? 0 : y;
+            y = y >= this.height - 1 ? this.height - 1 : y;
+
+            canvas.getScene().setRGB(i, y, 0xFF0000);
+        }
+
         canvas.repaint();
     }
 

@@ -22,6 +22,10 @@ public class ArraySimulation implements Runnable
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
 
+    private int[] graphPoints;
+    private int graphWidth;
+    private int lastGraphUpdate;
+
     public final static int NUM_INITIAL_SUBJECTS = 1200;
     public final static int PLANKTION_GROWTH_PER_MOVE = 300;
     public final static int FISH_HEALTH_CONSUMPTION = 300;
@@ -35,6 +39,9 @@ public class ArraySimulation implements Runnable
 
         tiles = new Tile[scene.getHeight()][scene.getWidth()];
         activeSubjects = new ArrayList<>();
+        graphPoints = new int[scene.getWidth()];
+        graphWidth = 0;
+        lastGraphUpdate = 0;
 
         for (int y = 0; y < scene.getHeight(); ++y)
         {
@@ -287,6 +294,14 @@ public class ArraySimulation implements Runnable
             }
         }
     }
+
+    private void updateGraph() {
+        graphPoints[graphWidth] = activeSubjects.size();
+        graphWidth++;
+        if (graphWidth >= scene.getWidth()) {
+            graphWidth = 0;
+        }
+    }
     
     @Override
     public void run()
@@ -300,9 +315,15 @@ public class ArraySimulation implements Runnable
                 moveSubjects();
                 sustainPlankton();
                 sustainFields();
+
+                if (lastGraphUpdate == 20) {
+                    updateGraph();
+                    lastGraphUpdate = 0;
+                }
+                lastGraphUpdate++;
             }
 
-            scene.drawFrame(activeSubjects, tiles);
+            scene.drawFrame(activeSubjects, tiles, graphPoints, graphWidth, 1);
 
             if (!isRunning)
             {
