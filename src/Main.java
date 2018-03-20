@@ -6,7 +6,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        Display display = new Display("Test", 1000, 1000);
+        Display display = new Display("Test", 750, 750);
         ArraySimulation sim = new ArraySimulation(display, 60, 2);
 
         Thread thread = new Thread(sim);
