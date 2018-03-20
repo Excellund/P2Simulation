@@ -4,8 +4,7 @@ import VectorPackage.Vector;
 
 import java.awt.*;
 
-public class Field
-{
+public class Field {
     // Fields:
     public Vector position; //hvorfor er fields public???? revise.
     public int radius;
@@ -13,8 +12,7 @@ public class Field
     private int health;
 
     // Constructor:
-    public Field(Vector position, int radius, Color color, int health)
-    {
+    public Field(Vector position, int radius, Color color, int health) {
         this.position = position;
         this.radius = radius;
         this.color = color;
@@ -22,67 +20,53 @@ public class Field
     }
 
     // Methods:
-    public boolean isColliding(Field subject)
-    {
+    public boolean isColliding(Field subject) {
         return Math.sqrt(Math.pow((position.x - subject.position.x), 2) + Math.pow(position.y - subject.position.y, 2)) < radius + subject.radius;
     }
     
-    public void addHealth(int amount)
-    {
+    public void addHealth(int amount) {
         health += amount;
         
-        if (health > 300)
-        {
+        if (health > 300) {
             health = 300;
         }
     }
     
-    public void subtractHealth(int amount)
-    {
+    public void subtractHealth(int amount) {
         health -= amount;
         
-        if (health < 0)
-        {
+        if (health < 0) {
             health = 0;
         }
     }
     
     // Getters:
-
-    public Vector getPosition()
-    {
+    public Vector getPosition() {
         return position;
     }
 
-    public int getRadius()
-    {
+    public int getRadius() {
         return radius;
     }
 
-    public Color getColor()
-    {
+    public Color getColor() {
         return color;
     }
     
-    public int getHealth()
-    {
+    public int getHealth() {
         return health;
     }
     
     // Setters:
-
-    public void setPosition(Vector position)
-    {
+    public void setPosition(Vector position) {
         this.position = position;
     }
 
-    public void setRadius(int radius)
-    {
+    public void setRadius(int radius) {
         this.radius = radius;
     }
 
-    public void setColor(Color color)
-    {
+    public void setColor(Color color) {
         this.color = color;
     }
 }

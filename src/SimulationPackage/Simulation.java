@@ -11,8 +11,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Random;
 
-public class Simulation implements Runnable
-{
+public class Simulation implements Runnable {
     // Fields:
     private boolean isRunning = true;
     private Display scene;
@@ -23,16 +22,14 @@ public class Simulation implements Runnable
     private ArrayList<Field> subjects;
 
     // Constructor:
-    public Simulation(Display scene, int framesPerSecond, int movesPerFrame)
-    {
+    public Simulation(Display scene, int framesPerSecond, int movesPerFrame) {
         this.scene = scene;
         this.framesPerSecond = framesPerSecond;
         this.movesPerFrame = movesPerFrame;
 
         subjects = new ArrayList<>();
 
-        for (int i = 0; i < 1000; ++i)
-        {
+        for (int i = 0; i < 1000; ++i) {
             Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0), 100);
             subject.radius = random.nextInt(15) + 2;
             subject.position.x = random.nextInt(scene.getWidth());
@@ -46,8 +43,7 @@ public class Simulation implements Runnable
     }
 
     // Methods:
-    public void moveSubjects()
-    {
+    public void moveSubjects() {
         ListIterator<Field> i1 = subjects.listIterator();
 
         while (i1.hasNext())
@@ -85,8 +81,7 @@ public class Simulation implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         int sleepTime = 1000 / framesPerSecond;
 
         t = new Timer(sleepTime, e ->
@@ -107,9 +102,21 @@ public class Simulation implements Runnable
         t.start();
     }
 
-    public void stop()
-    {
+    public void stop() {
         isRunning = false;
         scene.close();
+    }
+
+    // Getters:
+    public Field getSubject(int index) {
+        return this.subjects.get(index);
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public Timer getT() {
+        return t;
     }
 }

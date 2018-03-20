@@ -2,56 +2,46 @@ package SimulationPackage.Entities;
 
 import java.util.ArrayList;
 
-public class Tile
-{
+public class Tile {
     private ArrayList<Field> subjects;
     private int muDensity;
 
-    public Tile(int muDensity)
-    {
+    public Tile(int muDensity) {
         this.muDensity = muDensity;
         subjects = new ArrayList<>();
     }
 
-    public void addSubject(Field subject)
-    {
+    public void addSubject(Field subject) {
         subjects.add(subject);
     }
 
-    public void removeSubject(Field subject)
-    {
+    public void removeSubject(Field subject) {
         subjects.remove(subject);
     }
 
-    public void subtractDensity(int amount)
-    {
+    public void subtractDensity(int amount) {
         muDensity -= amount;
 
-        if (muDensity < 0)
-        {
+        if (muDensity < 0) {
             muDensity = 0;
         }
     }
     
-    public void addDensity(int amount)
-    {
+    public void addDensity(int amount) {
         muDensity += amount;
         
-        if (muDensity > 1000000)
-        {
+        if (muDensity > 1000000) {
             muDensity = 1000000;
         }
     }
     
-    //access private fields
+    // Getters
 
-    public ArrayList<Field> getSubjects()
-    {
+    public ArrayList<Field> getSubjects() {
         return subjects;
     }
 
-    public int getMuDensity()
-    {
+    public int getMuDensity() {
         return muDensity;
     }
 }
