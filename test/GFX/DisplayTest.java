@@ -21,14 +21,14 @@ class DisplayTest {
     ArrayList<Field> subjects;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
 
         display = new Display("Test", 1920, 1080);
         subjects = new ArrayList<>();
     }
 
     @Disabled
-    void drawFrameSubjectSize(){
+    void drawFrameSubjectSize() {
 
         int testInt = 50;
 

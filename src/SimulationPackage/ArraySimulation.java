@@ -13,6 +13,7 @@ import java.util.ListIterator;
 import java.util.Random;
 
 public class ArraySimulation implements Runnable {
+    // Fields
     private boolean isRunning = true;
     private Display scene;
     private int framesPerSecond, movesPerFrame;
@@ -27,8 +28,9 @@ public class ArraySimulation implements Runnable {
     private int graphLastUpdate;
     private int graphUpdateDelay;
 
+    // Constants
     public final static int NUM_INITIAL_SUBJECTS = 1200;
-    public final static int PLANKTION_GROWTH_PER_MOVE = 300;
+    public final static int PLANKTON_GROWTH_PER_MOVE = 300;
     public final static int FISH_HEALTH_CONSUMPTION = 300;
 
     // Constructor:
@@ -57,7 +59,6 @@ public class ArraySimulation implements Runnable {
     }
 
     // Methods:
-    
     private void addSubject() {
         Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0), random.nextInt(100) + 50);
         subject.radius = random.nextInt(15) + 2;
@@ -229,7 +230,7 @@ public class ArraySimulation implements Runnable {
     private void sustainPlankton() {
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
-                tiles[y][x].addDensity(PLANKTION_GROWTH_PER_MOVE);
+                tiles[y][x].addDensity(PLANKTON_GROWTH_PER_MOVE);
             }
         }
     }
@@ -304,5 +305,10 @@ public class ArraySimulation implements Runnable {
     public void stop() {
         isRunning = false;
         scene.close();
+    }
+
+    // Getters:
+    public int getMovesPerFrame() {
+        return movesPerFrame;
     }
 }

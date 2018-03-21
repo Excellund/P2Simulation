@@ -18,13 +18,6 @@ public class SimulationTest {
     }
 
     @Test
-    public void moveSubjectPositionChanged() {
-        int previous = simulation.getSubject(0).position.x;
-        simulation.moveSubjects();
-        assertTrue(Math.abs(previous - simulation.getSubject(0).position.x) == 1);
-    }
-
-    @Test
     public void stop() {
         simulation.stop();
         assertFalse(simulation.isRunning());

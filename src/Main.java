@@ -3,12 +3,22 @@ import SimulationPackage.ArraySimulation;
 import SimulationPackage.Simulation;
 
 public class Main {
+
+    public static final int MOVES_PER_FRAME = 2;
+    public static final int FRAMES_PER_SECOND = 60;
+    public static final int DISPLAY_DIMENSIONS = 750;
+
     public static void main(String[] args) {
-        Display display = new Display("Test", 750, 750);
-        ArraySimulation sim = new ArraySimulation(display, 60, 2);
+        Display display = new Display("Test", DISPLAY_DIMENSIONS, DISPLAY_DIMENSIONS);
+        ArraySimulation sim = new ArraySimulation(display, FRAMES_PER_SECOND, MOVES_PER_FRAME);
 
         Thread thread = new Thread(sim);
         thread.start();
         //sim.stop();
+    }
+
+    // Getters:
+    public static int getMovesPerFrame() {
+        return MOVES_PER_FRAME;
     }
 }

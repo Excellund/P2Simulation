@@ -2,8 +2,7 @@ package GFX;
 
 import SimulationPackage.Entities.Field;
 import VectorPackage.Vector;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,12 +39,7 @@ public class CanvasTest {
         assertTrue(condition);
     }
 
-    @Test
-    public void getGFX() {
-
-    }
-
-    @Test
+    @Disabled
     public void drawFieldColor() {
         canvas.drawField(subject);
         assertEquals(subject.color, canvas.getGFX().getColor());
