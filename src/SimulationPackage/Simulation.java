@@ -119,4 +119,8 @@ public class Simulation implements Runnable {
     public Timer getT() {
         return t;
     }
+
+    public int getMovesPerFrame() {
+        return movesPerFrame;
+    }
 }
