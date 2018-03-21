@@ -8,6 +8,7 @@ import VectorPackage.Vector;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.Random;
 
@@ -22,8 +23,9 @@ public class ArraySimulation implements Runnable {
     private ArrayList<Field> activeSubjects;
 
     private int[] graphPoints;
-    private int graphWidth;
-    private int lastGraphUpdate;
+    private int graphPosition;
+    private int graphLastUpdate;
+    private int graphUpdateDelay;
 
     public final static int NUM_INITIAL_SUBJECTS = 1200;
     public final static int PLANKTION_GROWTH_PER_MOVE = 300;
@@ -38,8 +40,10 @@ public class ArraySimulation implements Runnable {
         tiles = new Tile[scene.getHeight()][scene.getWidth()];
         activeSubjects = new ArrayList<>();
         graphPoints = new int[scene.getWidth()];
-        graphWidth = 0;
-        lastGraphUpdate = 0;
+        graphPosition = 0;
+        graphLastUpdate = 0;
+        graphUpdateDelay = 1;
+        Arrays.fill(graphPoints, NUM_INITIAL_SUBJECTS);
 
         for (int y = 0; y < scene.getHeight(); ++y) {
             for (int x = 0; x < scene.getWidth(); ++x) {
@@ -257,10 +261,14 @@ public class ArraySimulation implements Runnable {
     }
 
     private void updateGraph() {
-        graphPoints[graphWidth] = activeSubjects.size();
-        graphWidth++;
-        if (graphWidth >= scene.getWidth()) {
-            graphWidth = 0;
+        graphPoints[graphPosition] = activeSubjects.size();
+        graphPosition++;
+        if (graphPosition >= scene.getWidth()) {
+            for (int i = 0; i < graphPoints.length/2; i++) {
+                graphPoints[i] = (graphPoints[i*2] + graphPoints[i*2+1]) / 2;
+            }
+            graphPosition /= 2;
+            graphUpdateDelay *= 2;
         }
     }
     
@@ -276,14 +284,14 @@ public class ArraySimulation implements Runnable {
                 sustainPlankton();
                 sustainFields();
 
-                if (lastGraphUpdate == 20) {
+                if (graphLastUpdate == graphUpdateDelay) {
                     updateGraph();
-                    lastGraphUpdate = 0;
+                    graphLastUpdate = 0;
                 }
-                lastGraphUpdate++;
+                graphLastUpdate++;
             }
 
-            scene.drawFrame(activeSubjects, tiles, graphPoints, graphWidth);
+            scene.drawFrame(activeSubjects, tiles, graphPoints, graphPosition);
 
             if (!isRunning) {
                 t.stop();

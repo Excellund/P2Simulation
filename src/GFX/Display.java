@@ -40,12 +40,19 @@ public class Display {
         gfx.setColor(Color.CYAN);
         gfx.drawString("Number: " + subjects.size(), 10, 10);
 
+        int prevY = (-graphPoints[0] / 10 + this.height / 7 * 6);
         for (int i = 0; i < size; i++) {
             int y = (-graphPoints[i] / 10 + this.height / 7 * 6);
             y = y < 0 ? 0 : y;
             y = y >= this.height - 1 ? this.height - 1 : y;
 
-            canvas.getScene().setRGB(i, y, 0xFF0000);
+            int higher = y < prevY ? prevY : y;
+            int lower = y > prevY ? prevY : y;
+            for (int j = lower; j <= higher; j++) {
+                canvas.getScene().setRGB(i, j, 0xFF0000);
+            }
+
+            prevY = y;
         }
 
         canvas.repaint();
