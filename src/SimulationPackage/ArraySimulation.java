@@ -265,8 +265,18 @@ public class ArraySimulation implements Runnable {
         graphPoints[graphPosition] = activeSubjects.size();
         graphPosition++;
         if (graphPosition >= scene.getWidth()) {
+            int graphAverage = 0;
+            for (int i = 0; i < graphPoints.length; i++) {
+                graphAverage += graphPoints[i];
+            }
+            graphAverage /= graphPoints.length;
+
             for (int i = 0; i < graphPoints.length/2; i++) {
-                graphPoints[i] = (graphPoints[i*2] + graphPoints[i*2+1]) / 2;
+                int p1Dist = Math.abs(graphPoints[i*2] - graphAverage);
+                int p2Dist = Math.abs(graphPoints[i*2+1] - graphAverage);
+
+                //graphPoints[i] = p1Dist < p2Dist ? graphPoints[i*2+1] : graphPoints[i*2];
+                //graphPoints[i] = (graphPoints[i*2] + graphPoints[i*2+1]) / 2;
             }
             graphPosition /= 2;
             graphUpdateDelay *= 2;
