@@ -4,9 +4,9 @@ import SimulationPackage.Simulation;
 
 public class Main {
 
-    public static final int MOVES_PER_FRAME = 2;
+    public static final int MOVES_PER_FRAME = 20;
     public static final int FRAMES_PER_SECOND = 60;
-    public static final int DISPLAY_DIMENSIONS = 750;
+    public static final int DISPLAY_DIMENSIONS = 300;
 
     public static void main(String[] args) {
         Display display = new Display("Test", DISPLAY_DIMENSIONS, DISPLAY_DIMENSIONS);
