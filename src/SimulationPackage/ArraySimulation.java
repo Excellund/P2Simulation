@@ -275,7 +275,7 @@ public class ArraySimulation implements Runnable {
                 int p1Dist = Math.abs(graphPoints[i*2] - graphAverage);
                 int p2Dist = Math.abs(graphPoints[i*2+1] - graphAverage);
 
-                //graphPoints[i] = p1Dist < p2Dist ? graphPoints[i*2+1] : graphPoints[i*2];
+                graphPoints[i] = p1Dist < p2Dist ? graphPoints[i*2+1] : graphPoints[i*2];
                 //graphPoints[i] = (graphPoints[i*2] + graphPoints[i*2+1]) / 2;
             }
             graphPosition /= 2;
