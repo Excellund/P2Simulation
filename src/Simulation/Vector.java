@@ -1,4 +1,4 @@
-package VectorPackage;
+package Simulation;
 
 public class Vector {
     // Fields:

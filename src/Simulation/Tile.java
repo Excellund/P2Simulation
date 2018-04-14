@@ -1,4 +1,4 @@
-package SimulationPackage.Entities;
+package Simulation;
 
 import java.util.ArrayList;
 
@@ -26,15 +26,15 @@ public class Tile {
             muDensity = 0;
         }
     }
-    
+
     public void addDensity(int amount) {
         muDensity += amount;
-        
+
         if (muDensity > 1000000) {
             muDensity = 1000000;
         }
     }
-    
+
     // Getters
 
     public ArrayList<Field> getSubjects() {

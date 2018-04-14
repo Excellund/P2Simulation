@@ -1,0 +1,119 @@
+.content {
+    -fx-font: 10px "System";
+    -fx-background-color: #36393e;
+    -fx-padding: 1 4 -1 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.content-box {
+    -fx-font: 10px "System";
+    -fx-background-color: #36393e;
+    -fx-padding: 0 0 0 0;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.tree-view {
+    -fx-font: 10px "System";
+    -fx-background-color: #36393e;
+    -fx-padding: 1 4 -1 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+}
+
+.tree-cell {
+    -fx-font: 12px "System";
+    -fx-background-color: #36393e;
+    -fx-padding: 1 4 -1 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.toolbar {
+    -fx-background-color: #2f3136;
+}
+
+.menu-bar {
+    -fx-background-color: #36393e;
+    -fx-padding: 0 0 0 0;
+}
+
+.context-menu {
+    -fx-background-color: #2f3136;
+    -fx-padding: 0 0 0 0;
+}
+
+.menu-item {
+    -fx-background-color: #2f3136;
+    -fx-padding: 3 3 3 3;
+}
+
+.menu-item:hover {
+    -fx-background-color: #36393e;
+}
+
+.canvas {
+    -fx-background-color: #000000;
+}
+
+.label {
+    -fx-font: 13px "System";
+    -fx-font-weight: bold;
+    -fx-padding: 5;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-font: 11px "System";
+    -fx-background-color: transparent;
+    -fx-padding: 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.box {
+    -fx-background-color: #33353a;
+}
+
+.button-box {
+    -fx-background-color: #2f3136;
+}
+
+.text-field {
+    -fx-background-color: #474b51;
+    -fx-padding: 5;
+    -fx-font: 10px "System";
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.scroll-bar {
+    -fx-background-color: #2f3136;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #1e2124;
+}
+
+.scroll-bar .increment-button:hover, .scroll-bar .decrement-button:hover {
+    -fx-background-color: #2f3136;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #36393e;
+}
+
+.scroll-pane {
+    -fx-background-color: #36393e;
+}
