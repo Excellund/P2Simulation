@@ -1,4 +1,4 @@
-package SimulationPackage.Entities;
+package Simulation;
 
 public class Carcass {
     private int nutrition;

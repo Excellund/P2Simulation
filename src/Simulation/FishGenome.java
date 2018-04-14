@@ -1,4 +1,4 @@
-package SimulationPackage.Entities;
+package Simulation;
 
 import utils.CountingRandom;
 
@@ -92,20 +92,15 @@ public class FishGenome {
 
             if (chance < 0.4) {
                 genomeResultArray[i] = genomeArrayA[i];
-            }
-            else if (chance < 0.45) {
+            } else if (chance < 0.45) {
                 genomeResultArray[i] = genomeArrayAA[i];
-            }
-            else if (chance < 0.5) {
+            } else if (chance < 0.5) {
                 genomeResultArray[i] = genomeArrayAB[i];
-            }
-            else if (chance < 0.9){
+            } else if (chance < 0.9) {
                 genomeResultArray[i] = genomeArrayB[i];
-            }
-            else if (chance < 0.95) {
+            } else if (chance < 0.95) {
                 genomeResultArray[i] = genomeArrayBA[i];
-            }
-            else {
+            } else {
                 genomeResultArray[i] = genomeArrayBB[i];
             }
         }
@@ -174,7 +169,7 @@ public class FishGenome {
     }
 
     private float[] getArray() {
-        return new float[] {
+        return new float[]{
                 this.size,
                 this.speed,
                 this.herbivoreEfficiency,

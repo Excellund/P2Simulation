@@ -1,4 +1,4 @@
-package SimulationPackage.Entities;
+package Simulation;
 
 public class Fish {
 

@@ -1,8 +1,4 @@
-package SimulationPackage.Entities;
-
-import VectorPackage.Vector;
-
-import java.awt.*;
+package Simulation;
 
 public class Field {
     // Fields:
@@ -23,23 +19,23 @@ public class Field {
     public boolean isColliding(Field subject) {
         return Math.sqrt(Math.pow((position.x - subject.position.x), 2) + Math.pow(position.y - subject.position.y, 2)) < radius + subject.radius;
     }
-    
+
     public void addHealth(int amount) {
         health += amount;
-        
+
         if (health > 300) {
             health = 300;
         }
     }
-    
+
     public void subtractHealth(int amount) {
         health -= amount;
-        
+
         if (health < 0) {
             health = 0;
         }
     }
-    
+
     // Getters:
     public Vector getPosition() {
         return position;
@@ -52,11 +48,11 @@ public class Field {
     public Color getColor() {
         return color;
     }
-    
+
     public int getHealth() {
         return health;
     }
-    
+
     // Setters:
     public void setPosition(Vector position) {
         this.position = position;

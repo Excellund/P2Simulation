@@ -1,33 +1,18 @@
-package SimulationPackage;
+package Simulation;
 
-import GFX.Display;
-import SimulationPackage.Entities.Field;
-import SimulationPackage.Entities.Tile;
-import VectorPackage.Vector;
 import utils.CountingRandom;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.Random;
 
-public class ArraySimulation implements Runnable {
+public class Simulation {
     // Fields
-    private boolean isRunning = true;
-    private Display scene;
-    private int framesPerSecond, movesPerFrame;
-    private Timer t;
     private Random random = CountingRandom.getInstance();
-
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
-
-    private int[] graphPoints;
-    private int graphPosition;
-    private int graphLastUpdate;
-    private int graphUpdateDelay;
+    private int width;
+    private int height;
 
     // Constants
     public final static int NUM_INITIAL_SUBJECTS = 1200;
@@ -35,21 +20,15 @@ public class ArraySimulation implements Runnable {
     public final static int FISH_HEALTH_CONSUMPTION = 300;
 
     // Constructor:
-    public ArraySimulation(Display scene, int framesPerSecond, int movesPerFrame) {
-        this.scene = scene;
-        this.framesPerSecond = framesPerSecond;
-        this.movesPerFrame = movesPerFrame;
+    public Simulation(int width, int height) {
+        this.width = width;
+        this.height = height;
 
-        tiles = new Tile[scene.getHeight()][scene.getWidth()];
+        tiles = new Tile[height][width];
         activeSubjects = new ArrayList<>();
-        graphPoints = new int[scene.getWidth()];
-        graphPosition = 0;
-        graphLastUpdate = 0;
-        graphUpdateDelay = 1;
-        Arrays.fill(graphPoints, NUM_INITIAL_SUBJECTS);
 
-        for (int y = 0; y < scene.getHeight(); ++y) {
-            for (int x = 0; x < scene.getWidth(); ++x) {
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
                 tiles[y][x] = new Tile(random.nextInt(200000));
             }
         }
@@ -63,37 +42,37 @@ public class ArraySimulation implements Runnable {
     private void addSubject() {
         Field subject = new Field(new Vector(0, 0), 0, new Color(0, 0, 0), random.nextInt(100) + 50);
         subject.radius = random.nextInt(15) + 2;
-        subject.position.x = random.nextInt(scene.getWidth());
-        subject.position.y = random.nextInt(scene.getHeight());
-        int r = random.nextInt(155) + 100;
-        int b = random.nextInt(155) + 100;
+        subject.position.x = random.nextInt(width);
+        subject.position.y = random.nextInt(height);
+        int r = random.nextInt(255);
+        int b = random.nextInt(255);
         subject.color = new Color(r, 0, b);
-    
+
         tiles[subject.position.y][subject.position.x].addSubject(subject);
         activeSubjects.add(subject);
     }
-    
+
     private void moveSubjects() {
         ListIterator<Field> iterator = activeSubjects.listIterator();
-        
+
         while (iterator.hasNext()) {
             Field subject = iterator.next();
-    
+
             Vector previous = subject.getPosition();
-    
+
             tiles[subject.position.y][subject.position.x].removeSubject(subject);
             subject.setPosition(favoredMove(subject));
-    
-            if ((subject.position.x < 0 || subject.position.x >= scene.getWidth()) ||
-                (subject.position.y < 0 || subject.position.y >= scene.getHeight())) {
+
+            if ((subject.position.x < 0 || subject.position.x >= width) ||
+                    (subject.position.y < 0 || subject.position.y >= height)) {
                 subject.setPosition(previous);
             }
-    
+
             tiles[subject.position.y][subject.position.x].addSubject(subject);
-    
+
             if (tiles[subject.position.y][subject.position.x].getMuDensity() < 100000) {
                 subject.subtractHealth(3);
-        
+
                 if (subject.getHealth() == 0) {
                     tiles[subject.position.y][subject.position.x].removeSubject(subject);
                     iterator.remove();
@@ -101,7 +80,7 @@ public class ArraySimulation implements Runnable {
             } else {
                 subject.addHealth(1);
             }
-    
+
             tiles[subject.position.y][subject.position.x].subtractDensity(100000);
         }
     }
@@ -109,18 +88,18 @@ public class ArraySimulation implements Runnable {
     private Vector favoredMove(Field entity) { //TODO: revise
         int xLower, xHigher, yLower, yHigher, x, y, xOffset, yOffset;
         long last, current;
-        
+
         last = 0;
         x = entity.position.x;
         y = entity.position.y;
-        
+
         if (entity.getHealth() >= 290) {
             xLower = entity.position.x < 3 ? 0 : entity.position.x - 3;
-            xHigher = entity.position.x > scene.getWidth() - 4 ? scene.getWidth() - 1 : entity.position.x + 3;
-    
+            xHigher = entity.position.x > width - 4 ? width - 1 : entity.position.x + 3;
+
             yLower = entity.position.y < 3 ? 0 : entity.position.y - 3;
-            yHigher = entity.position.y > scene.getHeight() - 4 ? scene.getHeight() - 1 : entity.position.y + 3;
-            
+            yHigher = entity.position.y > height - 4 ? height - 1 : entity.position.y + 3;
+
             last = tiles[entity.position.y][entity.position.x].getSubjects().size();
 
             xOffset = random.nextInt(xHigher - xLower);
@@ -139,16 +118,16 @@ public class ArraySimulation implements Runnable {
                 }
             }
         }
-        
+
         if (entity.getHealth() < 290 || last < 1) {
             xLower = entity.position.x < 1 ? 0 : entity.position.x - 1;
-            xHigher = entity.position.x > scene.getWidth() - 2 ? scene.getWidth() - 1 : entity.position.x + 1;
-    
+            xHigher = entity.position.x > width - 2 ? width - 1 : entity.position.x + 1;
+
             yLower = entity.position.y < 1 ? 0 : entity.position.y - 1;
-            yHigher = entity.position.y > scene.getHeight() - 2 ? scene.getHeight() - 1 : entity.position.y + 1;
-    
+            yHigher = entity.position.y > height - 2 ? height - 1 : entity.position.y + 1;
+
             last = tiles[entity.position.y][entity.position.x].getMuDensity();
-    
+
             x = entity.position.x;
             y = entity.position.y;
 
@@ -167,18 +146,18 @@ public class ArraySimulation implements Runnable {
                     }
                 }
             }
-    
+
             if (last < 100000) {
                 xLower = entity.position.x < 3 ? 0 : entity.position.x - 3;
-                xHigher = entity.position.x > scene.getWidth() - 4 ? scene.getWidth() - 1 : entity.position.x + 3;
-        
+                xHigher = entity.position.x > width - 4 ? width - 1 : entity.position.x + 3;
+
                 yLower = entity.position.y < 3 ? 0 : entity.position.y - 3;
-                yHigher = entity.position.y > scene.getHeight() - 4 ? scene.getHeight() - 1 : entity.position.y + 3;
-        
+                yHigher = entity.position.y > height - 4 ? height - 1 : entity.position.y + 3;
+
                 last = tileDensity(xLower, entity.position.x, yLower, entity.position.y, tiles);
                 x = -1;
                 y = -1;
-        
+
                 current = tileDensity(entity.position.x, xHigher, yLower, entity.position.y, tiles);
 
                 if (current > last) {
@@ -186,28 +165,28 @@ public class ArraySimulation implements Runnable {
                     y = -1;
                     last = current;
                 }
-        
+
                 current = tileDensity(entity.position.x, xHigher, entity.position.y, yHigher, tiles);
-        
+
                 if (current > last) {
                     x = 1;
                     y = 1;
                     last = current;
                 }
-        
+
                 current = tileDensity(xLower, entity.position.x, entity.position.y, yHigher, tiles);
-        
+
                 if (current > last) {
                     x = -1;
                     y = 1;
                     last = current;
                 }
-        
+
                 if (last < 4000000) {
                     x = random.nextInt(2) == 1 ? 1 : -1;
                     y = random.nextInt(2) == 1 ? 1 : -1;
                 }
-        
+
                 x += entity.position.x;
                 y += entity.position.y;
             }
@@ -227,7 +206,7 @@ public class ArraySimulation implements Runnable {
 
         return combined;
     }
-    
+
     private void sustainPlankton() {
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
@@ -235,7 +214,7 @@ public class ArraySimulation implements Runnable {
             }
         }
     }
-    
+
     private void sustainFields() {
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
@@ -244,7 +223,7 @@ public class ArraySimulation implements Runnable {
 
                     ListIterator<Field> iterator = tiles[y][x].getSubjects().listIterator();
 
-                    while(iterator.hasNext()) {
+                    while (iterator.hasNext()) {
                         Field subject = iterator.next();
 
                         if (subject.getHealth() >= 250) {
@@ -262,64 +241,17 @@ public class ArraySimulation implements Runnable {
         }
     }
 
-    private void updateGraph() {
-        graphPoints[graphPosition] = activeSubjects.size();
-        graphPosition++;
-        if (graphPosition >= scene.getWidth()) {
-            int graphAverage = 0;
-            for (int i = 0; i < graphPoints.length; i++) {
-                graphAverage += graphPoints[i];
-            }
-            graphAverage /= graphPoints.length;
-
-            for (int i = 0; i < graphPoints.length/2; i++) {
-                int p1Dist = Math.abs(graphPoints[i*2] - graphAverage);
-                int p2Dist = Math.abs(graphPoints[i*2+1] - graphAverage);
-
-                graphPoints[i] = p1Dist < p2Dist ? graphPoints[i*2+1] : graphPoints[i*2];
-                //graphPoints[i] = (graphPoints[i*2] + graphPoints[i*2+1]) / 2;
-            }
-            graphPosition /= 2;
-            graphUpdateDelay *= 2;
-        }
-    }
-    
-    @Override
-    public void run() {
-        int sleepTime = 1000 / framesPerSecond;
-
-        t = new Timer(sleepTime, e ->
-        {
-            for (int i = 0; i < movesPerFrame; ++i)
-            {
-                moveSubjects();
-                sustainPlankton();
-                sustainFields();
-
-                if (graphLastUpdate == graphUpdateDelay) {
-                    updateGraph();
-                    graphLastUpdate = 0;
-                }
-                graphLastUpdate++;
-            }
-
-            scene.drawFrame(activeSubjects, tiles, graphPoints, graphPosition);
-
-            if (!isRunning) {
-                t.stop();
-            }
-        });
-
-        t.start();
+    public void timeStep() {
+        moveSubjects();
+        sustainPlankton();
+        sustainFields();
     }
 
-    public void stop() {
-        isRunning = false;
-        scene.close();
-    }
 
     // Getters:
-    public int getMovesPerFrame() {
-        return movesPerFrame;
+
+    public final Tile[][] getTiles() {
+        return tiles;
     }
+
 }
