@@ -1,5 +1,7 @@
 package SimulationPackage.Entities;
 
+import utils.CountingRandom;
+
 import java.util.Random;
 
 public class FishGenome {
@@ -22,8 +24,6 @@ public class FishGenome {
 
     private FishGenome parentGenomeA, parentGenomeB;
 
-
-
     public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float attackAbility, int numSpawns, float spawnSize, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         this.size = size;
         this.speed = speed;
@@ -41,7 +41,7 @@ public class FishGenome {
 
     public FishGenome(float[] genome, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         if (genome.length < 10) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Not enough genes provided.");
         }
 
         this.size = genome[0];
@@ -85,8 +85,7 @@ public class FishGenome {
 
         float genomeResultArray[] = new float[numGenes];
 
-        Random r = new Random();
-
+        Random r = CountingRandom.getInstance();
 
         for (int i = 0; i < numGenes; i++) {
             float chance = r.nextFloat();
@@ -125,7 +124,9 @@ public class FishGenome {
         this.parentGenomeB = genomeB;
     }
 
-    public FishGenome(Random r) {
+    public FishGenome() {
+        Random r = CountingRandom.getInstance();
+
         this.size = r.nextFloat();
         this.speed = r.nextFloat();
 
@@ -145,7 +146,7 @@ public class FishGenome {
     //TODO: relevant values as arguments (How much to mutate)
     public void mutate(float rate) {
         //Skal tage højde for forældres forældres gener
-        Random r = new Random();
+        Random r = CountingRandom.getInstance();
 
         this.size += (r.nextFloat() - 0.5) * rate;
         this.speed += (r.nextFloat() - 0.5) * rate;

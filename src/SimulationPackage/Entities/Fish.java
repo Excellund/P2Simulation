@@ -36,7 +36,7 @@ public class Fish {
 
     public Fish mate(Fish mate) {
         FishGenome childGenome = new FishGenome(this.genome, mate.getGenome());
-        childGenome.mutate();
+        childGenome.mutate(0.1f);
         return new Fish(childGenome);
     }
 

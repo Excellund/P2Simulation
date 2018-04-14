@@ -3,6 +3,7 @@ package SimulationPackage;
 import GFX.Display;
 import SimulationPackage.Entities.Field;
 import VectorPackage.Vector;
+import utils.CountingRandom;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +18,7 @@ public class Simulation implements Runnable {
     private Display scene;
     private int framesPerSecond, movesPerFrame;
     private Timer t;
-    private Random random = new Random();
+    private Random random = CountingRandom.getInstance();
 
     private ArrayList<Field> subjects;
 

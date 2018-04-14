@@ -4,6 +4,7 @@ import GFX.Display;
 import SimulationPackage.Entities.Field;
 import SimulationPackage.Entities.Tile;
 import VectorPackage.Vector;
+import utils.CountingRandom;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ public class ArraySimulation implements Runnable {
     private Display scene;
     private int framesPerSecond, movesPerFrame;
     private Timer t;
-    private Random random = new Random();
+    private Random random = CountingRandom.getInstance();
 
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
