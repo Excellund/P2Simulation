@@ -14,7 +14,11 @@ public class Fish {
 
     //How compatible a fish is with another. This determines the likelyhood of them mating.
     public float getCompatibility(Fish other) {
-        return 1;
+        float genomeSimilarity = genome.calculateSimilarity(other.genome);
+
+        //Logistisk funktion
+        //1/(1+e^(-50(x-0.85)))
+        return (float) (1 / (1 + Math.pow((float) Math.E, -50 * (genomeSimilarity-0.85))));
     }
 
     //Call every time step
@@ -27,11 +31,6 @@ public class Fish {
 
     public void attack(Fish other) {
 
-    }
-
-    public float getMatingChance(Fish other) {
-        //1/(1+e^(-0.8(x-92)))
-        return 1;
     }
 
     public Fish mate(Fish mate) {
