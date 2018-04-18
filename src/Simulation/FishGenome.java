@@ -148,12 +148,12 @@ public class FishGenome {
         float spawnSize = r.nextFloat();
         this.spawnSize = spawnSize - this.size < 0 ? spawnSize / 4 : this.size / 4; // Do something to ensure spawnsize is less than size.
 
-        stripUneededGenomeReferences();
+        stripUnneededGenomeReferences();
     }
 
     //TODO: relevant values as arguments (How much to mutate). Implement properly
     public void mutate(float rate) {
-        // Skal tage højde for forældres forældres gener
+        // Poisson fordeling
         Random r = CountingRandom.getInstance();
 
         this.size += (r.nextFloat() - 0.5) * rate;
@@ -181,7 +181,7 @@ public class FishGenome {
     }
 
     // Removes unneeded references to grandgrandparents genomes
-    private void stripUneededGenomeReferences() {
+    private void stripUnneededGenomeReferences() {
         //Make sure references to older genomes get removed in order to save memory
         parentGenomeA.parentGenomeA.parentGenomeA = null;
         parentGenomeA.parentGenomeA.parentGenomeB = null;
@@ -223,7 +223,7 @@ public class FishGenome {
         this.parentGenomeA = parentGenomeA;
         this.parentGenomeB = parentGenomeB;
 
-        stripUneededGenomeReferences();
+        stripUnneededGenomeReferences();
     }
 
     // Getters
