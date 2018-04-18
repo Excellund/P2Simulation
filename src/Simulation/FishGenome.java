@@ -152,12 +152,33 @@ public class FishGenome {
     }
 
     //TODO: relevant values as arguments (How much to mutate). Implement properly
-    public void mutate(float rate) {
+    public void mutate(int expectedMutationAmount) {
         // Poisson fordeling
         Random r = CountingRandom.getInstance();
 
-        this.size += (r.nextFloat() - 0.5) * rate;
-        this.speed += (r.nextFloat() - 0.5) * rate;
+        double randomNumber = r.nextDouble();
+
+        int i = 0;
+        while(randomNumber < poisson(expectedMutationAmount, i) ) {
+            i++;
+        }
+        i--;
+
+
+    }
+
+    private double poisson(int expectedMutationAmount, int occurrences) {
+        return (Math.pow(Math.E, 0 - expectedMutationAmount) * Math.pow(expectedMutationAmount, occurrences)) / factorial(occurrences);
+    }
+
+    private double factorial(double number) {
+        double result = 1;
+
+        for (int factor = 2; factor <= number; factor++) {
+            result *= factor;
+        }
+
+        return result;
     }
 
     // Returns the similarity of two genomes. Between 0 and 1.
