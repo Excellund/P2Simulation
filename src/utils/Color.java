@@ -1,4 +1,4 @@
-package Simulation;
+package utils;
 
 public class Color {
     private int intRepresentation;

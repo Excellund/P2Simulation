@@ -1,4 +1,7 @@
-package Simulation;
+package simulation;
+
+import utils.Color;
+import utils.Vector;
 
 public interface Field {
     default void update(SimulationSpace space) {

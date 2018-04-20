@@ -1,4 +1,7 @@
-package Simulation;
+package simulation;
+
+import utils.Color;
+import utils.Vector;
 
 public class Carcass implements Field {
     private int nutrition;

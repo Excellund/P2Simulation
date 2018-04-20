@@ -1,5 +1,5 @@
-import Simulation.Engine;
-import Simulation.Simulation;
+import simulation.Engine;
+import simulation.Simulation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;

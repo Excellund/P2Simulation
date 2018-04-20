@@ -1,4 +1,4 @@
-package Simulation;
+package simulation;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.PixelFormat;
@@ -39,7 +39,7 @@ public class Engine implements Runnable {
                 } else {
                     double green = (((double) tiles[y][x].getMuDensity() / 1000000) * 80);
 
-                    green = Math.pow(green / 255.0, 0.6) * 255;
+                    green = Math.pow(green / 255.0, 0.8) * 255;
                     newPixels[x + y * (int) canvas.getWidth()] = ((int) green << 8);
                 }
             }

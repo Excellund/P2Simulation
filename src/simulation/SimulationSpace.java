@@ -1,4 +1,6 @@
-package Simulation;
+package simulation;
+
+import utils.Vector;
 
 import java.util.*;
 
@@ -21,20 +23,20 @@ public class SimulationSpace implements Iterable {
         }
     }
 
-    public void addField(Vector tilePos, Field field) {
+    public void addField(utils.Vector tilePos, Field field) {
         field.setPosition(tilePos);
         tiles[tilePos.y][tilePos.x].addSubject(field);
         activeSubjects.add(field);
     }
 
-    public void removeField(Vector tilePos, Field field) {
-        Vector pos = field.getPosition();
+    public void removeField(utils.Vector tilePos, Field field) {
+        utils.Vector pos = field.getPosition();
         tiles[pos.y][pos.x].removeSubject(field);
         activeSubjects.remove(field);
     }
 
-    public void moveField(Vector tilePos, Field field) {
-        Vector oldPos = field.getPosition();
+    public void moveField(utils.Vector tilePos, Field field) {
+        utils.Vector oldPos = field.getPosition();
         field.setPosition(tilePos);
         tiles[oldPos.y][oldPos.x].removeSubject(field);
         tiles[tilePos.y][tilePos.x].addSubject(field);

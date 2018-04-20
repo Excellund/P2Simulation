@@ -10,7 +10,7 @@ public class ContentBoxFactory {
 
     public ContentBox generateNavigator(double width) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        TreeItem<String> menuRoot = new TreeItem<>("Simulation name");
+        TreeItem<String> menuRoot = new TreeItem<>("simulation name");
         TreeView<String> menu = new TreeView<>(menuRoot);
 
         TreeItem<String> itemSettings = new TreeItem<>("Settings");

@@ -1,6 +1,8 @@
-package Simulation;
+package simulation;
 
+import utils.Color;
 import utils.CountingRandom;
+import utils.Vector;
 
 import java.util.Random;
 
@@ -16,6 +18,7 @@ public class Fish implements Field {
     public Fish(FishGenome genome, Vector position) {
         this.genome = genome;
         this.position = position;
+        this.health = CountingRandom.getInstance().nextInt(100) + 50;
     }
 
     //How compatible a fish is with another. This determines the likelyhood of them mating.
@@ -43,10 +46,6 @@ public class Fish implements Field {
                 newPos.y >= 0 && newPos.y < space.getHeight()) {
             space.moveField(newPos, this);
         }
-
-        //tiles[position.y][position.x].addSubject(this);
-        //space.getTile(position).addSubject(this);
-        //space.moveField(newPos, this);
 
         if (space.getTile(position).getMuDensity() < 100000) {
             health -= 3;
@@ -132,7 +131,6 @@ public class Fish implements Field {
             yHigher = position.y > space.getHeight() - 4 ? space.getHeight() - 1 : position.y + 3;
 
             last = space.getTile(position.x, position.y).getSubjects().size();
-            //last = tiles[position.y][position.x].getSubjects().size();
 
             xOffset = random.nextInt(xHigher - xLower);
             yOffset = random.nextInt(yHigher - yLower);
@@ -142,9 +140,7 @@ public class Fish implements Field {
                     int ic = i > yHigher ? i - yOffset : i;
                     int jc = j > xHigher ? j - xOffset : j;
 
-                    //if ((ic != position.y || jc != position.x) && tiles[ic][jc].getSubjects().size() > last) {
                     if ((ic != position.y || jc != position.x) && space.getTile(jc, ic).getSubjects().size() > last) {
-                        //last = tiles[ic][jc].getSubjects().size();
                         last = space.getTile(jc, ic).getSubjects().size();
                         x = (jc - x) != 0 ? (jc - x) / Math.abs(jc - x) + x : x;
                         y = (ic - y) != 0 ? (ic - y) / Math.abs(ic - y) + y : y;
@@ -160,7 +156,6 @@ public class Fish implements Field {
             yLower = position.y < 1 ? 0 : position.y - 1;
             yHigher = position.y > space.getHeight() - 2 ? space.getHeight() - 1 : position.y + 1;
 
-            //last = tiles[position.y][position.x].getMuDensity();
             last = space.getTile(position).getMuDensity();
 
             x = position.x;
@@ -174,9 +169,7 @@ public class Fish implements Field {
                     int ic = i > yHigher ? i - 3 : i;
                     int jc = j > xHigher ? j - 3 : j;
 
-                    //if (tiles[ic][jc].getMuDensity() > last) {
                     if (space.getTile(jc, ic).getMuDensity() > last) {
-                        //last = tiles[ic][jc].getMuDensity();
                         last = space.getTile(jc, ic).getMuDensity();
                         x = jc;
                         y = ic;
