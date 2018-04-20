@@ -157,7 +157,6 @@ public class FishGenome {
     public void mutate(int expectedMutationAmount, float mean, float variance, float interval) {
         // Poisson fordeling
         Random r = CountingRandom.getInstance();
-        Random rand = new Random();
 
         double randomNumber = r.nextDouble();
 
@@ -183,7 +182,7 @@ public class FishGenome {
 
         // Find the attributes to mutate.
         while(mutatedAttributes.size() < attributeMutateAmount) {
-            int randomIndex = rand.nextInt(attributeMutateAmount);
+            int randomIndex = r.nextInt(attributeMutateAmount);
             if (mutatedAttributes.add(attributeArray[randomIndex])) {
                 indices[mutatedAttributes.size() - 1] = randomIndex;
             }
@@ -211,7 +210,6 @@ public class FishGenome {
         }
 
         this.setAttributes(attributeArray);
-
     }
 
     private double poisson(int expectedMutationAmount, int occurrences) {
