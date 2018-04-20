@@ -157,6 +157,7 @@ public class FishGenome {
     //TODO: relevant values as arguments (How much to mutate). Implement properly
     public void mutate(int expectedMutationAmount, float mean, float variance, float interval) {
         // Poisson fordeling
+        /*
         Random r = CountingRandom.getInstance();
         Random rand = new Random();
 
@@ -189,7 +190,7 @@ public class FishGenome {
         for (float element : mutatedAttributes) {
             
         }
-
+        */
     }
 
     private double normal(float mean, float variance, float interval) {
@@ -233,14 +234,26 @@ public class FishGenome {
     // Removes unneeded references to grandgrandparents genomes
     private void stripUnneededGenomeReferences() {
         //Make sure references to older genomes get removed in order to save memory
-        parentGenomeA.parentGenomeA.parentGenomeA = null;
-        parentGenomeA.parentGenomeA.parentGenomeB = null;
-        parentGenomeA.parentGenomeB.parentGenomeA = null;
-        parentGenomeA.parentGenomeB.parentGenomeB = null;
-        parentGenomeB.parentGenomeA.parentGenomeA = null;
-        parentGenomeB.parentGenomeA.parentGenomeB = null;
-        parentGenomeB.parentGenomeB.parentGenomeA = null;
-        parentGenomeB.parentGenomeB.parentGenomeB = null;
+        if (parentGenomeA != null) {
+            if (parentGenomeA.parentGenomeA != null) {
+                parentGenomeA.parentGenomeA.parentGenomeA = null;
+                parentGenomeA.parentGenomeA.parentGenomeB = null;
+            }
+            if (parentGenomeA.parentGenomeB != null) {
+                parentGenomeA.parentGenomeB.parentGenomeA = null;
+                parentGenomeA.parentGenomeB.parentGenomeB = null;
+            }
+        }
+        if (parentGenomeB != null) {
+            if (parentGenomeB.parentGenomeA != null) {
+                parentGenomeB.parentGenomeA.parentGenomeB = null;
+                parentGenomeB.parentGenomeB.parentGenomeA = null;
+            }
+            if (parentGenomeB.parentGenomeB != null) {
+                parentGenomeB.parentGenomeA.parentGenomeA = null;
+                parentGenomeB.parentGenomeB.parentGenomeB = null;
+            }
+        }
     }
 
     public void print() {

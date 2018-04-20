@@ -29,7 +29,7 @@ public class Engine implements Runnable {
     private void drawTiles() {
         WritablePixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
 
-        Tile[][] tiles = simulation.getTiles();
+        Tile[][] tiles = simulation.getSpace().getTiles();
 
         int[] newPixels = new int[(int) (canvas.getWidth() * canvas.getHeight())];
         for (int y = 0; y < tiles.length; ++y) {
