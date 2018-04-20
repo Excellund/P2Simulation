@@ -157,7 +157,6 @@ public class FishGenome {
     //TODO: relevant values as arguments (How much to mutate). Implement properly
     public void mutate(int expectedMutationAmount, float mean, float variance, float interval) {
         // Poisson fordeling
-        /*
         Random r = CountingRandom.getInstance();
         Random rand = new Random();
 
@@ -165,7 +164,7 @@ public class FishGenome {
 
         // Find the amount of mutations to perform using poisson distribution.
         int attributeMutateAmount = 0;
-        double previousProbability = poisson(expectedMutationAmount, attributeMutateAmount)
+        double previousProbability = poisson(expectedMutationAmount, attributeMutateAmount);
         double area = 0;
         while(randomNumber > area) {
             attributeMutateAmount++;
@@ -179,22 +178,41 @@ public class FishGenome {
         }
         attributeMutateAmount--;
         float[] attributeArray = this.getArray();
+        int[] indices = new int[attributeMutateAmount];
 
         Set<Float> mutatedAttributes = new HashSet();
 
         // Find the attributes to mutate.
         while(mutatedAttributes.size() < attributeMutateAmount) {
-            mutatedAttributes.add(attributeArray[rand.nextInt(attributeMutateAmount)]);
+            int randomIndex = rand.nextInt(attributeMutateAmount);
+            if (mutatedAttributes.add(attributeArray[randomIndex])) {
+                indices[mutatedAttributes.size() - 1] = randomIndex;
+            }
+
         }
 
         for (float element : mutatedAttributes) {
-            
-        }
-        */
-    }
+            int i = 0;
+            float probability = r.nextFloat();
+            if (probability < 0.023) {
+                element -= 2 * interval;
+            } else if (probability < 0.159) {
+                element -= interval;
+            } else if (probability < 0.5) {
 
-    private double normal(float mean, float variance, float interval) {
-        return (Math.pow(Math.E, (-1/2) * Math.pow(mean, 2)) / Math.sqrt(2 * Math.PI));
+            } else if (probability < 0.841) {
+
+            } else if (probability < 0.977) {
+                element += interval;
+            } else {
+                element += 2 * interval;
+            }
+            attributeArray[indices[i]] = element;
+            i++;
+        }
+
+        this.setAttributes(attributeArray);
+
     }
 
     private double poisson(int expectedMutationAmount, int occurrences) {
@@ -305,6 +323,20 @@ public class FishGenome {
                 this.numSpawns,
                 this.spawnSize
         };
+    }
+
+    private void setAttributes(float[] array) {
+        this.size = array[0];
+        this.speed = array[1];
+        this.herbivoreEfficiency = array[2];
+        this.carnivoreEfficiency = array[3];
+        this.herbivoreTendency = array[4];
+        this.predationTendency = array[5];
+        this.scavengeTendency = array[6];
+        this.schoolingTendency = array[7];
+        this.attackAbility = array[8];
+        this.numSpawns = array[9];
+        this.spawnSize = array[10];
     }
 
 }
