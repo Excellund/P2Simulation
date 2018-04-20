@@ -2,7 +2,10 @@ package Simulation;
 
 import utils.CountingRandom;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class FishGenome {
     // All attributes (genes) will have values between 0 and 1
@@ -152,19 +155,45 @@ public class FishGenome {
     }
 
     //TODO: relevant values as arguments (How much to mutate). Implement properly
-    public void mutate(int expectedMutationAmount) {
+    public void mutate(int expectedMutationAmount, float mean, float variance, float interval) {
         // Poisson fordeling
         Random r = CountingRandom.getInstance();
+        Random rand = new Random();
 
         double randomNumber = r.nextDouble();
 
-        int i = 0;
-        while(randomNumber < poisson(expectedMutationAmount, i) ) {
-            i++;
+        // Find the amount of mutations to perform using poisson distribution.
+        int attributeMutateAmount = 0;
+        double previousProbability = poisson(expectedMutationAmount, attributeMutateAmount)
+        double area = 0;
+        while(randomNumber > area) {
+            attributeMutateAmount++;
+            double currentProbability = poisson(expectedMutationAmount, attributeMutateAmount);
+            area += currentProbability;
+            if (currentProbability < previousProbability) {
+                area += (previousProbability - currentProbability) / 2;
+            } else {
+                area -= (previousProbability - currentProbability) / 2;
+            }
         }
-        i--;
+        attributeMutateAmount--;
+        float[] attributeArray = this.getArray();
 
+        Set<Float> mutatedAttributes = new HashSet();
 
+        // Find the attributes to mutate.
+        while(mutatedAttributes.size() < attributeMutateAmount) {
+            mutatedAttributes.add(attributeArray[rand.nextInt(attributeMutateAmount)]);
+        }
+
+        for (float element : mutatedAttributes) {
+            
+        }
+
+    }
+
+    private double normal(float mean, float variance, float interval) {
+        return (Math.pow(Math.E, (-1/2) * Math.pow(mean, 2)) / Math.sqrt(2 * Math.PI));
     }
 
     private double poisson(int expectedMutationAmount, int occurrences) {
