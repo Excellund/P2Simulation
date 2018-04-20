@@ -1,20 +1,13 @@
-/*
-* Replaced by EvolutionSimulation
-* */
-
 package Simulation;
 
 import utils.CountingRandom;
 
-import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Random;
 
 public class Simulation {
     // Fields
     private Random random = CountingRandom.getInstance();
-    //private Tile[][] tiles;
-    //private ArrayList<FieldOld> activeSubjects;
     private int width;
     private int height;
     SimulationSpace space;
@@ -29,13 +22,10 @@ public class Simulation {
         this.width = width;
         this.height = height;
 
-        //tiles = new Tile[height][width];
-        //activeSubjects = new ArrayList<>();
         space = new SimulationSpace(width, height);
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                //tiles[y][x] = new Tile(random.nextInt(200000));
                 space.getTile(x, y).addDensity(random.nextInt(200000));
             }
         }
