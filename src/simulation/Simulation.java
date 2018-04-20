@@ -15,7 +15,7 @@ public class Simulation {
 
     // Constants
     public final static int NUM_INITIAL_SUBJECTS = 1200;
-    public final static int PLANKTON_GROWTH_PER_MOVE = 100;
+    public final static int PLANKTON_GROWTH_PER_MOVE = 300;
     public final static int FISH_HEALTH_CONSUMPTION = 300;
 
     // Constructor:

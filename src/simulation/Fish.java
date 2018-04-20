@@ -36,10 +36,7 @@ public class Fish implements Field {
         //Decrease health if energy low
         //Increase health if energy high
         //Increase size if energy high and is able to grow due to genome
-        //Vector previous = getPosition();
 
-        //space.getTile(position).removeSubject(this);
-        //position = favoredMove(space);
         Vector newPos = favoredMove(space);
 
         if (newPos.x >= 0 && newPos.x < space.getWidth() &&
@@ -130,7 +127,7 @@ public class Fish implements Field {
             yLower = position.y < 3 ? 0 : position.y - 3;
             yHigher = position.y > space.getHeight() - 4 ? space.getHeight() - 1 : position.y + 3;
 
-            last = space.getTile(position.x, position.y).getSubjects().size();
+            last = space.getTile(position.x, position.y).getSubjects().size() - 1;
 
             xOffset = random.nextInt(xHigher - xLower);
             yOffset = random.nextInt(yHigher - yLower);
