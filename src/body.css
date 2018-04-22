@@ -26,7 +26,7 @@
 }
 
 .tree-cell:selected {
-    -fx-font-weight: bold ;
+    -fx-font-weight: bold;
 }
 
 .tree-cell {

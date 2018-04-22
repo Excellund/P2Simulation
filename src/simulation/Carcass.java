@@ -26,11 +26,6 @@ public class Carcass implements Field {
     }
 
     @Override
-    public void interact(Field field, SimulationSpace space) {
-        return;
-    }
-
-    @Override
     public boolean isAlive() {
         return nutrition > 0;
     }

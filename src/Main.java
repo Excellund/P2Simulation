@@ -1,5 +1,3 @@
-import simulation.Engine;
-import simulation.Simulation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -12,9 +10,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import simulation.Engine;
+import simulation.Settings;
+import simulation.Simulation;
 
 public class Main extends Application {
     public static void main(String[] args) {
+        Settings.defaultAbbreviated();
+        Settings.toFile("default"); //create a default settings profile
+        Settings.fromFile("default"); //use the default profile
+
         launch(args);
     }
 

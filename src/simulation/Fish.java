@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class Fish implements Field {
 
+    public final static int FISH_HEALTH_CONSUMPTION = 300;
+
     private Vector position;
     private float health;
     private float energy;
@@ -19,15 +21,17 @@ public class Fish implements Field {
         this.genome = genome;
         this.position = position;
         this.health = CountingRandom.getInstance().nextInt(100) + 50;
+
+        this.size = 0.5f; //TODO: REVISE
     }
 
-    //How compatible a fish is with another. This determines the likelyhood of them mating.
+    //How compatible a fish is with another. This determines the likelihood of them mating.
     public float getCompatibility(Fish other) {
         float genomeSimilarity = genome.calculateSimilarity(other.genome);
 
-        //Logistisk funktion
-        //1/(1+e^(-50(x-0.85)))
-        return (float) (1 / (1 + Math.pow((float) Math.E, -50 * (genomeSimilarity-0.85))));
+        //Logistic function
+        //1/(1+e^(-STEEPNESS(x-MIDPOINT)))
+        return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
     }
 
     @Override
@@ -39,23 +43,57 @@ public class Fish implements Field {
 
         Vector newPos = favoredMove(space);
 
-        if (newPos.x >= 0 && newPos.x < space.getWidth() &&
-                newPos.y >= 0 && newPos.y < space.getHeight()) {
+        if (newPos.x >= 0 && newPos.x < space.getWidth() && newPos.y >= 0 && newPos.y < space.getHeight()) {
             space.moveField(newPos, this);
         }
 
-        if (space.getTile(position).getMuDensity() < 100000) {
+        Tile currentTile = space.getTile(position);
+        if (currentTile.getMuDensity() < 100000) {
             health -= 3;
         } else {
             health++;
         }
 
-        space.getTile(position).subtractDensity(100000);
+        Random r = CountingRandom.getInstance();
+
+        //Mating
+        if (currentTile.getSubjects().size() > 2) {
+            for (Field subject : currentTile.getSubjects()) {
+                if (subject != this) {
+                    if (subject instanceof Fish) {
+                        Fish fishSubject = (Fish) subject;
+
+                        if (fishSubject.getHealth() >= 250 && this.getHealth() >= 250) {
+                            if (r.nextFloat() > this.getCompatibility(fishSubject)) {
+                                interact(fishSubject, space);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        currentTile.subtractDensity(100000);
     }
 
-    @Override
-    public void interact(Field field, SimulationSpace space) {
-
+    public void interact(Field subject, SimulationSpace space) {
+        if (subject instanceof FishEgg) {
+            ((FishEgg) subject).subtractEggs((int) (size * Settings.MAX_FISH_SIZE));
+            energy += (int) (size * Settings.MAX_FISH_SIZE) * Settings.ENERGY_PER_EGG;
+        }
+        else if (subject instanceof Carcass) {
+            ((Carcass) subject).consume((int) (size * Settings.MAX_FISH_SIZE));
+            energy += (int) (size * Settings.MAX_FISH_SIZE) * genome.getCarnivoreEfficiency();
+        }
+        else if (subject instanceof Fish) //future maintainability
+        {
+            if (getCompatibility((Fish) subject) >= Settings.MIN_COMPATIBILITY_MATING) {
+                mate((Fish) subject, space);
+            }
+            else if (genome.getPredationTendency() >= Settings.MIN_PREDATION_TENDENCY) {
+                attack((Fish) subject);
+            }
+        }
     }
 
     @Override
@@ -70,19 +108,34 @@ public class Fish implements Field {
 
     @Override
     public Color getColor() {
-        return new Color(255, 0, 0);
+        return genome.getColor();
     }
 
     public void attack(Fish other) {
+        int damage = (int) (genome.getAttackAbility() * Settings.MAX_ATTACK_DAMAGE);
 
+        if (other.getHealth() < damage) {
+            energy -= other.getHealth() * Settings.ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE;
+        } else {
+            energy -= damage * Settings.ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE;
+        }
+
+        other.subtractHealth(damage);
     }
 
-    public Fish mate(Fish mate) {
+    public void mate(Fish mate, SimulationSpace space) {
+        this.health -= FISH_HEALTH_CONSUMPTION;
+        mate.health -= FISH_HEALTH_CONSUMPTION;
+
         FishGenome childGenome = new FishGenome(this.genome, mate.getGenome());
-        //childGenome.mutate(1); //TODO: Remove when implemented
-        return new Fish(childGenome, position);
-    }
 
+        childGenome.mutate();
+
+        Fish child = new Fish(childGenome, position);
+
+        child.health = 10; //TODO: change, fix
+        space.queueAddField(child);
+    }
 
     //Getters
     public float getHealth() {
@@ -137,8 +190,8 @@ public class Fish implements Field {
                     int ic = i > yHigher ? i - yOffset : i;
                     int jc = j > xHigher ? j - xOffset : j;
 
-                    if ((ic != position.y || jc != position.x) && space.getTile(jc, ic).getSubjects().size() > last) {
-                        last = space.getTile(jc, ic).getSubjects().size();
+                    if ((ic != position.y || jc != position.x) && space.getTile(jc, ic).getSubjects().size() - 1 > last) {
+                        last = space.getTile(jc, ic).getSubjects().size() - 1;
                         x = (jc - x) != 0 ? (jc - x) / Math.abs(jc - x) + x : x;
                         y = (ic - y) != 0 ? (ic - y) / Math.abs(ic - y) + y : y;
                     }
@@ -176,7 +229,7 @@ public class Fish implements Field {
 
             if (last < 100000) {
                 xLower = position.x < 3 ? 0 : position.x - 3;
-                xHigher = position.x > space.getWidth() - 4 ? space.getWidth()- 1 : position.x + 3;
+                xHigher = position.x > space.getWidth() - 4 ? space.getWidth() - 1 : position.x + 3;
 
                 yLower = position.y < 3 ? 0 : position.y - 3;
                 yHigher = position.y > space.getHeight() - 4 ? space.getHeight() - 1 : position.y + 3;

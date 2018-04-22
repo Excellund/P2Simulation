@@ -4,7 +4,6 @@ import utils.Color;
 import utils.Vector;
 
 public class FishEgg implements Field {
-
     Color color;
     Vector position;
     FishGenome genome;
@@ -13,19 +12,16 @@ public class FishEgg implements Field {
 
     @Override
     public void update(SimulationSpace space) {
-
-        //TODO: Take death of eggs into consideration
         if (timeBeforeHatch <= 0) {
             for (int i = 0; i < numEggs; i++) {
-                space.addField(position, new Fish(genome, position));
+                space.addField(new Fish(genome, position));
             }
             numEggs = 0;
         }
     }
 
-    @Override
-    public void interact(Field field, SimulationSpace space) {
-        return;
+    public void subtractEggs(int amount) {
+        numEggs -= amount;
     }
 
     @Override

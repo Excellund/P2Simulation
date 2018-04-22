@@ -2,11 +2,15 @@ package simulation;
 
 import utils.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 public class SimulationSpace implements Iterable {
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
+    private ArrayList<Field> subjectsAddQueue;
+    private ArrayList<Field> subjectsRemoveQueue;
     private int width, height;
 
     public SimulationSpace(int width, int height) {
@@ -15,6 +19,8 @@ public class SimulationSpace implements Iterable {
 
         tiles = new Tile[height][width];
         activeSubjects = new ArrayList<>();
+        subjectsAddQueue = new ArrayList<>();
+        subjectsRemoveQueue = new ArrayList<>();
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
@@ -23,13 +29,13 @@ public class SimulationSpace implements Iterable {
         }
     }
 
-    public void addField(utils.Vector tilePos, Field field) {
-        field.setPosition(tilePos);
-        tiles[tilePos.y][tilePos.x].addSubject(field);
+    public void addField(Field field) {
+        Vector fieldPos = field.getPosition();
+        tiles[fieldPos.y][fieldPos.x].addSubject(field);
         activeSubjects.add(field);
     }
 
-    public void removeField(utils.Vector tilePos, Field field) {
+    public void removeField(Field field) {
         utils.Vector pos = field.getPosition();
         tiles[pos.y][pos.x].removeSubject(field);
         activeSubjects.remove(field);
@@ -40,6 +46,27 @@ public class SimulationSpace implements Iterable {
         field.setPosition(tilePos);
         tiles[oldPos.y][oldPos.x].removeSubject(field);
         tiles[tilePos.y][tilePos.x].addSubject(field);
+    }
+
+    public void queueAddField(Field field) {
+        subjectsAddQueue.add(field);
+    }
+
+    public void queueRemoveField(Field field) {
+        subjectsRemoveQueue.add(field);
+    }
+
+    public void processQueue() {
+        for (Field field : subjectsAddQueue) {
+            addField(field);
+        }
+
+        for (Field field : subjectsRemoveQueue) {
+            removeField(field);
+        }
+
+        subjectsAddQueue.clear();
+        subjectsRemoveQueue.clear();
     }
 
     public Tile getTile(int x, int y) {

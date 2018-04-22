@@ -3,6 +3,7 @@ package simulation;
 import utils.CountingRandom;
 import utils.Vector;
 
+import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Random;
 
@@ -11,12 +12,8 @@ public class Simulation {
     private Random random = CountingRandom.getInstance();
     private int width;
     private int height;
-    SimulationSpace space;
-
-    // Constants
-    public final static int NUM_INITIAL_SUBJECTS = 1200;
-    public final static int PLANKTON_GROWTH_PER_MOVE = 300;
-    public final static int FISH_HEALTH_CONSUMPTION = 300;
+    private SimulationSpace space;
+    private ArrayList<Vessel> vessels;
 
     // Constructor:
     public Simulation(int width, int height) {
@@ -24,6 +21,7 @@ public class Simulation {
         this.height = height;
 
         space = new SimulationSpace(width, height);
+        vessels = new ArrayList<>();
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
@@ -31,93 +29,73 @@ public class Simulation {
             }
         }
 
-        for (int i = 0; i < NUM_INITIAL_SUBJECTS; ++i) {
-            addSubject();
+        for (int i = 0; i < Settings.NUM_INITIAL_SUBJECTS; ++i) {
+            int posX = random.nextInt(width);
+            int posY = random.nextInt(height);
+            FishGenome genome = new FishGenome();
+            Field subject = new Fish(genome, new Vector(posX, posY));
+
+            space.addField(subject);
+        }
+
+        for (int i = 0; i < Settings.NUM_VESSELS; ++i) {
+            vessels.add(new Vessel(new Vector(width, height)));
         }
     }
 
-    // Methods:
-    private void addSubject() {
-        int posX = random.nextInt(width);
-        int posY = random.nextInt(height);
-        Field subject = new Fish(new FishGenome(), new Vector(posX, posY));
-
-        space.addField(subject.getPosition(), subject);
-    }
-
-    private void moveSubjects() {
+    private void updateFields() {
         ListIterator<Field> iterator = space.listIterator();
 
         while (iterator.hasNext()) {
             Field subject = iterator.next();
 
-            subject.update(space);
-
-            if (!subject.isAlive()) {
+            if (subject.isAlive()) {
+                subject.update(space);
+            } else {
                 iterator.remove();
             }
         }
     }
 
-    private long tileDensity(int xLower, int xHigher, int yLower, int yHigher, Tile[][] tiles) {
-        long combined = 0;
-
-        for (int y = yLower; y < yHigher; ++y) {
-            for (int x = xLower; x < xHigher; ++x) {
-                combined += tiles[y][x].getMuDensity();
-            }
-        }
-
-        return combined;
-    }
-
-    private void sustainPlankton() {
+    private void updatePlankton() {
         for (int y = 0; y < space.getHeight(); ++y) {
             for (int x = 0; x < space.getWidth(); ++x) {
-                space.getTile(x, y).addDensity(PLANKTON_GROWTH_PER_MOVE);
+                space.getTile(x, y).addDensity((int) Settings.PLANKTON_GROWTH_PER_TIMESTEP);
             }
         }
     }
 
-    private void sustainFields() {
-        for (int y = 0; y < space.getHeight(); ++y) {
-            for (int x = 0; x < space.getWidth(); ++x) {
-                if (space.getTile(x, y).getSubjects().size() >= 2) {
-                    int count = 0;
+    private void updateVessels() {
+        ListIterator<Vessel> iterator = vessels.listIterator();
 
-                    ListIterator<Field> iterator = space.getTile(x, y).getSubjects().listIterator();
+        while (iterator.hasNext()) {
+            Vessel vessel = iterator.next();
 
-                    while (iterator.hasNext()) {
-                        Field subject = iterator.next();
+            vessel.timeStep(space);
 
-                        if (subject instanceof Fish) {
-                            Fish fishSubject = (Fish) subject;
-
-                            if (fishSubject.getHealth() >= 250) {
-                                fishSubject.subtractHealth(FISH_HEALTH_CONSUMPTION);
-                                ++count;
-                            }
-
-                            if (count == 2) {
-                                addSubject();
-                                break;
-                            }
-                        }
-                    }
-                }
+            if (vessel.quotaIsSpent()) {
+                iterator.remove();
             }
+        }
+
+        for (int i = 0; i < Settings.NUM_VESSELS - vessels.size(); ++i) {
+            vessels.add(new Vessel(new Vector(width, height)));
         }
     }
 
     public void timeStep() {
-        moveSubjects();
-        sustainPlankton();
-        sustainFields();
+        updateFields();
+        updatePlankton();
+        updateVessels();
+        space.processQueue();
     }
-
 
     // Getters:
     public SimulationSpace getSpace() {
         return space;
+    }
+
+    public ArrayList<Vessel> getVessels() {
+        return vessels;
     }
 }

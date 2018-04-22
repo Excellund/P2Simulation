@@ -1,5 +1,6 @@
 package simulation;
 
+import utils.Color;
 import utils.CountingRandom;
 
 import java.util.HashSet;
@@ -10,6 +11,7 @@ public class FishGenome {
     // All attributes (genes) will have values between 0 and 1
     private float size;
     private float speed;
+    private Color color;
 
     private float herbivoreEfficiency;
     private float carnivoreEfficiency;
@@ -26,7 +28,7 @@ public class FishGenome {
 
     private FishGenome parentGenomeA, parentGenomeB;
 
-    public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+    public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         setGenes(
                 size,
                 speed,
@@ -39,46 +41,9 @@ public class FishGenome {
                 attackAbility,
                 numSpawns,
                 spawnSize,
+                color,
                 parentGenomeA,
                 parentGenomeB
-        );
-    }
-
-    // Create new genome from array of genes
-    public FishGenome(float[] genome, FishGenome parentGenomeA, FishGenome parentGenomeB) {
-        setGenes(
-                genome[0],
-                genome[1],
-                genome[3],
-                genome[2],
-                genome[4],
-                genome[5],
-                genome[6],
-                genome[7],
-                genome[8],
-                genome[9],
-                genome[10],
-                parentGenomeA,
-                parentGenomeB
-        );
-    }
-
-    // Copies other genome.
-    public FishGenome(FishGenome other) {
-        setGenes(
-                other.size,
-                other.speed,
-                other.herbivoreEfficiency,
-                other.carnivoreEfficiency,
-                other.herbivoreTendency,
-                other.predationTendency,
-                other.scavengeTendency,
-                other.schoolingTendency,
-                other.attackAbility,
-                other.numSpawns,
-                other.spawnSize,
-                other.parentGenomeA,
-                other.parentGenomeB
         );
     }
 
@@ -126,8 +91,9 @@ public class FishGenome {
                 genomeResultArray[8],
                 genomeResultArray[9],
                 genomeResultArray[10],
-                genomeA,
-                genomeB
+                new Color(genomeResultArray[11], genomeResultArray[12], genomeResultArray[13]),
+                new FishGenome(genomeA),
+                new FishGenome(genomeB)
         );
     }
 
@@ -148,82 +114,105 @@ public class FishGenome {
         this.numSpawns = r.nextFloat();
 
         float spawnSize = r.nextFloat();
-        this.spawnSize = spawnSize - this.size < 0 ? spawnSize / 4 : this.size / 4; // Do something to ensure spawnsize is less than size.
+        this.spawnSize = spawnSize - this.size < 0 ? spawnSize / 4 : this.size / 4; // Do something to ensure spawnsize is less than size. //TODO: do properly
+
+        this.color = new Color(r.nextInt(255), r.nextInt(100), r.nextInt(100) + 155);
+
+        parentGenomeA = new FishGenome(this);
+        parentGenomeB = new FishGenome(this);
 
         stripUnneededGenomeReferences();
     }
 
-    //TODO: relevant values as arguments (How much to mutate). Implement properly
-    public void mutate(int expectedMutationAmount, float mean, float variance, float interval) {
-        // Poisson fordeling
+    // Create new genome from array of genes
+    public FishGenome(float[] genome, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+        setGenes(
+                genome[0],
+                genome[1],
+                genome[3],
+                genome[2],
+                genome[4],
+                genome[5],
+                genome[6],
+                genome[7],
+                genome[8],
+                genome[9],
+                genome[10],
+                new Color(genome[11], genome[12], genome[13]),
+                parentGenomeA,
+                parentGenomeB
+        );
+    }
+
+    // Copies other genome.
+    public FishGenome(FishGenome other) {
+        setGenes(
+                other.size,
+                other.speed,
+                other.herbivoreEfficiency,
+                other.carnivoreEfficiency,
+                other.herbivoreTendency,
+                other.predationTendency,
+                other.scavengeTendency,
+                other.schoolingTendency,
+                other.attackAbility,
+                other.numSpawns,
+                other.spawnSize,
+                other.color,
+                other.parentGenomeA,
+                other.parentGenomeB
+        );
+    }
+
+    public void mutate() {
         Random r = CountingRandom.getInstance();
 
-        double randomNumber = r.nextDouble();
+        float[] attributes = getArray();
 
-        // Find the amount of mutations to perform using poisson distribution.
-        int attributeMutateAmount = 0;
-        double previousProbability = poisson(expectedMutationAmount, attributeMutateAmount);
-        double area = 0;
-        while(randomNumber > area) {
-            attributeMutateAmount++;
-            double currentProbability = poisson(expectedMutationAmount, attributeMutateAmount);
-            area += currentProbability;
-            if (currentProbability < previousProbability) {
-                area += (previousProbability - currentProbability) / 2;
-            } else {
-                area -= (previousProbability - currentProbability) / 2;
-            }
-        }
-        attributeMutateAmount--;
-        float[] attributeArray = this.getArray();
-        int[] indices = new int[attributeMutateAmount];
+        // Generate number of mutations to perform based on a poisson distribution
+        int numMutations = generatePoissonDistributedNumber((int) Settings.EXPECTED_MUTATION_AMOUNT);
 
-        Set<Float> mutatedAttributes = new HashSet();
-
-        // Find the attributes to mutate.
-        while(mutatedAttributes.size() < attributeMutateAmount) {
-            int randomIndex = r.nextInt(attributeMutateAmount);
-            if (mutatedAttributes.add(attributeArray[randomIndex])) {
-                indices[mutatedAttributes.size() - 1] = randomIndex;
-            }
-
+        if (numMutations > attributes.length) {
+            numMutations = attributes.length;
         }
 
-        for (float element : mutatedAttributes) {
-            int i = 0;
-            float probability = r.nextFloat();
-            if (probability < 0.023) {
-                element -= 2 * interval;
-            } else if (probability < 0.159) {
-                element -= interval;
-            } else if (probability < 0.5) {
-
-            } else if (probability < 0.841) {
-
-            } else if (probability < 0.977) {
-                element += interval;
-            } else {
-                element += 2 * interval;
-            }
-            attributeArray[indices[i]] = element;
-            i++;
+        //Select attributes to mutate.
+        Set<Integer> mutationIndices = new HashSet<>();
+        while (mutationIndices.size() < numMutations) {
+            mutationIndices.add(r.nextInt(attributes.length));
         }
 
-        this.setAttributes(attributeArray);
+        //Mutate attributes
+        for (int index : mutationIndices) {
+            //Normal distribution
+            attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_MEAN;
+
+            //Make sure attributes are within bounds
+            if (attributes[index] < 0) {
+                attributes[index] = 0;
+            } else if (attributes[index] > 1) {
+                attributes[index] = 1;
+            }
+        }
+
+        setAttributes(attributes);
     }
 
-    private double poisson(int expectedMutationAmount, int occurrences) {
-        return (Math.pow(Math.E, 0 - expectedMutationAmount) * Math.pow(expectedMutationAmount, occurrences)) / factorial(occurrences);
-    }
+    // Java implementation of Donald Knuth's algorithm generate random Poisson-distributed number, as described in his book "The Art of Computer Programming, Volume 2"
+    // Algorithm also described on wikipedia: https://en.wikipedia.org/wiki/Poisson_distribution#Generating_Poisson-distributed_random_variables
+    private int generatePoissonDistributedNumber(int lambda) {
+        Random rand = CountingRandom.getInstance();
 
-    private double factorial(double number) {
-        double result = 1;
+        float l = (float) Math.pow(Math.E, -lambda);
+        int k = 0;
+        float p = 1;
 
-        for (int factor = 2; factor <= number; factor++) {
-            result *= factor;
-        }
+        do {
+            k++;
+            p = p * rand.nextFloat();
+        } while (p > l);
 
-        return result;
+        return k - 1;
     }
 
     // Returns the similarity of two genomes. Between 0 and 1.
@@ -232,7 +221,7 @@ public class FishGenome {
         // Each element of the two points refer to the value of the gene in the genome
 
         float[] genomeA = this.getArray();
-        float[] genomeB = this.getArray();
+        float[] genomeB = other.getArray();
 
         float distance = 0;
 
@@ -261,11 +250,11 @@ public class FishGenome {
         }
         if (parentGenomeB != null) {
             if (parentGenomeB.parentGenomeA != null) {
+                parentGenomeB.parentGenomeA.parentGenomeA = null;
                 parentGenomeB.parentGenomeA.parentGenomeB = null;
-                parentGenomeB.parentGenomeB.parentGenomeA = null;
             }
             if (parentGenomeB.parentGenomeB != null) {
-                parentGenomeB.parentGenomeA.parentGenomeA = null;
+                parentGenomeB.parentGenomeB.parentGenomeA = null;
                 parentGenomeB.parentGenomeB.parentGenomeB = null;
             }
         }
@@ -286,7 +275,7 @@ public class FishGenome {
     }
 
     // Setters
-    private void setGenes(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+    private void setGenes(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         this.size = size;
         this.speed = speed;
         this.herbivoreEfficiency = herbivoreEfficiency;
@@ -298,6 +287,7 @@ public class FishGenome {
         this.attackAbility = attackAbility;
         this.numSpawns = numSpawns;
         this.spawnSize = spawnSize;
+        this.color = color;
         this.parentGenomeA = parentGenomeA;
         this.parentGenomeB = parentGenomeB;
 
@@ -318,11 +308,31 @@ public class FishGenome {
                 this.schoolingTendency,
                 this.attackAbility,
                 this.numSpawns,
-                this.spawnSize
+                this.spawnSize,
+                this.color.getRedNormalized(),
+                this.color.getGreenNormalized(),
+                this.color.getBlueNormalized()
         };
     }
 
     private void setAttributes(float[] array) {
+        setGenes(
+                array[0],
+                array[1],
+                array[2],
+                array[3],
+                array[4],
+                array[5],
+                array[6],
+                array[7],
+                array[8],
+                array[9],
+                array[10],
+                new Color(array[11], array[12], array[13]),
+                this.parentGenomeA,
+                this.parentGenomeB
+
+        );
         this.size = array[0];
         this.speed = array[1];
         this.herbivoreEfficiency = array[2];
@@ -336,4 +346,38 @@ public class FishGenome {
         this.spawnSize = array[10];
     }
 
+    //access private fields:
+
+
+    public float getHerbivoreEfficiency() {
+        return herbivoreEfficiency;
+    }
+
+    public float getCarnivoreEfficiency() {
+        return carnivoreEfficiency;
+    }
+
+    public float getHerbivoreTendency() {
+        return herbivoreTendency;
+    }
+
+    public float getPredationTendency() {
+        return predationTendency;
+    }
+
+    public float getScavengeTendency() {
+        return scavengeTendency;
+    }
+
+    public float getSchoolingTendency() {
+        return schoolingTendency;
+    }
+
+    public float getAttackAbility() {
+        return attackAbility;
+    }
+
+    public Color getColor() {
+        return color;
+    }
 }
