@@ -43,4 +43,16 @@ public class FishEgg implements Field {
     public void setPosition(Vector position) {
         this.position = position;
     }
+
+    public FishGenome getGenome() {
+        return genome;
+    }
+
+    public int getNumEggs() {
+        return numEggs;
+    }
+
+    public int getTimeBeforeHatch() {
+        return timeBeforeHatch;
+    }
 }

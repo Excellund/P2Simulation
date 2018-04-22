@@ -64,6 +64,7 @@ public class Fish implements Field {
                         Fish fishSubject = (Fish) subject;
 
                         if (fishSubject.getHealth() >= 250 && this.getHealth() >= 250) {
+                            //System.out.println("Comp: " + this.getCompatibility(fishSubject) + ", Simi: " + genome.calculateSimilarity(fishSubject.genome) + " - " + this.hashCode() + " : " + fishSubject.hashCode());
                             if (r.nextFloat() > this.getCompatibility(fishSubject)) {
                                 interact(fishSubject, space);
                             }
@@ -153,7 +154,7 @@ public class Fish implements Field {
     }
 
     public float getSize() {
-        return size;
+        return genome.getSize();
     }
 
     public float getSpeed() {

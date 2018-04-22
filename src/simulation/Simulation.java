@@ -29,10 +29,12 @@ public class Simulation {
             }
         }
 
+        FishGenome initialGenome = new FishGenome();
         for (int i = 0; i < Settings.NUM_INITIAL_SUBJECTS; ++i) {
             int posX = random.nextInt(width);
             int posY = random.nextInt(height);
-            FishGenome genome = new FishGenome();
+            FishGenome genome = new FishGenome(initialGenome);
+            genome.mutate();
             Field subject = new Fish(genome, new Vector(posX, posY));
 
             space.addField(subject);

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class SimulationSpace implements Iterable {
+public class SimulationSpace implements Iterable<Field> {
     private Tile[][] tiles;
     private ArrayList<Field> activeSubjects;
     private ArrayList<Field> subjectsAddQueue;

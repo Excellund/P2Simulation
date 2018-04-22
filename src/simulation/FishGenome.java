@@ -116,7 +116,7 @@ public class FishGenome {
         float spawnSize = r.nextFloat();
         this.spawnSize = spawnSize - this.size < 0 ? spawnSize / 4 : this.size / 4; // Do something to ensure spawnsize is less than size. //TODO: do properly
 
-        this.color = new Color(r.nextInt(255), r.nextInt(100), r.nextInt(100) + 155);
+        this.color = new Color(r.nextInt(155) + 100, r.nextInt(100), r.nextInt(155) + 100);
 
         parentGenomeA = new FishGenome(this);
         parentGenomeB = new FishGenome(this);
@@ -296,7 +296,7 @@ public class FishGenome {
 
     // Getters
     // Get genome represented as a float array
-    private float[] getArray() {
+    public float[] getArray() {
         return new float[]{
                 this.size,
                 this.speed,
@@ -349,6 +349,10 @@ public class FishGenome {
     //access private fields:
 
 
+    public float getSize() {
+        return size;
+    }
+
     public float getHerbivoreEfficiency() {
         return herbivoreEfficiency;
     }
@@ -379,5 +383,25 @@ public class FishGenome {
 
     public Color getColor() {
         return color;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public float getNumSpawns() {
+        return numSpawns;
+    }
+
+    public float getSpawnSize() {
+        return spawnSize;
+    }
+
+    public FishGenome getParentGenomeA() {
+        return parentGenomeA;
+    }
+
+    public FishGenome getParentGenomeB() {
+        return parentGenomeB;
     }
 }

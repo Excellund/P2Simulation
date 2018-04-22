@@ -19,15 +19,15 @@ public class Color {
     }
 
     public int getRed() {
-        return intRepresentation & 0xFF;
+        return (intRepresentation >> 16) & 0xFF;
     }
 
     public int getGreen() {
-        return (intRepresentation >> 2) & 0xFF;
+        return (intRepresentation >> 8) & 0xFF;
     }
 
     public int getBlue() {
-        return (intRepresentation >> 4) & 0xFF;
+        return (intRepresentation) & 0xFF;
     }
 
     public float getRedNormalized() {
