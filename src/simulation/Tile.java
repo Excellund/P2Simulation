@@ -19,19 +19,19 @@ public class Tile {
         subjects.remove(subject);
     }
 
-    public void subtractDensity(int amount) {
-        muDensity -= amount;
-
-        if (muDensity < 0) {
-            muDensity = 0;
-        }
-    }
-
     public void addDensity(int amount) {
         muDensity += amount;
 
         if (muDensity > 1000000) {
             muDensity = 1000000;
+        }
+    }
+
+    public void subtractDensity(int amount) {
+        muDensity -= amount;
+
+        if (muDensity < 0) {
+            muDensity = 0;
         }
     }
 
