@@ -1,6 +1,6 @@
 package simulation;
 import org.junit.jupiter.api.*;
-import utils.Color;
+import simulation.Subjects.Fish;
 import utils.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,5 +1,6 @@
-package simulation;
+package simulation.Subjects;
 
+import simulation.*;
 import utils.Color;
 import utils.CountingRandom;
 import utils.Vector;

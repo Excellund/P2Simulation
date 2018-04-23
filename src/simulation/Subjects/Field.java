@@ -1,5 +1,6 @@
-package simulation;
+package simulation.Subjects;
 
+import simulation.SimulationSpace;
 import utils.Color;
 import utils.Vector;
 

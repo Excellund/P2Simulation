@@ -1,5 +1,6 @@
-package simulation;
+package simulation.Subjects;
 
+import simulation.SimulationSpace;
 import utils.Color;
 import utils.Vector;
 
@@ -41,7 +42,5 @@ public class Carcass implements Field {
     }
 
     @Override
-    public void setPosition(Vector position) {
-
-    }
+    public void setPosition(Vector position) { }
 }

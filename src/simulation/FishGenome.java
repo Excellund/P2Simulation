@@ -176,18 +176,18 @@ public class FishGenome {
             numMutations = attributes.length;
         }
 
-        //Select attributes to mutate.
+        // Select attributes to mutate.
         Set<Integer> mutationIndices = new HashSet<>();
         while (mutationIndices.size() < numMutations) {
             mutationIndices.add(r.nextInt(attributes.length));
         }
 
-        //Mutate attributes
+        // Mutate attributes
         for (int index : mutationIndices) {
-            //Normal distribution
+            // Normal distribution
             attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_MEAN;
 
-            //Make sure attributes are within bounds
+            // Make sure attributes are within bounds
             if (attributes[index] < 0) {
                 attributes[index] = 0;
             } else if (attributes[index] > 1) {
