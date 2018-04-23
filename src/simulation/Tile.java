@@ -1,5 +1,7 @@
 package simulation;
 
+import simulation.Subjects.Field;
+
 import java.util.ArrayList;
 
 public class Tile {

@@ -6,6 +6,7 @@ import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
+import simulation.Subjects.Fish;
 import utils.Vector;
 
 import java.nio.IntBuffer;

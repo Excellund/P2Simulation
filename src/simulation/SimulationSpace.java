@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.Subjects.Field;
 import utils.Vector;
 
 import java.util.ArrayList;

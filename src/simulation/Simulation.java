@@ -1,5 +1,7 @@
 package simulation;
 
+import simulation.Subjects.Field;
+import simulation.Subjects.Fish;
 import utils.CountingRandom;
 import utils.Vector;
 

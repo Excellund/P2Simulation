@@ -1,5 +1,6 @@
 package simulation;
 import org.junit.jupiter.api.*;
+import simulation.Subjects.Carcass;
 import utils.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
