@@ -87,7 +87,7 @@ public class SimulationSpace implements Iterable<Field> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Field> iterator() {
         return new SimulationSpaceIterator(this, activeSubjects);
     }
 

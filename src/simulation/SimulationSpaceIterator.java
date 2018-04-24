@@ -5,7 +5,7 @@ import simulation.fields.Field;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class SimulationSpaceIterator implements ListIterator {
+public class SimulationSpaceIterator implements ListIterator<Field> {
 
     ListIterator<Field> iterator;
     SimulationSpace space;
@@ -22,7 +22,7 @@ public class SimulationSpaceIterator implements ListIterator {
     }
 
     @Override
-    public Object next() {
+    public Field next() {
         current = iterator.next();
         return current;
     }
@@ -33,7 +33,7 @@ public class SimulationSpaceIterator implements ListIterator {
     }
 
     @Override
-    public Object previous() {
+    public Field previous() {
         return iterator.previous();
     }
 
@@ -56,12 +56,12 @@ public class SimulationSpaceIterator implements ListIterator {
     }
 
     @Override
-    public void set(Object o) {
-        iterator.set((Field) o);
+    public void set(Field f) {
+        iterator.set(f);
     }
 
     @Override
-    public void add(Object o) {
-        iterator.add((Field) o);
+    public void add(Field f) {
+        iterator.add(f);
     }
 }
