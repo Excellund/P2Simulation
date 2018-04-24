@@ -1,4 +1,4 @@
-package simulation.Subjects;
+package simulation.fields;
 
 import simulation.*;
 import utils.Color;
@@ -24,6 +24,15 @@ public class Fish implements Field {
         this.health = CountingRandom.getInstance().nextInt(100) + 50;
 
         this.size = 0.5f; //TODO: REVISE
+    }
+
+    public Fish(Vector position, float health, float energy, float size, float speed, FishGenome genome) {
+        this.position = position;
+        this.health = health;
+        this.energy = energy;
+        this.size = size;
+        this.speed = speed;
+        this.genome = genome;
     }
 
     //How compatible a fish is with another. This determines the likelihood of them mating.

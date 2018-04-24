@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.input.TransferMode;

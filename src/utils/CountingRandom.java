@@ -6,6 +6,7 @@ public class CountingRandom extends Random {
 
     private static final CountingRandom globalRandom = new CountingRandom();
 
+    private long initialSeed = 0;
     private long nextCounter = 0;
 
     @Override
@@ -24,6 +25,10 @@ public class CountingRandom extends Random {
 
     public long getCounter() {
         return nextCounter;
+    }
+
+    public long getInitialSeed() {
+        return initialSeed;
     }
 
     public static CountingRandom getInstance() {

@@ -1,12 +1,13 @@
 package simulation;
 
-import simulation.Subjects.Field;
-import simulation.Subjects.Fish;
+import simulation.fields.Field;
+import simulation.fields.Fish;
 import utils.CountingRandom;
 import utils.Vector;
 import utils.VectorTransformer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Net {
@@ -18,6 +19,11 @@ public class Net {
         this.favoredMorphology = favoredMorphology;
 
         fish = new LinkedList<>();
+    }
+
+    public Net(float favoredMorphology, Fish[] fish) {
+        this.favoredMorphology = favoredMorphology;
+        this.fish = new LinkedList<>(Arrays.asList(fish));
     }
 
     private boolean isOutOfBounds(Vector requested, Vector max) {

@@ -1,4 +1,4 @@
-package simulation.Subjects;
+package simulation.fields;
 
 import simulation.FishGenome;
 import simulation.SimulationSpace;
@@ -11,6 +11,13 @@ public class FishEgg implements Field {
     FishGenome genome;
     int numEggs;
     int timeBeforeHatch;
+
+    public FishEgg(Vector position, int numEggs, int timeBeforeHatch, FishGenome genome) {
+        this.position = position;
+        this.numEggs = numEggs;
+        this.timeBeforeHatch = timeBeforeHatch;
+        this.genome = genome;
+    }
 
     @Override
     public void update(SimulationSpace space) {

@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 public class DragListener {
     public ContentBox dragged = null;

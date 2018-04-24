@@ -1,6 +1,6 @@
 package simulation;
 
-import simulation.Subjects.Field;
+import simulation.fields.Field;
 import utils.Vector;
 
 import java.util.ArrayList;

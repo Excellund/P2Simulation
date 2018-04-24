@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;

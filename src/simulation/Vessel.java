@@ -1,7 +1,10 @@
 package simulation;
 
+import simulation.fields.Fish;
 import utils.CountingRandom;
 import utils.Vector;
+
+import java.util.LinkedList;
 
 import static utils.VectorTransformer.*;
 
@@ -60,6 +63,21 @@ public class Vessel {
         stern = new Vector[2];
         transform(bow, getDirection());
         net = new Net(favoredMorphology);
+    }
+
+    public Vessel(int quota, Vector bow, Vector sought, Vector max, double temporaryX, double temporaryY, float netFavoredMorphology, Fish[] netFish) {
+        this.quota = quota;
+        this.bow = bow;
+        this.sought = sought;
+        this.max = max;
+        this.temporaryX = temporaryX;
+        this.temporaryY = temporaryY;
+
+        random = CountingRandom.getInstance();
+        stern = new Vector[2];
+        transform(bow, getDirection());
+
+        this.net = new Net(netFavoredMorphology, netFish);
     }
 
     private int getOrientation() {
@@ -163,7 +181,19 @@ public class Vessel {
         return stern;
     }
 
+    public double getTemporaryX() {
+        return temporaryX;
+    }
+
+    public double getTemporaryY() {
+        return temporaryY;
+    }
+
     public final Vector getSought() {
         return sought;
+    }
+
+    public Vector getMax() {
+        return max;
     }
 }

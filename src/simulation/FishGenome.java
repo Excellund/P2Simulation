@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.Set;
 
 public class FishGenome {
+    public static final int NUM_ATTRIBUTES = 14;
+
     // All attributes (genes) will have values between 0 and 1
     private float size;
     private float speed;

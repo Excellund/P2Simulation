@@ -1,4 +1,4 @@
-package simulation.Subjects;
+package simulation.fields;
 
 import simulation.SimulationSpace;
 import utils.Color;
