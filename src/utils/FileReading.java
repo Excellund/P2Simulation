@@ -16,20 +16,17 @@ public class FileReading {
     private List<List> collectedList = new ArrayList<>();
 
     //Constructor
-    public FileReading(String fileName) {
+    public FileReading(String fileName) throws IOException {
+
         this.fileName = fileName;
-    }
 
-
-    public void Load() throws IOException {
-        //Field
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
         String line;
-        int i = 0;
 
         //Load data into lists
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null)
+        {
             //Split array
             String[] splitted = line.split(",");
 
@@ -38,14 +35,16 @@ public class FileReading {
             list2.add(Double.parseDouble(splitted[1]));
             list3.add(Double.parseDouble(splitted[2]));
 
-            i++;
         }
 
         //List of lists
         collectedLists();
+
     }
 
-    public List<List> collectedLists() {
+    public List<List> collectedLists()
+    {
+
         collectedList.add(list1);
         collectedList.add(list2);
         collectedList.add(list3);

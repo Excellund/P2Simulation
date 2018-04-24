@@ -1,10 +1,12 @@
 package ui;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -15,6 +17,10 @@ import java.io.IOException;
 
 public class ContentBoxFactory {
     private DragListener dragListener;
+
+    private StackPane root1 = new StackPane();
+    private StackPane root2 = new StackPane();
+    private StackPane root3 = new StackPane();
 
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
@@ -422,11 +428,6 @@ public class ContentBoxFactory {
         interactionBox.setContent(mainContent);
     }
 
-    public void interactionBoxSetContentGraph(ContentBox interactionBox) {
-        Label Graph = new Label("this is Graph settings");
-        interactionBox.setContent(Graph);
-    }
-
     public void launchBoxSetContextStart(ContentBox launchBox) {
         HBox mainContent = new HBox(10);
         VBox columnA = new VBox();
@@ -469,34 +470,189 @@ public class ContentBoxFactory {
 
     }
 
+    public ContentBox[] interactionBoxSetContentGraph(ContentBox interactionBox) {
 
-    public ContentBox generateGraph(double width, int xChoice, int yChoice) throws IOException {
+        HBox mainContent = new HBox(10);
+        GridPane grid = new GridPane();
 
-        ContentBox contentBox2 = new ContentBox("Graph", width, dragListener);
+        //ChoiceBox choices
+        ObservableList<String> options = FXCollections.observableArrayList("List 1", "List 2", "List 3");
+
+        //XY-coordinates for the different graphs
+        int[] XYGraph1 = new int[2];
+        int[] XYGraph2 = new int[2];
+        int[] XYGraph3 = new int[2];
+
+        //Array of content boxes which holds the three graphs
+        ContentBox[] graphs = new ContentBox[3];
+
+        //Graph 1
+        //Labels
+        Label graph1 = new Label("Graph 1");
+        Label xData1 = new Label("x plot: ");
+        Label yData1 = new Label("y plot:");
+
+        //Choice boxes
+        final ChoiceBox xChoiceBox1 = new ChoiceBox(options);
+        final ChoiceBox yChoiceBox1 = new ChoiceBox(options);
+
+        //Save button to make new graph
+        Button saveButton1 = new Button("Save");
+        saveButton1.getStyleClass().add("buttonContent");
+
+        grid.add(graph1,0,0);
+        grid.add(xData1,0,1);
+        grid.add(yData1, 2,1);
+        grid.add(xChoiceBox1,1,1);
+        grid.add(yChoiceBox1,3,1);
+        grid.add(saveButton1, 4, 1);
+
+        //Chosen value in choice box gets stored in XY-coordinates
+        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph1[0] = getChoice(xChoiceBox1));
+        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph1[1] = getChoice(yChoiceBox1));
+
+        //First graph is generated and stored in the array of graphs
+        ContentBox graphOneGenerate = generateGraph(root1, XYGraph1[0], XYGraph1[1]);
+        graphs[0] = graphOneGenerate;
+
+        //Update action when save button is pressed
+        saveButton1.setOnAction(e -> updateGraph(root1, XYGraph1[0], XYGraph1[1]));
+
+        //Graph 2
+        //Labels
+        Label graph2 = new Label("Graph 2");
+        Label xData2 = new Label("x plot: ");
+        Label yData2 = new Label("y plot:");
+
+        // Choice boxes
+        final ChoiceBox xChoiceBox2 = new ChoiceBox(options);
+        final ChoiceBox yChoiceBox2 = new ChoiceBox(options);
+
+        //Save button for graph 2
+        Button saveButton2 = new Button("Save");
+        saveButton2.getStyleClass().add("buttonContent");
+
+        grid.add(graph2,0,2);
+        grid.add(xData2,0,3);
+        grid.add(yData2, 2,3);
+        grid.add(xChoiceBox2,1,3);
+        grid.add(yChoiceBox2,3,3);
+        grid.add(saveButton2, 4, 3);
+
+        //Chosen value in choice box gets stored in XY-coordinates
+        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph2[0] = getChoice(xChoiceBox2));
+        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph2[1] = getChoice(yChoiceBox2));
+
+        //Second graph is generated and stored in the array of graphs
+        ContentBox graphTwoGenerate = generateGraph(root2, XYGraph2[0], XYGraph2[1]);
+        graphs[1] = graphTwoGenerate;
+
+        //Update action when save button is pressed
+        saveButton2.setOnAction(e -> updateGraph(root2, XYGraph2[0], XYGraph2[1]));
+
+        //Graph 3
+        //Labels
+        Label graph3 = new Label("Graph 3");
+        Label xData3 = new Label("x plot: ");
+        Label yData3 = new Label("y plot:");
+
+        //Choice boxes
+        final ChoiceBox xChoiceBox3 = new ChoiceBox(options);
+        final ChoiceBox yChoiceBox3 = new ChoiceBox(options);
+
+        //Save button
+        Button saveButton3 = new Button("Save");
+        saveButton3.getStyleClass().add("buttonContent");
+
+        grid.add(graph3,0,4);
+        grid.add(xData3,0,5);
+        grid.add(yData3, 2,5);
+        grid.add(xChoiceBox3,1,5);
+        grid.add(yChoiceBox3,3,5);
+        grid.add(saveButton3, 4, 5);
+
+        //Chosen value in choice box gets stored in XY-coordinates
+        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph3[0] = getChoice(xChoiceBox3));
+        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph3[1] = getChoice(yChoiceBox3));
+
+        //Third graph is generated and stored in the array of graphs
+        ContentBox graphThreeGenerate = generateGraph(root3, XYGraph3[0], XYGraph3[1]);
+        graphs[2] = graphThreeGenerate;
+
+        //Update action when save button is pressed
+        saveButton3.setOnAction(e -> updateGraph(root3, XYGraph3[0], XYGraph3[1]));
+
+        //Add all graph UI to main content
+        mainContent.getChildren().add(grid);
+
+        //Set main content as content of interaction box
+        interactionBox.setContent(mainContent);
+
+        return graphs;
+    }
+
+    //Gives the string values on the list an int value to read the correct list
+    public int getChoice(ChoiceBox<String> choiceBox){
+
+        String choice = choiceBox.getValue();
+        int choiceValue = 0;
+
+        if(choice.equals("List 1")){
+            choiceValue = 0;
+        }
+        else if(choice.equals("List 2")){
+            choiceValue = 1;
+        }
+        else if(choice.equals("List 3")){
+            choiceValue = 2;
+        }
+
+        return choiceValue;
+    }
+
+    public ContentBox generateGraph(StackPane root, int xChoice, int yChoice){
+
         Graph graph = new Graph();
         ObservableList<XYChart.Series<Double, Double>> dataSet = graph.getChartData(xChoice, yChoice);
 
+        //Name of content box
+        ContentBox contentBox = new ContentBox("Graph x: " + xChoice +", y: " + yChoice, 375, dragListener);
 
+        //Max sizes of XY-coordinates
         double xMax = graph.getxCoordinate().get(graph.getxCoordinate().size() - 1) + 1;
         double yMax = graph.getyCoordinate().get(graph.getyCoordinate().size() - 1) + 1;
 
         //Axis size
-        NumberAxis xAxis = new NumberAxis(0, xMax, graph.tickUnit(xChoice, xMax));
-        NumberAxis yAxis = new NumberAxis(0, yMax, graph.tickUnit(yChoice, yMax));
-        xAxis.setLabel("x-coordinates");
-        yAxis.setLabel("y-coordinates");
+        NumberAxis xAxis = new NumberAxis(0, xMax, graph.tickUnit(xMax));
+        NumberAxis yAxis = new NumberAxis(0, yMax, graph.tickUnit(yMax));
+
+        //Axis name
+        xAxis.setLabel(Integer.toString(xChoice));
+        yAxis.setLabel(Integer.toString(yChoice));
 
         //Load data into chart
         ScatterChart<Double, Double> scatterChart = new ScatterChart(xAxis, yAxis);
         scatterChart.setData(dataSet);
+        scatterChart.setLegendVisible(false);
+
+        //Chart size
+        scatterChart.setPrefWidth(375);
+        scatterChart.setPrefHeight(300);
 
         //Pane window
-        StackPane root = new StackPane();
         root.getChildren().add(scatterChart);
 
-        contentBox2.setContent(root);
+        //Set the content of content box to be root
+        contentBox.setContent(root);
 
-        return contentBox2;
+        return contentBox;
+    }
+
+    public void updateGraph(StackPane root, int xChoice, int yChoice) {
+
+        root.getChildren().clear();
+        generateGraph(root, xChoice, yChoice);
+
     }
 
 

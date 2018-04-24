@@ -16,17 +16,20 @@ public class Graph {
     private List<Double> xCoordinate = new ArrayList<>();
     private List<Double> yCoordinate = new ArrayList<>();
 
-    public ObservableList<Series<Double, Double>> getChartData(int xChoice, int yChoice) throws IOException {
+    public ObservableList<Series<Double, Double>> getChartData(int xChoice, int yChoice) {
 
         ObservableList<Series<Double, Double>> result = FXCollections.observableArrayList();
         Series<Double, Double> dataSet = new Series<>();
 
-        dataSet.setName("Data");
+        //Calls the file
+        FileReading file = null;
+        try {
+            file = new FileReading("TestData");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        FileReading file = new FileReading("TestData");
-        file.Load();
-
-        for (int i = 0; i < (double) file.getCollectedList().get(xChoice).size(); i++) {
+        for (int i = 0; i < (double) file.getCollectedList().get(xChoice).size(); i++){
 
             xCoordinate.add((double) file.getCollectedList().get(xChoice).get(i));
             yCoordinate.add((double) file.getCollectedList().get(yChoice).get(i));
@@ -36,6 +39,7 @@ public class Graph {
         double xValue;
         double yValue;
 
+        //Store the data into dataset
         for (int i = 0; i < xCoordinate.size(); i++) {
 
             xValue = xCoordinate.get(i);
@@ -50,19 +54,21 @@ public class Graph {
         return result;
     }
 
-
-    int tickUnit(int coordinate, double listMax) {
+    //Tick units so the graph doesn't get too cluttered
+    int tickUnit(double listMax){
 
         int tickUnitValue = 1;
 
-        if (listMax >= 20) {
+        if(listMax >= 20){
 
             tickUnitValue = 5;
-        } else if (listMax >= 50) {
+        }
+        else if(listMax >= 50){
 
             tickUnitValue = 10;
 
-        } else if (listMax >= 1000) {
+        }
+        else if(listMax >= 1000){
 
             tickUnitValue = 500;
         }

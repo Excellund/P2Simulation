@@ -98,16 +98,6 @@ public class Main extends Application {
         areaTwo.getChildren().addAll(contentTwo, contentThree);
         rowContainer.getChildren().addAll(areaOne, canvasContainer, areaTwo);
 
-        HBox graphContainer = new HBox();
-        ContentBox graphOne = new ContentBox("Graph one", 500, dragListener);
-
-        ContentBox graph = factory.generateGraph(375, 0, 1);
-        ContentBox graph2 = factory.generateGraph(375, 0, 2);
-        ContentBox graph3 = factory.generateGraph(375, 2, 0);
-
-
-        //graphAreaOne.getChildren().add(graphOne);
-        graphContainer.getChildren().addAll(graphAreaOne, graphAreaTwo, graphAreaThree);
 
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -130,36 +120,45 @@ public class Main extends Application {
             event.consume();
         });
 
+        HBox graphContainer = new HBox();
+
+        graphContainer.getChildren().addAll(graphAreaOne, graphAreaTwo, graphAreaThree);
+
         MenuItem itemGraph1 = new MenuItem("Graph 1");
         MenuItem itemGraph2 = new MenuItem("Graph 2");
         MenuItem itemGraph3 = new MenuItem("Graph 3");
 
-        menuView.getItems().add(itemGraph1);
-        menuView.getItems().add(itemGraph2);
-        menuView.getItems().add(itemGraph3);
+        menuView.getItems().addAll(itemGraph1, itemGraph2, itemGraph3);
 
+        ContentBox graph1 = factory.interactionBoxSetContentGraph(interactionBox)[0];
+        ContentBox graph2 = factory.interactionBoxSetContentGraph(interactionBox)[1];
+        ContentBox graph3 = factory.interactionBoxSetContentGraph(interactionBox)[2];
+
+        //If graph1 isn't in graphAreaOne, it will create the graph there, when button is clicked
         itemGraph1.setOnAction(event ->
         {
-            if (graph.getParent() == null) {
-                graphAreaOne.getChildren().add(0, graph);
+            if (graph1.getParent() == null) {
+                graphAreaOne.getChildren().add(0, graph1);
             }
 
             event.consume();
         });
 
-        itemGraph1.setOnAction(event ->
+        //If graph2 isn't in graphAreaTwo, it will create the graph there, when button is clicked
+        itemGraph2.setOnAction(event ->
         {
             if (graph2.getParent() == null) {
-                graphAreaOne.getChildren().add(0, graph2);
+                graphAreaTwo.getChildren().add(0, graph2);
             }
 
             event.consume();
         });
 
-        itemGraph1.setOnAction(event ->
+        //If graph3 isn't in graphAreaThree, it will create the graph there, when button is clicked
+        itemGraph3.setOnAction(event ->
         {
             if (graph3.getParent() == null) {
-                graphAreaOne.getChildren().add(0, graph3);
+                graphAreaThree.getChildren().add(0, graph3);
             }
 
             event.consume();

@@ -26,7 +26,7 @@
 }
 
 .tree-cell:selected {
-    -fx-font-weight: bold;
+    -fx-font-weight: bold ;
 }
 
 .tree-cell {
@@ -116,4 +116,63 @@
 
 .scroll-pane {
     -fx-background-color: #36393e;
+}
+
+.chart {
+    -fx-font: 12px "System";
+    -fx-background-color: #36393e;
+    -fx-padding: 1 4 -1 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+.chart-vertical-grid-lines {
+    -fx-stroke: #637282;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: #637282;
+}
+.chart-alternative-row-fill {
+    -fx-fill: #393c44;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.chart-title {
+    -fx-text-fill: white;
+    -fx-font-size: 1.6em;
+    -fx-font-family: "System";
+}
+
+.chart-legend {
+    -fx-background-color:  transparent;
+    -fx-padding: 20px;
+}
+
+.axis {
+    -fx-font-size: 1.4em;
+    -fx-tick-label-fill: white;
+    -fx-font-family: "System";
+    -fx-tick-length: 20;
+    -fx-minor-tick-length: 10;
+}
+
+.axis-label {
+    -fx-text-fill: white;
+}
+
+.default-color0.chart-symbol { /* hollow circle */
+    -fx-background-color: #d5362c;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 3px;
+    -fx-padding: 3px;
+}
+
+.choice-box{
+    -fx-background-color: #53595d;
+    -fx-font-family: "System";
 }
