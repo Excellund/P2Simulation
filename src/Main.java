@@ -1,4 +1,3 @@
-import ui.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,15 +13,17 @@ import javafx.stage.StageStyle;
 import simulation.Engine;
 import simulation.Settings;
 import simulation.Simulation;
+import ui.*;
 
 public class Main extends Application {
     public static void main(String[] args) {
         Settings.defaultAbbreviated();
-        Settings.toFile("default"); //create a default settings profile
-        Settings.fromFile("default"); //use the default profile
-
+        Settings.toFile("default");
+        Settings.fromFile("default");
         launch(args);
+
     }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -59,7 +60,14 @@ public class Main extends Application {
         Canvas canvas = new Canvas(750, 750);
         ContentArea areaOne = new ContentArea(375, 750, dragListener);
         ContentArea areaTwo = new ContentArea(375, 750, dragListener);
-        ContentBox navigator = factory.generateNavigator(375);
+        ContentArea graphAreaOne = new ContentArea(375, 280, dragListener);
+        ContentArea graphAreaTwo = new ContentArea(750, 280, dragListener);
+        ContentArea graphAreaThree = new ContentArea(375, 280, dragListener);
+
+        ContentBox interactionBox = factory.generateInteractionBox(375);
+        ContentBox spawnBox = factory.generateSpawnBox(375);
+        ContentBox launchBox = factory.generateLaunchBox(375);
+        ContentBox navigator = factory.generateNavigator(375, interactionBox, spawnBox, launchBox, areaTwo);
         ContentBox contentTwo = new ContentBox("Two", 400, dragListener);
         ContentBox contentThree = new ContentBox("Three", 500, dragListener);
 
@@ -74,7 +82,8 @@ public class Main extends Application {
         Thread engineThread = new Thread(engine);
 
         //custom exit and minimize buttons
-        exitButton.setOnMouseReleased(event -> {
+        exitButton.setOnMouseReleased(event ->
+        {
             engine.stop();
             primaryStage.close();
         });
@@ -90,12 +99,14 @@ public class Main extends Application {
         rowContainer.getChildren().addAll(areaOne, canvasContainer, areaTwo);
 
         HBox graphContainer = new HBox();
-        ContentArea graphAreaOne = new ContentArea(375, 280, dragListener);
-        ContentArea graphAreaTwo = new ContentArea(750, 280, dragListener);
-        ContentArea graphAreaThree = new ContentArea(375, 280, dragListener);
         ContentBox graphOne = new ContentBox("Graph one", 500, dragListener);
 
-        graphAreaOne.getChildren().add(graphOne);
+        ContentBox graph = factory.generateGraph(375, 0, 1);
+        ContentBox graph2 = factory.generateGraph(375, 0, 2);
+        ContentBox graph3 = factory.generateGraph(375, 2, 0);
+
+
+        //graphAreaOne.getChildren().add(graphOne);
         graphContainer.getChildren().addAll(graphAreaOne, graphAreaTwo, graphAreaThree);
 
         MenuBar menuBar = new MenuBar();
@@ -114,6 +125,41 @@ public class Main extends Application {
         {
             if (navigator.getParent() == null) {
                 areaOne.getChildren().add(0, navigator);
+            }
+
+            event.consume();
+        });
+
+        MenuItem itemGraph1 = new MenuItem("Graph 1");
+        MenuItem itemGraph2 = new MenuItem("Graph 2");
+        MenuItem itemGraph3 = new MenuItem("Graph 3");
+
+        menuView.getItems().add(itemGraph1);
+        menuView.getItems().add(itemGraph2);
+        menuView.getItems().add(itemGraph3);
+
+        itemGraph1.setOnAction(event ->
+        {
+            if (graph.getParent() == null) {
+                graphAreaOne.getChildren().add(0, graph);
+            }
+
+            event.consume();
+        });
+
+        itemGraph1.setOnAction(event ->
+        {
+            if (graph2.getParent() == null) {
+                graphAreaOne.getChildren().add(0, graph2);
+            }
+
+            event.consume();
+        });
+
+        itemGraph1.setOnAction(event ->
+        {
+            if (graph3.getParent() == null) {
+                graphAreaOne.getChildren().add(0, graph3);
             }
 
             event.consume();

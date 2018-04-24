@@ -4,8 +4,6 @@ import simulation.fields.Fish;
 import utils.CountingRandom;
 import utils.Vector;
 
-import java.util.LinkedList;
-
 import static utils.VectorTransformer.*;
 
 public class Vessel {
@@ -26,10 +24,9 @@ public class Vessel {
         this.max = max;
         this.quota = (int) (Settings.FISHING_QUOTAS_MIN + random.nextInt((int) (Settings.FISHING_QUOTAS_MAX - Settings.FISHING_QUOTAS_MIN)));
 
-        temporaryX = random.nextInt(2) == 0 ? random.nextInt(2) == 0 ? -Settings.VESSEL_TRAVEL_DISTANCE : max.x + Settings.VESSEL_TRAVEL_DISTANCE : random.nextInt(max.x);
-        temporaryY = temporaryX == (int) -Settings.VESSEL_TRAVEL_DISTANCE || temporaryX == (int) (max.x + Settings.VESSEL_TRAVEL_DISTANCE) ? random.nextInt(max.y) : random.nextInt(2) == 0 ? -Settings.VESSEL_TRAVEL_DISTANCE : max.y + Settings.VESSEL_TRAVEL_DISTANCE;
-
-        bow = new Vector((int) temporaryX, (int) temporaryY);
+        bow = randomBow();
+        temporaryX = bow.x;
+        temporaryY = bow.y;
         newSought();
         stern = new Vector[2];
         transform(bow, getOrientation());
@@ -45,10 +42,9 @@ public class Vessel {
         this.max = max;
         this.quota = quota;
 
-        temporaryX = random.nextInt(2) == 0 ? random.nextInt(2) == 0 ? -Settings.VESSEL_TRAVEL_DISTANCE : max.x + Settings.VESSEL_TRAVEL_DISTANCE : random.nextInt(max.x);
-        temporaryY = temporaryX == (int) -Settings.VESSEL_TRAVEL_DISTANCE || temporaryX == (int) (max.x + Settings.VESSEL_TRAVEL_DISTANCE) ? random.nextInt(max.y) : random.nextInt(2) == 0 ? -Settings.VESSEL_TRAVEL_DISTANCE : max.y + Settings.VESSEL_TRAVEL_DISTANCE;
-
-        bow = new Vector((int) temporaryX, (int) temporaryY);
+        bow = randomBow();
+        temporaryX = bow.x;
+        temporaryY = bow.y;
         newSought();
         stern = new Vector[2];
         transform(bow, getOrientation());
@@ -78,6 +74,34 @@ public class Vessel {
         transform(bow, getDirection());
 
         this.net = new Net(netFavoredMorphology, netFish);
+    }
+
+    private Vector randomBow() {
+        int x, y;
+
+        random = CountingRandom.getInstance();
+
+        if (random.nextInt(2) == 0) {
+            if (random.nextInt(2) == 0) {
+                x = (int) -Settings.VESSEL_TRAVEL_DISTANCE;
+            } else {
+                x = (int) (max.x + Settings.VESSEL_TRAVEL_DISTANCE);
+            }
+        } else {
+            x = random.nextInt(max.x);
+        }
+
+        if (x == (int) -Settings.VESSEL_TRAVEL_DISTANCE || x == (int) (max.x + Settings.VESSEL_TRAVEL_DISTANCE)) {
+            y = random.nextInt(max.y);
+        } else {
+            if (random.nextInt(2) == 0) {
+                y = (int) -Settings.VESSEL_TRAVEL_DISTANCE;
+            } else {
+                y = (int) (max.y + Settings.VESSEL_TRAVEL_DISTANCE);
+            }
+        }
+
+        return new Vector(x, y);
     }
 
     private int getOrientation() {
@@ -181,19 +205,19 @@ public class Vessel {
         return stern;
     }
 
-    public double getTemporaryX() {
-        return temporaryX;
-    }
-
-    public double getTemporaryY() {
-        return temporaryY;
-    }
-
     public final Vector getSought() {
         return sought;
     }
 
     public Vector getMax() {
         return max;
+    }
+
+    public double getTemporaryX() {
+        return temporaryX;
+    }
+
+    public double getTemporaryY() {
+        return temporaryY;
     }
 }

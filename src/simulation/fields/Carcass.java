@@ -1,5 +1,6 @@
 package simulation.fields;
 
+import simulation.Settings;
 import simulation.SimulationSpace;
 import utils.Color;
 import utils.Vector;
@@ -23,7 +24,11 @@ public class Carcass implements Field {
 
     @Override
     public void update(SimulationSpace space) {
-        return;
+        if (!isAlive()) {
+            space.queueRemoveField(this);
+        }
+
+        nutrition -= Settings.CARCASS_DECAY_PER_TIMESTEP;
     }
 
     @Override
@@ -38,9 +43,11 @@ public class Carcass implements Field {
 
     @Override
     public Color getColor() {
-        return null;
+        return new Color(0, 0, 155);
     }
 
     @Override
-    public void setPosition(Vector position) { }
+    public void setPosition(Vector position) {
+
+    }
 }

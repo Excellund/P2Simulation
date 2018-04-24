@@ -1,5 +1,8 @@
 package simulation;
-import org.junit.jupiter.api.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import simulation.fields.Fish;
 import utils.Vector;
 
@@ -14,7 +17,7 @@ public class TileTest {
     @BeforeEach
     public void beforeEach() {
         tile = new Tile(0);
-        fish = new Fish(new FishGenome(), new Vector(0,0));
+        fish = new Fish(new FishGenome(), new Vector(0, 0));
     }
 
     @Test

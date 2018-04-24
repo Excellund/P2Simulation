@@ -162,7 +162,9 @@ public class Snapshot {
                 }
             }
 
-            if (stream.read() != GROUP_SEPARATOR) { return null; }
+            if (stream.read() != GROUP_SEPARATOR) {
+                return null;
+            }
 
             //Read fish
             snapshot.fish = new Fish[snapshot.numFish];
@@ -170,7 +172,9 @@ public class Snapshot {
                 snapshot.fish[i] = readFish(stream);
             }
 
-            if (stream.read() != GROUP_SEPARATOR) { return null; }
+            if (stream.read() != GROUP_SEPARATOR) {
+                return null;
+            }
 
             //Read fish eggs
             snapshot.fishEggs = new FishEgg[snapshot.numFishEgg];
@@ -178,7 +182,9 @@ public class Snapshot {
                 snapshot.fishEggs[i] = readFishEgg(stream);
             }
 
-            if (stream.read() != GROUP_SEPARATOR) { return null; }
+            if (stream.read() != GROUP_SEPARATOR) {
+                return null;
+            }
 
             //Read carcasses
             snapshot.carcasses = new Carcass[snapshot.numCarcass];
@@ -186,7 +192,9 @@ public class Snapshot {
                 snapshot.carcasses[i] = readCarcass(stream);
             }
 
-            if (stream.read() != GROUP_SEPARATOR) { return null; }
+            if (stream.read() != GROUP_SEPARATOR) {
+                return null;
+            }
 
             //Read vessels
             snapshot.vessels = new Vessel[snapshot.numVessels];

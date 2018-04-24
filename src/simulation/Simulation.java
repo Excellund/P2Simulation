@@ -32,10 +32,13 @@ public class Simulation {
         }
 
         FishGenome initialGenome = new FishGenome();
+
         for (int i = 0; i < Settings.NUM_INITIAL_SUBJECTS; ++i) {
             int posX = random.nextInt(width);
             int posY = random.nextInt(height);
+
             FishGenome genome = new FishGenome(initialGenome);
+
             genome.mutate();
             Field subject = new Fish(genome, new Vector(posX, posY));
 
@@ -48,16 +51,8 @@ public class Simulation {
     }
 
     private void updateFields() {
-        ListIterator<Field> iterator = space.listIterator();
-
-        while (iterator.hasNext()) {
-            Field subject = iterator.next();
-
-            if (subject.isAlive()) {
-                subject.update(space);
-            } else {
-                iterator.remove();
-            }
+        for (Field subject : space) {
+            subject.update(space);
         }
     }
 

@@ -1,6 +1,7 @@
 package simulation.fields;
 
 import simulation.FishGenome;
+import simulation.Settings;
 import simulation.SimulationSpace;
 import utils.Color;
 import utils.Vector;
@@ -12,20 +13,38 @@ public class FishEgg implements Field {
     int numEggs;
     int timeBeforeHatch;
 
+    public FishEgg(Vector position, FishGenome genome, int numEggs) {
+        this.position = position;
+        this.genome = genome;
+        this.numEggs = numEggs;
+
+        timeBeforeHatch = (int) Settings.TIME_BEFORE_HATCH;
+    }
+
     public FishEgg(Vector position, int numEggs, int timeBeforeHatch, FishGenome genome) {
         this.position = position;
+        this.genome = genome;
         this.numEggs = numEggs;
         this.timeBeforeHatch = timeBeforeHatch;
-        this.genome = genome;
     }
 
     @Override
     public void update(SimulationSpace space) {
+        if (!isAlive()) {
+            space.queueRemoveField(this);
+        }
+
         if (timeBeforeHatch <= 0) {
             for (int i = 0; i < numEggs; i++) {
-                space.addField(new Fish(genome, position));
+                FishGenome mutatedGenome = new FishGenome(genome);
+
+                mutatedGenome.mutate();
+                space.queueAddField(new Fish(mutatedGenome, position));
             }
+
             numEggs = 0;
+        } else {
+            --timeBeforeHatch;
         }
     }
 

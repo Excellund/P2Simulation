@@ -1,6 +1,9 @@
 package simulation.fields;
 
-import simulation.*;
+import simulation.FishGenome;
+import simulation.Settings;
+import simulation.SimulationSpace;
+import simulation.Tile;
 import utils.Color;
 import utils.CountingRandom;
 import utils.Vector;
@@ -17,13 +20,16 @@ public class Fish implements Field {
     private float size;
     private float speed;
     private FishGenome genome;
+    private int matingTimer;
 
     public Fish(FishGenome genome, Vector position) {
         this.genome = genome;
         this.position = position;
-        this.health = CountingRandom.getInstance().nextInt(100) + 50;
-
         this.size = 0.5f; //TODO: REVISE
+        this.health = CountingRandom.getInstance().nextInt((int) (Settings.HEALTH_POINTS_PER_SIZE_POINTS * getSize() * Settings.MAX_FISH_SIZE));
+        this.energy = 15;
+
+        matingTimer = CountingRandom.getInstance().nextInt(30);
     }
 
     public Fish(Vector position, float health, float energy, float size, float speed, FishGenome genome) {
@@ -50,6 +56,11 @@ public class Fish implements Field {
         //Decrease health if energy low
         //Increase health if energy high
         //Increase size if energy high and is able to grow due to genome
+        --matingTimer;
+
+        if (!isAlive()) {
+            space.queueRemoveField(this);
+        }
 
         Vector newPos = favoredMove(space);
 
@@ -58,10 +69,15 @@ public class Fish implements Field {
         }
 
         Tile currentTile = space.getTile(position);
+
         if (currentTile.getMuDensity() < 100000) {
-            health -= 3;
+            energy -= 3;
         } else {
-            health++;
+            energy += 1;
+
+            if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
+                energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
+            }
         }
 
         Random r = CountingRandom.getInstance();
@@ -70,17 +86,18 @@ public class Fish implements Field {
         if (currentTile.getSubjects().size() > 2) {
             for (Field subject : currentTile.getSubjects()) {
                 if (subject != this) {
-                    if (subject instanceof Fish) {
-                        Fish fishSubject = (Fish) subject;
-
-                        if (fishSubject.getHealth() >= 250 && this.getHealth() >= 250) {
-                            //System.out.println("Comp: " + this.getCompatibility(fishSubject) + ", Simi: " + genome.calculateSimilarity(fishSubject.genome) + " - " + this.hashCode() + " : " + fishSubject.hashCode());
-                            if (r.nextFloat() > this.getCompatibility(fishSubject)) {
-                                interact(fishSubject, space);
-                            }
-                        }
-                    }
+                    interact(subject, space);
                 }
+            }
+        }
+
+        if (energy <= 0) {
+            health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
+        } else if (energy >= Settings.MIN_ENERGY_HEALTH_INCREASE) {
+            health += Settings.ENERGY_HEALTH_INCREASE;
+
+            if (health > size * Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS) {
+                health = size * Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
             }
         }
 
@@ -91,18 +108,35 @@ public class Fish implements Field {
         if (subject instanceof FishEgg) {
             ((FishEgg) subject).subtractEggs((int) (size * Settings.MAX_FISH_SIZE));
             energy += (int) (size * Settings.MAX_FISH_SIZE) * Settings.ENERGY_PER_EGG;
-        }
-        else if (subject instanceof Carcass) {
+
+            if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
+                energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
+            }
+        } else if (subject instanceof Carcass) {
             ((Carcass) subject).consume((int) (size * Settings.MAX_FISH_SIZE));
             energy += (int) (size * Settings.MAX_FISH_SIZE) * genome.getCarnivoreEfficiency();
-        }
-        else if (subject instanceof Fish) //future maintainability
-        {
-            if (getCompatibility((Fish) subject) >= Settings.MIN_COMPATIBILITY_MATING) {
-                mate((Fish) subject, space);
+
+            if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
+                energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
-            else if (genome.getPredationTendency() >= Settings.MIN_PREDATION_TENDENCY) {
-                attack((Fish) subject);
+        } else if (subject instanceof Fish) //future maintainability
+        {
+            if (matingTimer <= 0) {
+                for (Field field : space.getTile(position).getSubjects()) {
+                    if (!(field instanceof Fish)) {
+                        return; //don't stack eggs or carcasses
+                    }
+                }
+
+                float compatibility = getCompatibility((Fish) subject);
+
+                if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING && ((Fish) subject).energy >= Settings.MIN_ENERGY_MATING) {
+                    mate((Fish) subject, space);
+                } else if (genome.getPredationTendency() >= Settings.MIN_PREDATION_TENDENCY) {
+                    attack((Fish) subject, space);
+                }
+
+                matingTimer = CountingRandom.getInstance().nextInt(30);
             }
         }
     }
@@ -122,11 +156,12 @@ public class Fish implements Field {
         return genome.getColor();
     }
 
-    public void attack(Fish other) {
+    public void attack(Fish other, SimulationSpace space) {
         int damage = (int) (genome.getAttackAbility() * Settings.MAX_ATTACK_DAMAGE);
 
-        if (other.getHealth() < damage) {
+        if (other.getHealth() <= damage) {
             energy -= other.getHealth() * Settings.ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE;
+            space.queueAddField(new Carcass((int) (other.getSize() * Settings.MAX_FISH_SIZE * Settings.NUTRITION_PER_SIZE_POINT), position));
         } else {
             energy -= damage * Settings.ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE;
         }
@@ -135,17 +170,16 @@ public class Fish implements Field {
     }
 
     public void mate(Fish mate, SimulationSpace space) {
-        this.health -= FISH_HEALTH_CONSUMPTION;
-        mate.health -= FISH_HEALTH_CONSUMPTION;
+        this.energy -= Settings.MATING_ENERGY_CONSUMPTION;
+        mate.energy -= Settings.MATING_ENERGY_CONSUMPTION;
 
-        FishGenome childGenome = new FishGenome(this.genome, mate.getGenome());
+        FishGenome offSpringGenome = new FishGenome(this.genome, mate.getGenome());
 
-        childGenome.mutate();
+        int numEggs = (int) (0.5 * size * Settings.MAX_FISH_SIZE + CountingRandom.getInstance().nextInt((int) (0.5 * size * Settings.MAX_FISH_SIZE)));
 
-        Fish child = new Fish(childGenome, position);
+        FishEgg offSpring = new FishEgg(position, offSpringGenome, numEggs);
 
-        child.health = 10; //TODO: change, fix
-        space.queueAddField(child);
+        space.queueAddField(offSpring);
     }
 
     //Getters
@@ -164,7 +198,7 @@ public class Fish implements Field {
     }
 
     public float getSize() {
-        return genome.getSize();
+        return size;
     }
 
     public float getSpeed() {

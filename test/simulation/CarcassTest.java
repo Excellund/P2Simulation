@@ -1,5 +1,8 @@
 package simulation;
-import org.junit.jupiter.api.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import simulation.fields.Carcass;
 import utils.Vector;
 

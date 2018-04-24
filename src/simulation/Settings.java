@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class Settings {
     //Simulation settings
-    public static float NUM_INITIAL_SUBJECTS;
     public static float PLANKTON_GROWTH_PER_TIMESTEP;
     public static float NUM_VESSELS;
+    public static float MAX_PLANKTON;
 
     //Fish settings
     public static float MAX_FISH_SIZE;
@@ -25,10 +25,17 @@ public class Settings {
     public static float COMPATIBILITY_MIDPOINT;
     public static float EXPECTED_MUTATION_AMOUNT;
     public static float MUTATION_GAUSSIAN_MEAN;
+    public static float NUTRITION_PER_SIZE_POINT;
+    public static float MIN_ENERGY_MATING;
+    public static float MATING_ENERGY_CONSUMPTION;
+    public static float HEALTH_POINTS_PER_SIZE_POINTS;
+    public static float ENERGY_POINTS_PER_SIZE_POINTS;
+    public static float HEALTH_REDUCTION_ON_LOW_ENERGY;
+    public static float MIN_ENERGY_HEALTH_INCREASE;
+    public static float ENERGY_HEALTH_INCREASE;
+    public static float TIME_BEFORE_HATCH;
+    public static float CARCASS_DECAY_PER_TIMESTEP;
 
-    public static float SPEED_SIZE;
-    public static float ENERGY_SIZE;
-    public static float HEALTH_SIZE;
     //Fishing settings
     public static float MAX_MORPHOLOGY;
     public static float MIN_MORPHOLOGY;
@@ -36,16 +43,13 @@ public class Settings {
     public static float FISHING_QUOTAS_MAX;
     public static float VESSEL_TRAVEL_DISTANCE;
     public static float WIDTH_STEEPNESS;
-    //Plankton settings
-    public static float GROWTH_PER_TIME_STEP;
-    public static float MAX_PLANKTON;
     //Spawn Vessel
     public static float MORPHOLOGY;
     public static float QUOTAS;
     //Spawn Plankton
     public static float ADD_PLANKTON;
     //Launch settings
-    public static float LOAD_FISH;
+    public static float NUM_INITIAL_SUBJECTS;
     public static float LOAD_PLANKTON;
     //Graphics settings
     public static float GAMMA;
@@ -53,9 +57,9 @@ public class Settings {
     private static Map<String, Float> abbreviated = new HashMap<>();
 
     public static void defaultAbbreviated() {
-        abbreviated.put("NUM_INITIAL_SUBJECTS", 1200f);
-        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 300f);
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 100f);
         abbreviated.put("NUM_VESSELS", 3f);
+        abbreviated.put("MAX_PLANKTON", 500000f);
 
         abbreviated.put("MAX_FISH_SIZE", 100f);
         abbreviated.put("ENERGY_PER_EGG", 1f);
@@ -67,10 +71,16 @@ public class Settings {
         abbreviated.put("COMPATIBILITY_MIDPOINT", 0.85f);
         abbreviated.put("EXPECTED_MUTATION_AMOUNT", 6f);
         abbreviated.put("MUTATION_GAUSSIAN_MEAN", 0.1f);
-
-        abbreviated.put("SPEED_SIZE", 2f);
-        abbreviated.put("ENERGY_SIZE", 400f);
-        abbreviated.put("HEALTH_SIZE", 400f);
+        abbreviated.put("NUTRITION_PER_SIZE_POINT", 0.01f);
+        abbreviated.put("MIN_ENERGY_MATING", 40f);
+        abbreviated.put("MATING_ENERGY_CONSUMPTION", 30f);
+        abbreviated.put("HEALTH_POINTS_PER_SIZE_POINTS", 1f);
+        abbreviated.put("ENERGY_POINTS_PER_SIZE_POINTS", 2f);
+        abbreviated.put("HEALTH_REDUCTION_ON_LOW_ENERGY", 10f);
+        abbreviated.put("MIN_ENERGY_HEALTH_INCREASE", 80f);
+        abbreviated.put("ENERGY_HEALTH_INCREASE", 5f);
+        abbreviated.put("TIME_BEFORE_HATCH", 50f);
+        abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", 5f);
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);
         abbreviated.put("MIN_MORPHOLOGY", 0.1f);
@@ -79,15 +89,12 @@ public class Settings {
         abbreviated.put("VESSEL_TRAVEL_DISTANCE", 600f);
         abbreviated.put("WIDTH_STEEPNESS", 20f);
 
-        abbreviated.put("GROWTH_PER_TIME_STEP", 300f);
-        abbreviated.put("MAX_PLANKTON", 1000000f);
-
         abbreviated.put("MORPHOLOGY", 0.5f);
         abbreviated.put("QUOTAS", 1500f);
 
         abbreviated.put("ADD_PLANKTON", 100000f);
 
-        abbreviated.put("LOAD_FISH", 1200f);
+        abbreviated.put("NUM_INITIAL_SUBJECTS", 1200f);
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);
@@ -96,9 +103,9 @@ public class Settings {
     }
 
     private static void useAbbreviated() {
-        NUM_INITIAL_SUBJECTS = abbreviated.get("NUM_INITIAL_SUBJECTS");
         PLANKTON_GROWTH_PER_TIMESTEP = abbreviated.get("PLANKTON_GROWTH_PER_TIMESTEP");
         NUM_VESSELS = abbreviated.get("NUM_VESSELS");
+        MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
 
         MAX_FISH_SIZE = abbreviated.get("MAX_FISH_SIZE");
         ENERGY_PER_EGG = abbreviated.get("ENERGY_PER_EGG");
@@ -110,10 +117,16 @@ public class Settings {
         COMPATIBILITY_MIDPOINT = abbreviated.get("COMPATIBILITY_MIDPOINT");
         EXPECTED_MUTATION_AMOUNT = abbreviated.get("EXPECTED_MUTATION_AMOUNT");
         MUTATION_GAUSSIAN_MEAN = abbreviated.get("MUTATION_GAUSSIAN_MEAN");
-
-        SPEED_SIZE = abbreviated.get("SPEED_SIZE");
-        ENERGY_SIZE = abbreviated.get("ENERGY_SIZE");
-        HEALTH_SIZE = abbreviated.get("HEALTH_SIZE");
+        NUTRITION_PER_SIZE_POINT = abbreviated.get("NUTRITION_PER_SIZE_POINT");
+        MIN_ENERGY_MATING = abbreviated.get("MIN_ENERGY_MATING");
+        MATING_ENERGY_CONSUMPTION = abbreviated.get("MATING_ENERGY_CONSUMPTION");
+        HEALTH_POINTS_PER_SIZE_POINTS = abbreviated.get("HEALTH_POINTS_PER_SIZE_POINTS");
+        ENERGY_POINTS_PER_SIZE_POINTS = abbreviated.get("ENERGY_POINTS_PER_SIZE_POINTS");
+        HEALTH_REDUCTION_ON_LOW_ENERGY = abbreviated.get("HEALTH_REDUCTION_ON_LOW_ENERGY");
+        MIN_ENERGY_HEALTH_INCREASE = abbreviated.get("MIN_ENERGY_HEALTH_INCREASE");
+        ENERGY_HEALTH_INCREASE = abbreviated.get("ENERGY_HEALTH_INCREASE");
+        TIME_BEFORE_HATCH = abbreviated.get("TIME_BEFORE_HATCH");
+        CARCASS_DECAY_PER_TIMESTEP = abbreviated.get("CARCASS_DECAY_PER_TIMESTEP");
 
         MAX_MORPHOLOGY = abbreviated.get("MAX_MORPHOLOGY");
         MIN_MORPHOLOGY = abbreviated.get("MIN_MORPHOLOGY");
@@ -122,15 +135,12 @@ public class Settings {
         VESSEL_TRAVEL_DISTANCE = abbreviated.get("VESSEL_TRAVEL_DISTANCE");
         WIDTH_STEEPNESS = abbreviated.get("WIDTH_STEEPNESS");
 
-        GROWTH_PER_TIME_STEP = abbreviated.get("GROWTH_PER_TIME_STEP");
-        MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
-
         MORPHOLOGY = abbreviated.get("MORPHOLOGY");
         QUOTAS = abbreviated.get("QUOTAS");
 
         ADD_PLANKTON = abbreviated.get("ADD_PLANKTON");
 
-        LOAD_FISH = abbreviated.get("LOAD_FISH");
+        NUM_INITIAL_SUBJECTS = abbreviated.get("NUM_INITIAL_SUBJECTS");
         LOAD_PLANKTON = abbreviated.get("LOAD_PLANKTON");
 
         GAMMA = abbreviated.get("GAMMA");

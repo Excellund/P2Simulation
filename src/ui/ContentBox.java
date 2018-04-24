@@ -17,6 +17,10 @@ public class ContentBox extends VBox {
     private Toolbar toolbar;
     private boolean hide;
 
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
     public ContentBox(String title, double width, DragListener dragListener) {
         hide = false;
         VBox.setVgrow(this, Priority.ALWAYS);
