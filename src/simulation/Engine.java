@@ -20,6 +20,8 @@ public class Engine implements Runnable {
     private PixelWriter pixelWriter;
     private boolean isRunning = true;
     private int timeStepsPerFrame;
+    private DataCollector dataCollector;
+    private long currentTimeStep = 0;
 
     private final double[][] vesselShape = {
             {0.0, -5.0, -20.0, -20.0, -5.0, 0.0},
@@ -42,6 +44,7 @@ public class Engine implements Runnable {
         this.timeStepsPerFrame = timeStepsPerFrame;
 
         pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
+        dataCollector = new DataCollector();
     }
 
     private void drawFrame() {
@@ -168,6 +171,9 @@ public class Engine implements Runnable {
         while (isRunning) {
             for (int i = 0; i < timeStepsPerFrame; i++) {
                 simulation.timeStep();
+
+                currentTimeStep++;
+                dataCollector.append(simulation.getSpace(), currentTimeStep);
             }
 
             drawFrame();
@@ -176,6 +182,7 @@ public class Engine implements Runnable {
 
     public void stop() {
         isRunning = false;
+        dataCollector.dispose();
     }
 
     // Getters/Setters

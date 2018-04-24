@@ -218,7 +218,7 @@ public class Fish implements Field {
         x = position.x;
         y = position.y;
 
-        if (getHealth() >= 290) {
+        if (energy >= Settings.MIN_ENERGY_MATING) {
             xLower = position.x < 3 ? 0 : position.x - 3;
             xHigher = position.x > space.getWidth() - 4 ? space.getWidth() - 1 : position.x + 3;
 
@@ -244,7 +244,7 @@ public class Fish implements Field {
             }
         }
 
-        if (health < 290 || last < 1) {
+        if (energy < Settings.MIN_ENERGY_MATING || last < 1) {
             xLower = position.x < 1 ? 0 : position.x - 1;
             xHigher = position.x > space.getWidth() - 2 ? space.getWidth() - 1 : position.x + 1;
 
@@ -264,7 +264,7 @@ public class Fish implements Field {
                     int ic = i > yHigher ? i - 3 : i;
                     int jc = j > xHigher ? j - 3 : j;
 
-                    if (space.getTile(jc, ic).getMuDensity() > last) {
+                    if (space.getTile(jc, ic).getMuDensity() > last || (space.getTile(jc, ic).getMuDensity() == last && random.nextInt(5) == 1)) {
                         last = space.getTile(jc, ic).getMuDensity();
                         x = jc;
                         y = ic;
