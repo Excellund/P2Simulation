@@ -12,8 +12,6 @@ import java.util.Random;
 
 public class Fish implements Field {
 
-    public final static int FISH_HEALTH_CONSUMPTION = 300;
-
     private Vector position;
     private float health;
     private float energy;
@@ -180,6 +178,84 @@ public class Fish implements Field {
         FishEgg offSpring = new FishEgg(position, offSpringGenome, numEggs);
 
         space.queueAddField(offSpring);
+    }
+
+    private float calculateTileRating(Tile tile) {
+        //TODO
+        return 0;
+    }
+
+    private float sumTiles(float[][] tiles, Vector min, Vector max) {
+        float sum = 0;
+
+        for (int y = min.y; y < max.y; y++) {
+            for (int x = min.x; x < max.x; x++) {
+                sum += tiles[y][x];
+            }
+        }
+
+        return sum;
+    }
+
+    private Vector findOptimalTile(float[][] tileRatings, Vector min, Vector max) {
+        if (min.equals(max)) {
+            return min;
+        }
+
+        float dx = max.x - min.x;
+        float dy = max.y - min.y;
+
+        //Find bounding box coordinates
+        //TODO: make sure these are correct...
+        Vector minP1 = min;
+        Vector maxP1 = new Vector(min.x + (int) Math.ceil(dx / 2), min.y + (int) Math.ceil(dy / 2));
+        Vector minP2 = new Vector(min.x + (int) Math.floor(dy / 2), min.y);
+        Vector maxP2 = new Vector(max.x, min.y + (int) Math.ceil(dy / 2));
+        Vector minP3 = new Vector(min.x, min.y + (int) Math.floor(dy / 2));
+        Vector maxP3 = new Vector(min.x + (int) Math.ceil(dx / 2), max.y);
+        Vector minP4 = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
+        Vector maxP4 = max;
+
+        //Find sums of areas
+        float[] sums = new float[4];
+        sums[0] = sumTiles(tileRatings, minP1, maxP1);
+        sums[1] = sumTiles(tileRatings, minP2, maxP2);
+        sums[2] = sumTiles(tileRatings, minP3, maxP3);
+        sums[3] = sumTiles(tileRatings, minP4, maxP4);
+
+        //Find max value, starting at a random index.
+        Random r = CountingRandom.getInstance();
+        int startIndex = r.nextInt(4);
+        float maxSum = 0;
+        int maxSumIndex = startIndex;
+
+        for (int i = startIndex; i < 4; i++) {
+            if (sums[i] > maxSum) {
+                maxSum = sums[i];
+                maxSumIndex = i;
+            }
+        }
+
+        for (int i = 0; i < startIndex; i++) {
+            if (sums[i] > maxSum) {
+                maxSum = sums[i];
+                maxSumIndex = i;
+            }
+        }
+
+        //Do function recursively at sub-area
+        switch (maxSumIndex) {
+            case 0:
+                return findOptimalTile(tileRatings, minP1, maxP1);
+            case 1:
+                return findOptimalTile(tileRatings, minP2, maxP2);
+            case 2:
+                return findOptimalTile(tileRatings, minP3, maxP3);
+            case 3:
+                return findOptimalTile(tileRatings, minP4, maxP4);
+        }
+
+        return null;
     }
 
     //Getters
