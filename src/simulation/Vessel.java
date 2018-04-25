@@ -116,7 +116,8 @@ public class Vessel {
     }
 
     private void transform(Vector bow, int direction) {
-        double[][] location = {{0, -20, -20}, {0, 3, -3}};
+        double[][] location = {{0, -20, -20},
+                               {0,   3,  -3}};
 
         location = rotatePolygon(location, new Vector(0, 0), direction);
         location = scalePolygon(location, 2);
