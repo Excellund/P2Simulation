@@ -512,8 +512,8 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB, columnC, columnD);
 
-        Snapshot hello = new Snapshot();
-        Snapshot.saveSnapshot("snapshots/hello", hello);
+        //Snapshot hello = new Snapshot();
+        //Snapshot.saveSnapshot("snapshots/hello", hello);
 
         launchBox.setContent(mainContent);
     }
