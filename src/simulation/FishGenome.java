@@ -261,17 +261,17 @@ public class FishGenome {
     }
 
     public void print() {
-        System.out.println("Size: " + size);
-        System.out.println("Speed: " + speed);
-        System.out.println("HerbivoreEfficiency: " + herbivoreEfficiency);
-        System.out.println("CarnivoreEfficiency: " + carnivoreEfficiency);
-        System.out.println("HerbivoreTendency: " + herbivoreTendency);
-        System.out.println("PredationTendency: " + predationTendency);
-        System.out.println("ScavengeTendency: " + scavengeTendency);
-        System.out.println("SchoolingTendency: " + schoolingTendency);
-        System.out.println("AttackAbility: " + attackAbility);
-        System.out.println("NumSpawns: " + numSpawns);
-        System.out.println("SpawnSize: " + spawnSize);
+        System.out.println("Size: " + size + "\n" +
+                           "Speed: " + speed + "\n" +
+                           "HerbivoreEfficiency: " + herbivoreEfficiency + "\n" +
+                           "CarnivoreEfficiency: " + carnivoreEfficiency + "\n" +
+                           "HerbivoreTendency: " + herbivoreTendency  + "\n" +
+                           "PredationTendency: " + predationTendency  + "\n" +
+                           "ScavengeTendency: " + scavengeTendency + "\n" +
+                           "SchoolingTendency: " + schoolingTendency + "\n" +
+                           "AttackAbility: " + attackAbility + "\n" +
+                           "NumSpawns: " + numSpawns + "\n" +
+                           "SpawnSize: " + spawnSize);
     }
 
     // Setters

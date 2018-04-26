@@ -1,9 +1,11 @@
 package simulation;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -102,7 +104,7 @@ public class Settings {
 
     }
 
-    private static void useAbbreviated() {
+    public static void useAbbreviated() {
         PLANKTON_GROWTH_PER_TIMESTEP = abbreviated.get("PLANKTON_GROWTH_PER_TIMESTEP");
         NUM_VESSELS = abbreviated.get("NUM_VESSELS");
         MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
@@ -148,8 +150,54 @@ public class Settings {
 
     }
 
+    public static void getAbbreviated(){
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", PLANKTON_GROWTH_PER_TIMESTEP);
+        abbreviated.put("NUM_VESSELS", NUM_VESSELS);
+        abbreviated.put("MAX_PLANKTON", MAX_PLANKTON);
+
+        abbreviated.put("MAX_FISH_SIZE", MAX_FISH_SIZE);
+        abbreviated.put("ENERGY_PER_EGG", ENERGY_PER_EGG);
+        abbreviated.put("MIN_COMPATIBILITY_MATING", MIN_COMPATIBILITY_MATING);
+        abbreviated.put("MIN_PREDATION_TENDENCY", MIN_PREDATION_TENDENCY);
+        abbreviated.put("MAX_ATTACK_DAMAGE", MAX_ATTACK_DAMAGE);
+        abbreviated.put("ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE", ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE);
+        abbreviated.put("COMPATIBILITY_STEEPNESS", COMPATIBILITY_STEEPNESS);
+        abbreviated.put("COMPATIBILITY_MIDPOINT", COMPATIBILITY_MIDPOINT);
+        abbreviated.put("EXPECTED_MUTATION_AMOUNT", EXPECTED_MUTATION_AMOUNT);
+        abbreviated.put("MUTATION_GAUSSIAN_MEAN", MUTATION_GAUSSIAN_MEAN);
+        abbreviated.put("NUTRITION_PER_SIZE_POINT", NUTRITION_PER_SIZE_POINT);
+        abbreviated.put("MIN_ENERGY_MATING", MIN_ENERGY_MATING);
+        abbreviated.put("MATING_ENERGY_CONSUMPTION", MATING_ENERGY_CONSUMPTION);
+        abbreviated.put("HEALTH_POINTS_PER_SIZE_POINTS", HEALTH_POINTS_PER_SIZE_POINTS);
+        abbreviated.put("ENERGY_POINTS_PER_SIZE_POINTS", ENERGY_POINTS_PER_SIZE_POINTS);
+        abbreviated.put("HEALTH_REDUCTION_ON_LOW_ENERGY", HEALTH_REDUCTION_ON_LOW_ENERGY);
+        abbreviated.put("MIN_ENERGY_HEALTH_INCREASE", MIN_ENERGY_HEALTH_INCREASE);
+        abbreviated.put("ENERGY_HEALTH_INCREASE", ENERGY_HEALTH_INCREASE);
+        abbreviated.put("TIME_BEFORE_HATCH", TIME_BEFORE_HATCH);
+        abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", CARCASS_DECAY_PER_TIMESTEP);
+
+        abbreviated.put("MAX_MORPHOLOGY", MAX_MORPHOLOGY);
+        abbreviated.put("MIN_MORPHOLOGY", MIN_MORPHOLOGY);
+        abbreviated.put("FISHING_QUOTAS_MIN", FISHING_QUOTAS_MIN);
+        abbreviated.put("FISHING_QUOTAS_MAX", FISHING_QUOTAS_MAX);
+        abbreviated.put("VESSEL_TRAVEL_DISTANCE", VESSEL_TRAVEL_DISTANCE);
+        abbreviated.put("WIDTH_STEEPNESS", WIDTH_STEEPNESS);
+
+        abbreviated.put("MORPHOLOGY", MORPHOLOGY);
+        abbreviated.put("QUOTAS", QUOTAS);
+
+        abbreviated.put("ADD_PLANKTON", ADD_PLANKTON);
+
+        abbreviated.put("NUM_INITIAL_SUBJECTS", NUM_INITIAL_SUBJECTS);
+        abbreviated.put("LOAD_PLANKTON", LOAD_PLANKTON);
+
+        abbreviated.put("GAMMA", GAMMA);
+    }
+
     public static void toFile(String name) {
         Path path = Paths.get("settings/");
+
+        getAbbreviated();
 
         if (Files.notExists(path)) {
             try {
@@ -184,5 +232,24 @@ public class Settings {
         } catch (IOException e) {
             System.out.println(e.getMessage()); //file doesn't exist
         }
+    }
+
+    public static ArrayList<String> getFiles(){
+        Path directory = Paths.get("settings/");
+        ArrayList<String> files = new ArrayList<>();
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)){
+            for (Path file: stream){
+                if (Files.isRegularFile(file)){
+                    String temp = file.getFileName().toString();
+                    files.add(temp.substring(0, temp.indexOf('.')));
+                }
+            }
+        }
+        catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+
+        return files;
     }
 }

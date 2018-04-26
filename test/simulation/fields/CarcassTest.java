@@ -1,9 +1,6 @@
-package simulation;
+package simulation.fields;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import simulation.fields.Carcass;
+import org.junit.jupiter.api.*;
 import utils.Vector;
 
 import static org.junit.jupiter.api.Assertions.*;
