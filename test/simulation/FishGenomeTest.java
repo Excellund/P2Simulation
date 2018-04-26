@@ -53,4 +53,9 @@ public class FishGenomeTest {
         genome2.mutate();
         assertTrue(genome.calculateSimilarity(genome2) < 1);
     }
+
+    @Test
+    public void print() {
+
+    }
 }
