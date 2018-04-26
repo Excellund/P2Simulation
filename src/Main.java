@@ -15,9 +15,12 @@ import simulation.Settings;
 import simulation.Simulation;
 import ui.*;
 
+import java.util.Set;
+
 public class Main extends Application {
     public static void main(String[] args) {
         Settings.defaultAbbreviated();
+        Settings.useAbbreviated();
         Settings.toFile("default");
         Settings.fromFile("default");
         launch(args);

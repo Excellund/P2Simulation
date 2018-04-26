@@ -11,8 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import simulation.Settings;
+import simulation.Snapshot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class ContentBoxFactory {
@@ -37,9 +39,10 @@ public class ContentBoxFactory {
         TreeItem<String> itemFishery = new TreeItem<>("Fishery");
         TreeItem<String> itemGraph = new TreeItem<>("Graph");
         TreeItem<String> itemGraphics = new TreeItem<>("Graphics");
+        TreeItem<String> itemSaveSettings = new TreeItem<>("Save settings");
 
 
-        itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics);
+        itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics, itemSaveSettings);
 
         TreeItem<String> itemSnapshot = new TreeItem<>("Snapshot");
 
@@ -86,6 +89,11 @@ public class ContentBoxFactory {
 
                         case "Graphics":
                             interactionBoxSetContextGraphics(interactionBox);
+                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                            break;
+
+                        case "Save settings":
+                            interactionBoxSetContentSaveSettings(interactionBox);
                             interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
                             break;
                     }
@@ -367,6 +375,29 @@ public class ContentBoxFactory {
         interactionBox.setContent(mainContent);
     }
 
+    public void interactionBoxSetContentSaveSettings(ContentBox interactionBox){
+        interactionBox.getToolbar().setTitle("Save settings");
+        HBox mainContent = new HBox(10);
+        VBox columnA = new VBox();
+        VBox columnB = new VBox(4);
+
+        mainContent.getChildren().addAll(columnA, columnB);
+
+        Label labelSave = new Label("Save as");
+        TextField textSave = new TextField();
+
+        Button saveButton = new Button("Save");
+        saveButton.getStyleClass().add("buttonContent");
+        saveButton.setOnAction(event -> {
+            Settings.toFile(textSave.getText());
+        });
+
+        columnA.getChildren().addAll(labelSave);
+        columnB.getChildren().addAll(textSave, saveButton);
+
+        interactionBox.setContent(mainContent);
+    }
+
     public void spawnBoxSetContextVessel(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Spawn Vessel");
         HBox mainContent = new HBox(10);
@@ -391,8 +422,8 @@ public class ContentBoxFactory {
             }
         });
 
-        columnA.getChildren().addAll(labelMorphology, labelQuotas);
-        columnB.getChildren().addAll(textMorphology, textQuotas);
+
+        columnB.getChildren().addAll(textMorphology, textQuotas);columnA.getChildren().addAll(labelMorphology, labelQuotas);
 
         columnB.getChildren().add(saveButton);
 
@@ -453,13 +484,19 @@ public class ContentBoxFactory {
             }
         });
 
-        Button launchSettings = new Button("Upload Settings");
-        launchSettings.getStyleClass().add("buttonContent");
         columnA.getChildren().addAll(labelFishLoad, labelPlanktonLoad);
         columnB.getChildren().addAll(textFishLoad, textPlanktonLoad);
 
+        ArrayList<String> files = Settings.getFiles();
+
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll("hej", "XD", "Nooob");
+        choiceBox.getItems().addAll(files);
+
+        Button launchSettings = new Button("Upload Settings");
+        launchSettings.getStyleClass().add("buttonContent");
+        launchSettings.setOnAction(event -> {
+            Settings.fromFile(choiceBox.getValue());
+        });
 
         columnC.getChildren().add(choiceBox);
         columnD.getChildren().add(launchSettings);
@@ -467,7 +504,18 @@ public class ContentBoxFactory {
     }
 
     public void launchBoxSetContextSnapshot(ContentBox launchBox) {
+        HBox mainContent = new HBox(10);
+        VBox columnA = new VBox();
+        VBox columnB = new VBox(4);
+        VBox columnC = new VBox();
+        VBox columnD = new VBox(4);
 
+        mainContent.getChildren().addAll(columnA, columnB, columnC, columnD);
+
+        Snapshot hello = new Snapshot();
+        Snapshot.saveSnapshot("snapshots/hello", hello);
+
+        launchBox.setContent(mainContent);
     }
 
     public ContentBox[] interactionBoxSetContentGraph(ContentBox interactionBox) {
