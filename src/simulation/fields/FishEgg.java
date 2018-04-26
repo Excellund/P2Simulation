@@ -7,7 +7,6 @@ import utils.Color;
 import utils.Vector;
 
 public class FishEgg implements Field {
-    Color color;
     Vector position;
     FishGenome genome;
     int numEggs;
@@ -64,7 +63,7 @@ public class FishEgg implements Field {
 
     @Override
     public Color getColor() {
-        return color;
+        return new Color(255, 255, 255);
     }
 
     @Override

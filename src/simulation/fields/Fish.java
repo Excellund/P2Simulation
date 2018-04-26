@@ -1,13 +1,11 @@
 package simulation.fields;
 
-import simulation.FishGenome;
-import simulation.Settings;
-import simulation.SimulationSpace;
-import simulation.Tile;
+import simulation.*;
 import utils.Color;
 import utils.CountingRandom;
 import utils.Vector;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Fish implements Field {
@@ -60,9 +58,20 @@ public class Fish implements Field {
             space.queueRemoveField(this);
         }
 
-        Vector newPos = favoredMove(space);
+        //Vector newPos = favoredMove(space);
+        boolean[][] tileValid = getSurroundingTileValidity(space, 3);
+        float[][] tileRatings = calculateSurroundingTileRatings(space, tileValid, 3);
+        /*for (int i = 0; i < tileRatings.length; i++) {
+            System.out.println(Arrays.toString(tileRatings[i]));
+        }
+        System.out.println();*/
 
-        if (newPos.x >= 0 && newPos.x < space.getWidth() && newPos.y >= 0 && newPos.y < space.getHeight()) {
+        Vector newPos = findOptimalTile(tileRatings, tileValid, new Vector(0,0), new Vector(7, 7));
+
+        newPos = Vector.subtract(newPos, new Vector(3,3));
+        newPos = Vector.add(position, newPos);
+
+        if (space.isWithinBounds(newPos)) {
             space.moveField(newPos, this);
         }
 
@@ -78,8 +87,6 @@ public class Fish implements Field {
             }
         }
 
-        Random r = CountingRandom.getInstance();
-
         //Mating
         if (currentTile.getSubjects().size() > 2) {
             for (Field subject : currentTile.getSubjects()) {
@@ -90,7 +97,7 @@ public class Fish implements Field {
         }
 
         if (energy <= 0) {
-            health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
+            //health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
         } else if (energy >= Settings.MIN_ENERGY_HEALTH_INCREASE) {
             health += Settings.ENERGY_HEALTH_INCREASE;
 
@@ -110,15 +117,16 @@ public class Fish implements Field {
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
-        } else if (subject instanceof Carcass) {
+        }
+        else if (subject instanceof Carcass) {
             ((Carcass) subject).consume((int) (size * Settings.MAX_FISH_SIZE));
             energy += (int) (size * Settings.MAX_FISH_SIZE) * genome.getCarnivoreEfficiency();
 
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
-        } else if (subject instanceof Fish) //future maintainability
-        {
+        }
+        else if (subject instanceof Fish) {  //future maintainability
             if (matingTimer <= 0) {
                 for (Field field : space.getTile(position).getSubjects()) {
                     if (!(field instanceof Fish)) {
@@ -137,21 +145,6 @@ public class Fish implements Field {
                 matingTimer = CountingRandom.getInstance().nextInt(30);
             }
         }
-    }
-
-    @Override
-    public boolean isAlive() {
-        return health > 0;
-    }
-
-    @Override
-    public Vector getPosition() {
-        return position;
-    }
-
-    @Override
-    public Color getColor() {
-        return genome.getColor();
     }
 
     public void attack(Fish other, SimulationSpace space) {
@@ -181,53 +174,119 @@ public class Fish implements Field {
     }
 
     private float calculateTileRating(Tile tile) {
-        //TODO
-        return 0;
+        float rating = 0;
+
+        rating += tile.getMuDensity() / 1000000f;
+
+        if (energy >= Settings.MIN_ENERGY_MATING) {
+            float bestCompatibility = 0;
+            float tempCompatibility;
+
+            for (Field subject : tile.getSubjects()) {
+                if (subject instanceof Fish && subject != this) {
+                    tempCompatibility = getCompatibility((Fish) subject);
+
+                    if (tempCompatibility > bestCompatibility) {
+                        bestCompatibility = tempCompatibility;
+                    }
+                }
+            }
+
+            rating += bestCompatibility;
+        }
+
+        return rating;
     }
 
-    private float sumTiles(float[][] tiles, Vector min, Vector max) {
+    private boolean[][] getSurroundingTileValidity(SimulationSpace space, int radius) {
+        int seekSquareLength = radius * 2 + 1;
+        boolean validTiles[][] = new boolean[seekSquareLength][seekSquareLength];
+
+        for (int y = 0; y < seekSquareLength; y++) {
+            for (int x = 0; x < seekSquareLength; x++) {
+                validTiles[y][x] = space.isWithinBounds(Vector.add(position, new Vector(x - radius, y - radius)));
+            }
+        }
+
+        return validTiles;
+    }
+
+    private float[][] calculateSurroundingTileRatings(SimulationSpace space, boolean[][] tileValid, int radius) {
+        int seekSquareLength = radius * 2 + 1;
+
+        float tileRatings[][] = new float[seekSquareLength][seekSquareLength];
+
+        for (int y = 0; y < seekSquareLength; y++) {
+            for (int x = 0; x < seekSquareLength; x++) {
+                if (tileValid[y][x]) {
+                    tileRatings[y][x] = calculateTileRating(space.getTile(Vector.add(position, new Vector(x - radius, y - radius))));
+                }
+            }
+        }
+
+        return tileRatings;
+    }
+
+    private float sumTiles(float[][] tiles, boolean tileValidity[][], Vector min, Vector max) {
         float sum = 0;
 
         for (int y = min.y; y < max.y; y++) {
             for (int x = min.x; x < max.x; x++) {
-                sum += tiles[y][x];
+                if (tileValidity[y][x]) {
+                    sum += tiles[y][x];
+                }
             }
         }
 
         return sum;
     }
 
-    private Vector findOptimalTile(float[][] tileRatings, Vector min, Vector max) {
-        if (min.equals(max)) {
-            return min;
+    private Vector findOptimalTile(float[][] tileRatings, boolean tileValidity[][], Vector min, Vector max) {
+        if (max.x - min.x <= 1 && max.y - min.y <= 1) {
+            return max;
         }
 
         float dx = max.x - min.x;
         float dy = max.y - min.y;
 
         //Find bounding box coordinates
+        int numAreas = 4;
+        Vector mins[] = new Vector[4];
+        Vector maxs[] = new Vector[4];
+
         //TODO: make sure these are correct...
-        Vector minP1 = min;
-        Vector maxP1 = new Vector(min.x + (int) Math.ceil(dx / 2), min.y + (int) Math.ceil(dy / 2));
-        Vector minP2 = new Vector(min.x + (int) Math.floor(dy / 2), min.y);
-        Vector maxP2 = new Vector(max.x, min.y + (int) Math.ceil(dy / 2));
-        Vector minP3 = new Vector(min.x, min.y + (int) Math.floor(dy / 2));
-        Vector maxP3 = new Vector(min.x + (int) Math.ceil(dx / 2), max.y);
-        Vector minP4 = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
-        Vector maxP4 = max;
+        mins[0] = min;
+        maxs[0] = new Vector(min.x + (int) Math.ceil(dx / 2), min.y + (int) Math.ceil(dy / 2));
+        mins[1] = new Vector(min.x + (int) Math.floor(dy / 2), min.y);
+        maxs[1] = new Vector(max.x, min.y + (int) Math.ceil(dy / 2));
+        mins[2] = new Vector(min.x, min.y + (int) Math.floor(dy / 2));
+        maxs[2] = new Vector(min.x + (int) Math.ceil(dx / 2), max.y);
+        mins[3] = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
+        maxs[3] = max;
+        /*System.out.println("Mins: ");
+        System.out.println(Arrays.toString(mins));
+        System.out.println("Maxs: ");
+        System.out.println(Arrays.toString(maxs));
+        System.out.println();*/
 
         //Find sums of areas
         float[] sums = new float[4];
-        sums[0] = sumTiles(tileRatings, minP1, maxP1);
-        sums[1] = sumTiles(tileRatings, minP2, maxP2);
-        sums[2] = sumTiles(tileRatings, minP3, maxP3);
-        sums[3] = sumTiles(tileRatings, minP4, maxP4);
+        for (int i = 0; i < numAreas; i++) {
+            sums[i] = sumTiles(tileRatings, tileValidity, mins[i], maxs[i]);
+        }
 
         //Find max value, starting at a random index.
         Random r = CountingRandom.getInstance();
         int startIndex = r.nextInt(4);
         float maxSum = 0;
         int maxSumIndex = startIndex;
+
+        /*for (int i = 0; i < 4; i++) {
+            if (sums[i] > maxSum) {
+                maxSum = sums[i];
+                maxSumIndex = i;
+            }
+        }*/
 
         for (int i = startIndex; i < 4; i++) {
             if (sums[i] > maxSum) {
@@ -244,21 +303,42 @@ public class Fish implements Field {
         }
 
         //Do function recursively at sub-area
-        switch (maxSumIndex) {
-            case 0:
-                return findOptimalTile(tileRatings, minP1, maxP1);
-            case 1:
-                return findOptimalTile(tileRatings, minP2, maxP2);
-            case 2:
-                return findOptimalTile(tileRatings, minP3, maxP3);
-            case 3:
-                return findOptimalTile(tileRatings, minP4, maxP4);
+        return findOptimalTile(tileRatings, tileValidity, mins[maxSumIndex], maxs[maxSumIndex]);
+    }
+
+    private Vector findGreatestElement(float[][] arr) {
+        float greatestValue = 0;
+        Vector greatestPos = new Vector(0,0);
+
+        for (int y = 0; y < arr.length; y++) {
+            for (int x = 0; x < arr[0].length; x++) {
+                if (greatestValue < arr[y][x]) {
+                    greatestValue = arr[y][x];
+                    greatestPos.x = x;
+                    greatestPos.y = y;
+                }
+            }
         }
 
-        return null;
+        return greatestPos;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return health > 0;
     }
 
     //Getters
+    @Override
+    public Vector getPosition() {
+        return position;
+    }
+
+    @Override
+    public Color getColor() {
+        return genome.getColor();
+    }
+
     public float getHealth() {
         return health;
     }

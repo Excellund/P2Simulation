@@ -91,6 +91,10 @@ public class SimulationSpace implements Iterable<Field> {
         return new SimulationSpaceIterator(this, activeSubjects);
     }
 
+    public boolean isWithinBounds(Vector tilePos) {
+        return tilePos.x >= 0 && tilePos.x < width && tilePos.y >= 0 && tilePos.y < height;
+    }
+
     public int getWidth() {
         return width;
     }

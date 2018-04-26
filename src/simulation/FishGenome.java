@@ -3,9 +3,7 @@ package simulation;
 import utils.Color;
 import utils.CountingRandom;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class FishGenome {
     public static final int NUM_ATTRIBUTES = 14;
