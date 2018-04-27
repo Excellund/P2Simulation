@@ -30,7 +30,7 @@ public class ContentBoxFactory {
 
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        TreeItem<String> menuRoot = new TreeItem<>("simulation name");
+        TreeItem<String> menuRoot = new TreeItem<>("EFSOS");
         TreeView<String> menu = new TreeView<>(menuRoot);
 
         TreeItem<String> itemSettings = new TreeItem<>("Settings");
@@ -685,7 +685,7 @@ public class ContentBoxFactory {
 
         //Chart size
         scatterChart.setPrefWidth(375);
-        scatterChart.setPrefHeight(300);
+        scatterChart.setPrefHeight(280);
 
         //Pane window
         root.getChildren().add(scatterChart);

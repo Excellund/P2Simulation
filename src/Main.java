@@ -63,16 +63,16 @@ public class Main extends Application {
         Canvas canvas = new Canvas(750, 750);
         ContentArea areaOne = new ContentArea(375, 750, dragListener);
         ContentArea areaTwo = new ContentArea(375, 750, dragListener);
-        ContentArea graphAreaOne = new ContentArea(375, 280, dragListener);
-        ContentArea graphAreaTwo = new ContentArea(750, 280, dragListener);
-        ContentArea graphAreaThree = new ContentArea(375, 280, dragListener);
+        ContentArea graphAreaOne = new ContentArea(375, 550, dragListener);
+        ContentArea graphAreaTwo = new ContentArea(750, 550, dragListener);
+        ContentArea graphAreaThree = new ContentArea(375, 550, dragListener);
 
         ContentBox interactionBox = factory.generateInteractionBox(375);
         ContentBox spawnBox = factory.generateSpawnBox(375);
         ContentBox launchBox = factory.generateLaunchBox(375);
         ContentBox navigator = factory.generateNavigator(375, interactionBox, spawnBox, launchBox, areaTwo);
-        ContentBox contentTwo = new ContentBox("Two", 400, dragListener);
-        ContentBox contentThree = new ContentBox("Three", 500, dragListener);
+        //ContentBox contentTwo = new ContentBox("Two", 400, dragListener);
+        //ContentBox contentThree = new ContentBox("Three", 500, dragListener);
 
         canvasContainer.setStyle("-fx-background-color:black");
         canvasContainer.getChildren().add(canvas);
@@ -95,10 +95,10 @@ public class Main extends Application {
 
         //
 
-        contentThree.setContent(new Button("xds"));
+        //contentThree.setContent(new Button("xds"));
 
         areaOne.getChildren().add(navigator);
-        areaTwo.getChildren().addAll(contentTwo, contentThree);
+        //areaTwo.getChildren().addAll(contentTwo, contentThree);
         rowContainer.getChildren().addAll(areaOne, canvasContainer, areaTwo);
 
 
