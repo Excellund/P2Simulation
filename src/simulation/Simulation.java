@@ -27,8 +27,7 @@ public class Simulation {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                //space.getTile(x, y).addDensity(random.nextInt(200000));
-                space.getTile(x, y).addDensity(100000);
+                space.getTile(x, y).addDensity(100000); //TODO: Should be a setting
             }
         }
 
@@ -61,24 +60,13 @@ public class Simulation {
         for (int y = 0; y < space.getHeight(); ++y) {
             for (int x = 0; x < space.getWidth(); ++x) {
                 Tile current = space.getTile(x, y);
-
                 current.addDensity(calculateTilePlanktonGrowth(current, new Vector(x, y)));
+                current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 200));
             }
         }
     }
 
     private int calculateTilePlanktonGrowth(Tile tile, Vector position) {
-        /*float sum = 0;
-
-        if (position.x > 0 && position.x < width-1 && position.y > 0 && position.y < height-1) {
-            sum += space.getTile(Vector.add(position, new Vector(1,0))).getMuDensity() / 1000000f;
-            sum += space.getTile(Vector.add(position, new Vector(0,1))).getMuDensity() / 1000000f;
-            sum += space.getTile(Vector.add(position, new Vector(-1,0))).getMuDensity() / 1000000f;
-            sum += space.getTile(Vector.add(position, new Vector(0,-1))).getMuDensity() / 1000000f;
-        }
-
-        return (int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP * sum / 4);*/
-
         Vector min = new Vector(position.x - 1, position.y - 1);
         Vector max = new Vector(position.x + 1, position.y + 1);
         float sum = 0;

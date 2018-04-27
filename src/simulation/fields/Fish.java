@@ -59,16 +59,21 @@ public class Fish implements Field {
         }
 
         //Vector newPos = favoredMove(space);
-        boolean[][] tileValid = getSurroundingTileValidity(space, 3);
-        float[][] tileRatings = calculateSurroundingTileRatings(space, tileValid, 3);
-        /*for (int i = 0; i < tileRatings.length; i++) {
-            System.out.println(Arrays.toString(tileRatings[i]));
+        int radius = 3; //TODO: should be a setting
+        boolean[][] tileValid = getSurroundingTileValidity(space, radius);
+        float[][] tileRatings = calculateSurroundingTileRatings(space, tileValid, radius);
+
+        Vector newPos = findOptimalTile(tileRatings, tileValid, new Vector(0,0), new Vector(radius*2, radius*2));
+        newPos = Vector.subtract(newPos, new Vector(radius, radius));
+
+        //Limit movement to 1 tile
+        if (newPos.x != 0) {
+            newPos.x = newPos.x > 0 ? 1 : -1;
         }
-        System.out.println();*/
+        if (newPos.y != 0) {
+            newPos.y = newPos.y > 0 ? 1 : -1;
+        }
 
-        Vector newPos = findOptimalTile(tileRatings, tileValid, new Vector(0,0), new Vector(7, 7));
-
-        newPos = Vector.subtract(newPos, new Vector(3,3));
         newPos = Vector.add(position, newPos);
 
         if (space.isWithinBounds(newPos)) {
@@ -78,7 +83,7 @@ public class Fish implements Field {
         Tile currentTile = space.getTile(position);
 
         if (currentTile.getMuDensity() < 100000) {
-            energy -= 3;
+            energy -= 2;
         } else {
             energy += 1;
 
@@ -97,7 +102,7 @@ public class Fish implements Field {
         }
 
         if (energy <= 0) {
-            //health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
+            health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
         } else if (energy >= Settings.MIN_ENERGY_HEALTH_INCREASE) {
             health += Settings.ENERGY_HEALTH_INCREASE;
 
@@ -230,8 +235,8 @@ public class Fish implements Field {
     private float sumTiles(float[][] tiles, boolean tileValidity[][], Vector min, Vector max) {
         float sum = 0;
 
-        for (int y = min.y; y < max.y; y++) {
-            for (int x = min.x; x < max.x; x++) {
+        for (int y = min.y; y <= max.y; y++) {
+            for (int x = min.x; x <= max.x; x++) {
                 if (tileValidity[y][x]) {
                     sum += tiles[y][x];
                 }
@@ -242,35 +247,29 @@ public class Fish implements Field {
     }
 
     private Vector findOptimalTile(float[][] tileRatings, boolean tileValidity[][], Vector min, Vector max) {
-        if (max.x - min.x <= 1 && max.y - min.y <= 1) {
-            return max;
-        }
-
         float dx = max.x - min.x;
         float dy = max.y - min.y;
+
+        if (dx == 0 && dy == 0) {
+            return min;
+        }
 
         //Find bounding box coordinates
         int numAreas = 4;
         Vector mins[] = new Vector[4];
         Vector maxs[] = new Vector[4];
 
-        //TODO: make sure these are correct...
         mins[0] = min;
-        maxs[0] = new Vector(min.x + (int) Math.ceil(dx / 2), min.y + (int) Math.ceil(dy / 2));
-        mins[1] = new Vector(min.x + (int) Math.floor(dy / 2), min.y);
-        maxs[1] = new Vector(max.x, min.y + (int) Math.ceil(dy / 2));
-        mins[2] = new Vector(min.x, min.y + (int) Math.floor(dy / 2));
-        maxs[2] = new Vector(min.x + (int) Math.ceil(dx / 2), max.y);
-        mins[3] = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
+        maxs[0] = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
+        mins[1] = new Vector(min.x + (int) Math.ceil(dy / 2), min.y);
+        maxs[1] = new Vector(max.x, min.y + (int) Math.floor(dy / 2));
+        mins[2] = new Vector(min.x, min.y + (int) Math.ceil(dy / 2));
+        maxs[2] = new Vector(min.x + (int) Math.floor(dx / 2), max.y);
+        mins[3] = new Vector(min.x + (int) Math.ceil(dx / 2), min.y + (int) Math.ceil(dy / 2));
         maxs[3] = max;
-        /*System.out.println("Mins: ");
-        System.out.println(Arrays.toString(mins));
-        System.out.println("Maxs: ");
-        System.out.println(Arrays.toString(maxs));
-        System.out.println();*/
 
         //Find sums of areas
-        float[] sums = new float[4];
+        float[] sums = new float[numAreas];
         for (int i = 0; i < numAreas; i++) {
             sums[i] = sumTiles(tileRatings, tileValidity, mins[i], maxs[i]);
         }
@@ -278,25 +277,19 @@ public class Fish implements Field {
         //Find max value, starting at a random index.
         Random r = CountingRandom.getInstance();
         int startIndex = r.nextInt(4);
+        //startIndex = 2;
         float maxSum = 0;
         int maxSumIndex = startIndex;
 
-        /*for (int i = 0; i < 4; i++) {
-            if (sums[i] > maxSum) {
-                maxSum = sums[i];
-                maxSumIndex = i;
-            }
-        }*/
-
-        for (int i = startIndex; i < 4; i++) {
-            if (sums[i] > maxSum) {
+        for (int i = startIndex; i < numAreas; i++) {
+            if (sums[i] > maxSum + 0.001) {
                 maxSum = sums[i];
                 maxSumIndex = i;
             }
         }
 
         for (int i = 0; i < startIndex; i++) {
-            if (sums[i] > maxSum) {
+            if (sums[i] > maxSum + 0.001) {
                 maxSum = sums[i];
                 maxSumIndex = i;
             }

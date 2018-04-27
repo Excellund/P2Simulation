@@ -80,7 +80,7 @@ public class Main extends Application {
         //
 
         Simulation simulation = new Simulation(750, 750);
-        Engine engine = new Engine(simulation, canvas, 1);
+        Engine engine = new Engine(simulation, canvas, 10);
 
         Thread engineThread = new Thread(engine);
 

@@ -59,7 +59,7 @@ public class Settings {
     private static Map<String, Float> abbreviated = new HashMap<>();
 
     public static void defaultAbbreviated() {
-        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 500f);
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 2000f);
         abbreviated.put("NUM_VESSELS", 3f);
         abbreviated.put("MAX_PLANKTON", 500000f);
 
@@ -96,7 +96,7 @@ public class Settings {
 
         abbreviated.put("ADD_PLANKTON", 100000f);
 
-        abbreviated.put("NUM_INITIAL_SUBJECTS", 300f);
+        abbreviated.put("NUM_INITIAL_SUBJECTS", 1500f);
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);

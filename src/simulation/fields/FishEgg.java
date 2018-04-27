@@ -4,7 +4,10 @@ import simulation.FishGenome;
 import simulation.Settings;
 import simulation.SimulationSpace;
 import utils.Color;
+import utils.CountingRandom;
 import utils.Vector;
+
+import java.util.Random;
 
 public class FishEgg implements Field {
     Vector position;
@@ -29,12 +32,13 @@ public class FishEgg implements Field {
 
     @Override
     public void update(SimulationSpace space) {
-        if (!isAlive()) {
-            space.queueRemoveField(this);
-        }
+        if (timeBeforeHatch <= 0 && numEggs > 0) {
+            Random r = CountingRandom.getInstance();
+            int hatches = r.nextInt(numEggs) / 4;
 
-        if (timeBeforeHatch <= 0) {
-            for (int i = 0; i < numEggs; i++) {
+            for (int i = 0; i < hatches; i++) {
+                numEggs -= 1;
+
                 FishGenome mutatedGenome = new FishGenome(genome);
 
                 mutatedGenome.mutate();
@@ -44,6 +48,10 @@ public class FishEgg implements Field {
             numEggs = 0;
         } else {
             --timeBeforeHatch;
+        }
+
+        if (!isAlive()) {
+            space.queueRemoveField(this);
         }
     }
 
