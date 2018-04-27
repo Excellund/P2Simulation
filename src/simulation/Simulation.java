@@ -61,7 +61,7 @@ public class Simulation {
             for (int x = 0; x < space.getWidth(); ++x) {
                 Tile current = space.getTile(x, y);
                 current.addDensity(calculateTilePlanktonGrowth(current, new Vector(x, y)));
-                current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 200));
+                current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 600));
             }
         }
     }
