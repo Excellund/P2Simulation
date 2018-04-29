@@ -14,8 +14,18 @@ public class Carcass implements Field {
         this.position = position;
     }
 
-    public void consume(int amount) {
+    public int consume(int amount) {
+        if (amount > nutrition) {
+            int energy = nutrition;
+
+            nutrition = 0;
+
+            return energy;
+        }
+
         nutrition -= amount;
+
+        return amount;
     }
 
     public int getNutrition() {

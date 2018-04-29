@@ -26,7 +26,7 @@
 }
 
 .tree-cell:selected {
-    -fx-font-weight: bold ;
+    -fx-font-weight: bold;
 }
 
 .tree-cell {
@@ -130,12 +130,15 @@
 .chart-plot-background {
     -fx-background-color: transparent;
 }
+
 .chart-vertical-grid-lines {
     -fx-stroke: #637282;
 }
+
 .chart-horizontal-grid-lines {
     -fx-stroke: #637282;
 }
+
 .chart-alternative-row-fill {
     -fx-fill: #393c44;
     -fx-stroke: transparent;
@@ -149,7 +152,7 @@
 }
 
 .chart-legend {
-    -fx-background-color:  transparent;
+    -fx-background-color: transparent;
     -fx-padding: 20px;
 }
 
@@ -172,7 +175,7 @@
     -fx-padding: 3px;
 }
 
-.choice-box{
+.choice-box {
     -fx-background-color: #53595d;
     -fx-font-family: "System";
 }

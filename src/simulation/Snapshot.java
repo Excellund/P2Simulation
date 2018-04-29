@@ -224,6 +224,10 @@ public class Snapshot {
         stream.write(ByteBuffer.allocate(Double.BYTES).putDouble(value).array());
     }
 
+    private static void writeBoolean(OutputStream stream, boolean value) throws IOException {
+        stream.write(value ? 1 : 0);
+    }
+
     private static void writeVector(OutputStream stream, Vector vec) throws IOException {
         writeInt(stream, vec.x);
         writeInt(stream, vec.y);
@@ -250,6 +254,8 @@ public class Snapshot {
         writeFloat(stream, fish.getSize());
         writeFloat(stream, fish.getSpeed());
         writeFishGenome(stream, fish.getGenome());
+        writeInt(stream, fish.getMatingTimer());
+        writeBoolean(stream, fish.isMature());
     }
 
     private static void writeFishEgg(OutputStream stream, FishEgg egg) throws IOException {
@@ -307,6 +313,10 @@ public class Snapshot {
         return buf.getDouble(0);
     }
 
+    private static boolean readBoolean(InputStream stream) throws IOException {
+        return stream.read() > 0;
+    }
+
     private static Vector readVector(InputStream stream) throws IOException {
         return new Vector(readInt(stream), readInt(stream));
     }
@@ -340,8 +350,10 @@ public class Snapshot {
         float size = readFloat(stream);
         float speed = readFloat(stream);
         FishGenome genome = readFishGenome(stream);
+        int matingTimer = readInt(stream);
+        boolean isMature = readBoolean(stream);
 
-        return new Fish(position, health, energy, size, speed, genome);
+        return new Fish(position, health, energy, size, speed, genome, matingTimer, isMature);
     }
 
     private static FishEgg readFishEgg(InputStream stream) throws IOException {

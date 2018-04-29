@@ -25,8 +25,7 @@ public class FileReading {
         String line;
 
         //Load data into lists
-        while ((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             //Split array
             String[] splitted = line.split(",");
 
@@ -42,8 +41,7 @@ public class FileReading {
 
     }
 
-    public List<List> collectedLists()
-    {
+    public List<List> collectedLists() {
 
         collectedList.add(list1);
         collectedList.add(list2);

@@ -3,12 +3,14 @@ package simulation;
 import utils.Color;
 import utils.CountingRandom;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class FishGenome {
     public static final int NUM_ATTRIBUTES = 14;
 
-    // All attributes (genes) will have values between 0 and 1
+    //All attributes (genes) will have values between 0 and 1
     private float size;
     private float speed;
     private Color color;
@@ -28,6 +30,7 @@ public class FishGenome {
 
     private FishGenome parentGenomeA, parentGenomeB;
 
+    //Creates a FishGenome from specified attributes
     public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         setGenes(
                 size,
@@ -47,7 +50,7 @@ public class FishGenome {
         );
     }
 
-    // Creates new genome from a mix of two others
+    //Creates new genome from a mix of two others
     public FishGenome(FishGenome genomeA, FishGenome genomeB) {
         float genomeArrayA[] = genomeA.getArray();
         float genomeArrayB[] = genomeB.getArray();
@@ -61,24 +64,26 @@ public class FishGenome {
 
         Random r = CountingRandom.getInstance();
 
+        //For each attribute, chose what parent/grandparent to inherit from.
         for (int i = 0; i < numGenes; i++) {
             float chance = r.nextFloat();
 
-            if (chance < 0.4) {        // 40% chance
-                genomeResultArray[i] = genomeArrayA[i];  // Inherit from parent A
-            } else if (chance < 0.8) { // 40% chance
-                genomeResultArray[i] = genomeArrayB[i];  // Inherit from parent B
-            } else if (chance < 0.85) { // 5% chance
-                genomeResultArray[i] = genomeArrayAA[i]; // Inherit from parent A of parent A
-            } else if (chance < 0.9) { // 5% chance
-                genomeResultArray[i] = genomeArrayAB[i]; // Inherit from parent B of parent A
-            } else if (chance < 0.95) { // 5% chance
-                genomeResultArray[i] = genomeArrayBA[i]; // Inherit from parent A of parent B
-            } else {                   // 5% chance
-                genomeResultArray[i] = genomeArrayBB[i]; // Inherit from parent B of parent B
+            if (chance < 0.4) {        //40% chance
+                genomeResultArray[i] = genomeArrayA[i];  //Inherit from parent A
+            } else if (chance < 0.8) { //40% chance
+                genomeResultArray[i] = genomeArrayB[i];  //Inherit from parent B
+            } else if (chance < 0.85) { //5% chance
+                genomeResultArray[i] = genomeArrayAA[i]; //Inherit from parent A of parent A
+            } else if (chance < 0.9) { //5% chance
+                genomeResultArray[i] = genomeArrayAB[i]; //Inherit from parent B of parent A
+            } else if (chance < 0.95) { //5% chance
+                genomeResultArray[i] = genomeArrayBA[i]; //Inherit from parent A of parent B
+            } else {                   //5% chance
+                genomeResultArray[i] = genomeArrayBB[i]; //Inherit from parent B of parent B
             }
         }
 
+        //Apply the new attributes
         setGenes(
                 genomeResultArray[0],
                 genomeResultArray[1],
@@ -97,26 +102,22 @@ public class FishGenome {
         );
     }
 
-    // Create random genome
+    //Creates random genome
     public FishGenome() {
         Random r = CountingRandom.getInstance();
 
         this.size = r.nextFloat();
         this.speed = r.nextFloat();
-
         this.herbivoreEfficiency = r.nextFloat();
         this.carnivoreEfficiency = r.nextFloat();
         this.herbivoreTendency = r.nextFloat();
         this.predationTendency = r.nextFloat();
         this.scavengeTendency = r.nextFloat();
-
+        this.schoolingTendency = r.nextFloat();
         this.attackAbility = r.nextFloat();
         this.numSpawns = r.nextFloat();
-
-        float spawnSize = r.nextFloat();
-        this.spawnSize = spawnSize - this.size < 0 ? spawnSize / 4 : this.size / 4; // Do something to ensure spawnsize is less than size. //TODO: do properly
-
-        this.color = new Color(r.nextInt(155) + 100, r.nextInt(100), r.nextInt(155) + 100);
+        this.spawnSize = size / numSpawns / 4;
+        this.color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
 
         parentGenomeA = new FishGenome(this);
         parentGenomeB = new FishGenome(this);
@@ -164,6 +165,7 @@ public class FishGenome {
         );
     }
 
+    //Mutates a genome randomly
     public void mutate() {
         Random r = CountingRandom.getInstance();
 
@@ -172,6 +174,7 @@ public class FishGenome {
         // Generate number of mutations to perform based on a poisson distribution
         int numMutations = generatePoissonDistributedNumber((int) Settings.EXPECTED_MUTATION_AMOUNT);
 
+        //Ensure there are no more mutations than number of attributes
         if (numMutations > attributes.length) {
             numMutations = attributes.length;
         }
@@ -198,7 +201,7 @@ public class FishGenome {
         setAttributes(attributes);
     }
 
-    // Java implementation of Donald Knuth's algorithm generate random Poisson-distributed number, as described in his book "The Art of Computer Programming, Volume 2"
+    // Java implementation of Donald Knuth's algorithm to generate random Poisson-distributed number, as described in his book "The Art of Computer Programming, Volume 2"
     // Algorithm also described on wikipedia: https://en.wikipedia.org/wiki/Poisson_distribution#Generating_Poisson-distributed_random_variables
     private int generatePoissonDistributedNumber(int lambda) {
         Random rand = CountingRandom.getInstance();
@@ -210,12 +213,13 @@ public class FishGenome {
         do {
             k++;
             p = p * rand.nextFloat();
-        } while (p > l);
+        }
+        while (p > l);
 
         return k - 1;
     }
 
-    // Returns the similarity of two genomes. Between 0 and 1.
+    // Returns the similarity of two genomes. Return a value between 0 and 1.
     public float calculateSimilarity(FishGenome other) {
         // Genomes similarity will be defined as 1 - d where d is the distance between two points in an n-dimensional space where n is the number of genes in a genome.
         // Each element of the two points refer to the value of the gene in the genome
@@ -225,19 +229,19 @@ public class FishGenome {
 
         float distance = 0;
 
-        for (int i = 0; i < genomeA.length; i++) {
+        //Calculate the square of the length of the vector between the two points corresponding to the attributes
+        for (int i = 0; i < NUM_ATTRIBUTES; i++) {
             distance += Math.pow(genomeA[i] - genomeB[i], 2);
         }
 
-        distance = (float) Math.sqrt(distance);
-        distance = distance / (float) Math.sqrt(genomeA.length); // Normalize distance to be between 0 and 1
+        distance = (float) Math.sqrt(distance); //Convert from distance squared to distance
+        distance = distance / (float) Math.sqrt(NUM_ATTRIBUTES); //Normalize distance to be between 0 and 1
 
-        return 1 - distance;
+        return 1 - distance; //Subtract the distance from 1 to find the similarity instead of the difference
     }
 
-    // Removes unneeded references to grandgrandparents genomes
+    // Removes unneeded references to grandgrandparents genomes in order to reclaim memory
     private void stripUnneededGenomeReferences() {
-        //Make sure references to older genomes get removed in order to save memory
         if (parentGenomeA != null) {
             if (parentGenomeA.parentGenomeA != null) {
                 parentGenomeA.parentGenomeA.parentGenomeA = null;
@@ -260,21 +264,8 @@ public class FishGenome {
         }
     }
 
-    public void print() {
-        System.out.println("Size: " + size + "\n" +
-                           "Speed: " + speed + "\n" +
-                           "HerbivoreEfficiency: " + herbivoreEfficiency + "\n" +
-                           "CarnivoreEfficiency: " + carnivoreEfficiency + "\n" +
-                           "HerbivoreTendency: " + herbivoreTendency  + "\n" +
-                           "PredationTendency: " + predationTendency  + "\n" +
-                           "ScavengeTendency: " + scavengeTendency + "\n" +
-                           "SchoolingTendency: " + schoolingTendency + "\n" +
-                           "AttackAbility: " + attackAbility + "\n" +
-                           "NumSpawns: " + numSpawns + "\n" +
-                           "SpawnSize: " + spawnSize);
-    }
-
-    // Setters
+    //Setters
+    //Set attributes to specified values
     private void setGenes(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         this.size = size;
         this.speed = speed;
@@ -294,27 +285,7 @@ public class FishGenome {
         stripUnneededGenomeReferences();
     }
 
-    // Getters
-    // Get genome represented as a float array
-    public float[] getArray() {
-        return new float[]{
-                this.size,
-                this.speed,
-                this.herbivoreEfficiency,
-                this.carnivoreEfficiency,
-                this.herbivoreTendency,
-                this.predationTendency,
-                this.scavengeTendency,
-                this.schoolingTendency,
-                this.attackAbility,
-                this.numSpawns,
-                this.spawnSize,
-                this.color.getRedNormalized(),
-                this.color.getGreenNormalized(),
-                this.color.getBlueNormalized()
-        };
-    }
-
+    //Set attributes from float array
     private void setAttributes(float[] array) {
         setGenes(
                 array[0],
@@ -333,21 +304,30 @@ public class FishGenome {
                 this.parentGenomeB
 
         );
-        this.size = array[0];
-        this.speed = array[1];
-        this.herbivoreEfficiency = array[2];
-        this.carnivoreEfficiency = array[3];
-        this.herbivoreTendency = array[4];
-        this.predationTendency = array[5];
-        this.scavengeTendency = array[6];
-        this.schoolingTendency = array[7];
-        this.attackAbility = array[8];
-        this.numSpawns = array[9];
-        this.spawnSize = array[10];
     }
 
     //access private fields:
 
+    // Getters
+    // Get genome represented as a float array in order to make it easier to iterate attributes
+    public float[] getArray() {
+        return new float[]{
+                this.size,
+                this.speed,
+                this.herbivoreEfficiency,
+                this.carnivoreEfficiency,
+                this.herbivoreTendency,
+                this.predationTendency,
+                this.scavengeTendency,
+                this.schoolingTendency,
+                this.attackAbility,
+                this.numSpawns,
+                this.spawnSize,
+                this.color.getRedNormalized(),
+                this.color.getGreenNormalized(),
+                this.color.getBlueNormalized()
+        };
+    }
 
     public float getSize() {
         return size;

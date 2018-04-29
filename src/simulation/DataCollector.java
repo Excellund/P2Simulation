@@ -5,7 +5,10 @@ import simulation.fields.Field;
 import simulation.fields.Fish;
 import simulation.fields.FishEgg;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -35,10 +38,11 @@ public class DataCollector {
     }
 
     public void append(SimulationSpace space, long timestep) {
-        String line = String.valueOf(timestep) + ',';
         ArrayList<Fish> fish = getFish(space);
+        String line = String.valueOf(timestep) + ',';
 
-        //TODO: %BWD
+        line += String.valueOf(averageBWD(fish));
+        line += ',';
         line += String.valueOf(averageMorphology(fish));
         line += ',';
         line += String.valueOf(averagePlanktonDensity(space));
@@ -50,6 +54,8 @@ public class DataCollector {
         line += String.valueOf(fishEggCount(space));
         line += ',';
         line += String.valueOf(averageMaxSpawning(fish));
+        line += ',';
+        line += String.valueOf(averageSchoolingTendency(fish));
         line += '\n';
 
         try {
@@ -71,6 +77,16 @@ public class DataCollector {
         } catch (IOException e) {
             e.getMessage();
         }
+    }
+
+    private float averageBWD(ArrayList<Fish> fish) {
+        float sum = 0;
+
+        for (Fish subject : fish) {
+            sum += subject.getSize() * subject.getSpeed();
+        }
+
+        return sum / fish.size();
     }
 
     private long carcassCount(SimulationSpace space) {
@@ -119,6 +135,16 @@ public class DataCollector {
         }
 
         return fish;
+    }
+
+    private double averageSchoolingTendency(ArrayList<Fish> fish) {
+        double sum = 0;
+
+        for (Fish subject : fish) {
+            sum += subject.getGenome().getSchoolingTendency();
+        }
+
+        return sum / fish.size();
     }
 
     private double averageMaxSpawning(ArrayList<Fish> fish) {

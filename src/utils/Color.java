@@ -3,12 +3,13 @@ package utils;
 public class Color {
     private int intRepresentation;
 
-    //Arguments between 0 and 255
+    //Creates a color from rgb values between 0-255
     public Color(int r, int g, int b) {
         intRepresentation = (r << 16) | (g << 8) | b;
     }
 
     //Arguments between 0 and 1
+    //Creates a color from rgb values between 0-1
     public Color(float r, float g, float b) {
         this((int) (r * 255), (int) (g * 255), (int) (b * 255));
     }
@@ -31,14 +32,14 @@ public class Color {
     }
 
     public float getRedNormalized() {
-        return (float) getRed() / 255;
+        return getRed() / 255f;
     }
 
     public float getGreenNormalized() {
-        return (float) getGreen() / 255;
+        return getGreen() / 255f;
     }
 
     public float getBlueNormalized() {
-        return (float) getBlue() / 255;
+        return getBlue() / 255f;
     }
 }

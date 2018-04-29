@@ -29,7 +29,7 @@ public class Graph {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < (double) file.getCollectedList().get(xChoice).size(); i++){
+        for (int i = 0; i < (double) file.getCollectedList().get(xChoice).size(); i++) {
 
             xCoordinate.add((double) file.getCollectedList().get(xChoice).get(i));
             yCoordinate.add((double) file.getCollectedList().get(yChoice).get(i));
@@ -55,20 +55,18 @@ public class Graph {
     }
 
     //Tick units so the graph doesn't get too cluttered
-    int tickUnit(double listMax){
+    int tickUnit(double listMax) {
 
         int tickUnitValue = 1;
 
-        if(listMax >= 20){
+        if (listMax >= 20) {
 
             tickUnitValue = 5;
-        }
-        else if(listMax >= 50){
+        } else if (listMax >= 50) {
 
             tickUnitValue = 10;
 
-        }
-        else if(listMax >= 1000){
+        } else if (listMax >= 1000) {
 
             tickUnitValue = 500;
         }

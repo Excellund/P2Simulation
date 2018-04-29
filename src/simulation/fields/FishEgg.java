@@ -55,8 +55,18 @@ public class FishEgg implements Field {
         }
     }
 
-    public void subtractEggs(int amount) {
+    public int subtractEggs(int amount) {
+        if (amount > numEggs) {
+            int eggs = numEggs;
+
+            numEggs = 0;
+
+            return eggs;
+        }
+
         numEggs -= amount;
+
+        return amount;
     }
 
     @Override

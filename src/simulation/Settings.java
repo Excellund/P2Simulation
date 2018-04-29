@@ -15,6 +15,7 @@ public class Settings {
     public static float PLANKTON_GROWTH_PER_TIMESTEP;
     public static float NUM_VESSELS;
     public static float MAX_PLANKTON;
+    public static float INITIAL_MAX_PLANKTON_DENSITY;
 
     //Fish settings
     public static float MAX_FISH_SIZE;
@@ -37,6 +38,11 @@ public class Settings {
     public static float ENERGY_HEALTH_INCREASE;
     public static float TIME_BEFORE_HATCH;
     public static float CARCASS_DECAY_PER_TIMESTEP;
+    public static float MAX_MOVES_CORRESPONDING_TO_SPEED;
+    public static float ENERGY_SPEED_CORRELATION;
+    public static float MATING_DELAY;
+    public static float VISION_RANGE;
+    public static float FISH_GROWTH_RATE_PER_TIMESTEP;
 
     //Fishing settings
     public static float MAX_MORPHOLOGY;
@@ -59,23 +65,24 @@ public class Settings {
     private static Map<String, Float> abbreviated = new HashMap<>();
 
     public static void defaultAbbreviated() {
-        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 3500f);
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 2000f);
         abbreviated.put("NUM_VESSELS", 3f);
         abbreviated.put("MAX_PLANKTON", 500000f);
+        abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", 300000f);
 
         abbreviated.put("MAX_FISH_SIZE", 100f);
         abbreviated.put("ENERGY_PER_EGG", 1f);
         abbreviated.put("MIN_COMPATIBILITY_MATING", 0.8f);
         abbreviated.put("MIN_PREDATION_TENDENCY", 0.4f);
-        abbreviated.put("MAX_ATTACK_DAMAGE", 1f);
+        abbreviated.put("MAX_ATTACK_DAMAGE", 20f);
         abbreviated.put("ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE", 0.1f);
         abbreviated.put("COMPATIBILITY_STEEPNESS", 50f);
         abbreviated.put("COMPATIBILITY_MIDPOINT", 0.85f);
-        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 6f);
-        abbreviated.put("MUTATION_GAUSSIAN_MEAN", 0.1f);
+        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 4f);
+        abbreviated.put("MUTATION_GAUSSIAN_MEAN", 0.05f);
         abbreviated.put("NUTRITION_PER_SIZE_POINT", 0.01f);
         abbreviated.put("MIN_ENERGY_MATING", 40f);
-        abbreviated.put("MATING_ENERGY_CONSUMPTION", 30f);
+        abbreviated.put("MATING_ENERGY_CONSUMPTION", 60f);
         abbreviated.put("HEALTH_POINTS_PER_SIZE_POINTS", 1f);
         abbreviated.put("ENERGY_POINTS_PER_SIZE_POINTS", 2f);
         abbreviated.put("HEALTH_REDUCTION_ON_LOW_ENERGY", 10f);
@@ -83,6 +90,11 @@ public class Settings {
         abbreviated.put("ENERGY_HEALTH_INCREASE", 5f);
         abbreviated.put("TIME_BEFORE_HATCH", 50f);
         abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", 1f);
+        abbreviated.put("MAX_MOVES_CORRESPONDING_TO_SPEED", 3f);
+        abbreviated.put("ENERGY_SPEED_CORRELATION", 90f);
+        abbreviated.put("MATING_DELAY", 600f);
+        abbreviated.put("VISION_RANGE", 4f);
+        abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.000005f);
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);
         abbreviated.put("MIN_MORPHOLOGY", 0.1f);
@@ -96,7 +108,7 @@ public class Settings {
 
         abbreviated.put("ADD_PLANKTON", 100000f);
 
-        abbreviated.put("NUM_INITIAL_SUBJECTS", 500f);
+        abbreviated.put("NUM_INITIAL_SUBJECTS", 3000f);
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);
@@ -108,6 +120,7 @@ public class Settings {
         PLANKTON_GROWTH_PER_TIMESTEP = abbreviated.get("PLANKTON_GROWTH_PER_TIMESTEP");
         NUM_VESSELS = abbreviated.get("NUM_VESSELS");
         MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
+        INITIAL_MAX_PLANKTON_DENSITY = abbreviated.get("INITIAL_MAX_PLANKTON_DENSITY");
 
         MAX_FISH_SIZE = abbreviated.get("MAX_FISH_SIZE");
         ENERGY_PER_EGG = abbreviated.get("ENERGY_PER_EGG");
@@ -129,6 +142,11 @@ public class Settings {
         ENERGY_HEALTH_INCREASE = abbreviated.get("ENERGY_HEALTH_INCREASE");
         TIME_BEFORE_HATCH = abbreviated.get("TIME_BEFORE_HATCH");
         CARCASS_DECAY_PER_TIMESTEP = abbreviated.get("CARCASS_DECAY_PER_TIMESTEP");
+        MAX_MOVES_CORRESPONDING_TO_SPEED = abbreviated.get("MAX_MOVES_CORRESPONDING_TO_SPEED");
+        ENERGY_SPEED_CORRELATION = abbreviated.get("ENERGY_SPEED_CORRELATION");
+        MATING_DELAY = abbreviated.get("MATING_DELAY");
+        VISION_RANGE = abbreviated.get("VISION_RANGE");
+        FISH_GROWTH_RATE_PER_TIMESTEP = abbreviated.get("FISH_GROWTH_RATE_PER_TIMESTEP");
 
         MAX_MORPHOLOGY = abbreviated.get("MAX_MORPHOLOGY");
         MIN_MORPHOLOGY = abbreviated.get("MIN_MORPHOLOGY");
@@ -150,10 +168,11 @@ public class Settings {
 
     }
 
-    public static void getAbbreviated(){
+    public static void getAbbreviated() {
         abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", PLANKTON_GROWTH_PER_TIMESTEP);
         abbreviated.put("NUM_VESSELS", NUM_VESSELS);
         abbreviated.put("MAX_PLANKTON", MAX_PLANKTON);
+        abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", INITIAL_MAX_PLANKTON_DENSITY);
 
         abbreviated.put("MAX_FISH_SIZE", MAX_FISH_SIZE);
         abbreviated.put("ENERGY_PER_EGG", ENERGY_PER_EGG);
@@ -175,6 +194,11 @@ public class Settings {
         abbreviated.put("ENERGY_HEALTH_INCREASE", ENERGY_HEALTH_INCREASE);
         abbreviated.put("TIME_BEFORE_HATCH", TIME_BEFORE_HATCH);
         abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", CARCASS_DECAY_PER_TIMESTEP);
+        abbreviated.put("MAX_MOVES_CORRESPONDING_TO_SPEED", MAX_MOVES_CORRESPONDING_TO_SPEED);
+        abbreviated.put("ENERGY_SPEED_CORRELATION", ENERGY_SPEED_CORRELATION);
+        abbreviated.put("MATING_DELAY", MATING_DELAY);
+        abbreviated.put("VISION_RANGE", VISION_RANGE);
+        abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", FISH_GROWTH_RATE_PER_TIMESTEP);
 
         abbreviated.put("MAX_MORPHOLOGY", MAX_MORPHOLOGY);
         abbreviated.put("MIN_MORPHOLOGY", MIN_MORPHOLOGY);
@@ -234,19 +258,18 @@ public class Settings {
         }
     }
 
-    public static ArrayList<String> getFiles(){
+    public static ArrayList<String> getFiles() {
         Path directory = Paths.get("settings/");
         ArrayList<String> files = new ArrayList<>();
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)){
-            for (Path file: stream){
-                if (Files.isRegularFile(file)){
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            for (Path file : stream) {
+                if (Files.isRegularFile(file)) {
                     String temp = file.getFileName().toString();
                     files.add(temp.substring(0, temp.indexOf('.')));
                 }
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 

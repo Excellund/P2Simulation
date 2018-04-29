@@ -11,9 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import simulation.Settings;
-import simulation.Snapshot;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -30,7 +28,7 @@ public class ContentBoxFactory {
 
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        TreeItem<String> menuRoot = new TreeItem<>("EFSOS");
+        TreeItem<String> menuRoot = new TreeItem<>("simulation name");
         TreeView<String> menu = new TreeView<>(menuRoot);
 
         TreeItem<String> itemSettings = new TreeItem<>("Settings");
@@ -62,7 +60,8 @@ public class ContentBoxFactory {
         contentBox.setContent(menu);
 
 
-        menu.getSelectionModel().selectedItemProperty().addListener(event -> {
+        menu.getSelectionModel().selectedItemProperty().addListener(event ->
+        {
             switch (menu.getSelectionModel().getSelectedItem().getParent().getValue()) {
                 case "Settings":
                     switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
@@ -193,7 +192,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.NUM_VESSELS = Float.parseFloat(textNumVessel.getText());
                 Settings.PLANKTON_GROWTH_PER_TIMESTEP = Float.parseFloat(textPlanktonGrowth.getText());
@@ -263,7 +263,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.ENERGY_PER_EGG = Float.parseFloat(textEnergyEgg.getText());
                 Settings.ENERGY_POINTS_PER_SIZE_POINTS = Float.parseFloat(textEnergy.getText());
@@ -323,7 +324,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.VESSEL_TRAVEL_DISTANCE = Float.parseFloat(textTravel.getText());
                 Settings.MIN_MORPHOLOGY = Float.parseFloat(textMorphologyMin.getText());
@@ -359,7 +361,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.GAMMA = Float.parseFloat(textGamma.getText());
             } catch (NumberFormatException e) {
@@ -375,7 +378,7 @@ public class ContentBoxFactory {
         interactionBox.setContent(mainContent);
     }
 
-    public void interactionBoxSetContentSaveSettings(ContentBox interactionBox){
+    public void interactionBoxSetContentSaveSettings(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Save settings");
         HBox mainContent = new HBox(10);
         VBox columnA = new VBox();
@@ -388,7 +391,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             Settings.toFile(textSave.getText());
         });
 
@@ -413,7 +417,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.MORPHOLOGY = Float.parseFloat(textMorphology.getText());
                 Settings.QUOTAS = Float.parseFloat(textQuotas.getText());
@@ -423,7 +428,8 @@ public class ContentBoxFactory {
         });
 
 
-        columnB.getChildren().addAll(textMorphology, textQuotas);columnA.getChildren().addAll(labelMorphology, labelQuotas);
+        columnB.getChildren().addAll(textMorphology, textQuotas);
+        columnA.getChildren().addAll(labelMorphology, labelQuotas);
 
         columnB.getChildren().add(saveButton);
 
@@ -443,7 +449,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.ADD_PLANKTON = Float.parseFloat(textAddPlankton.getText());
             } catch (NumberFormatException e) {
@@ -475,7 +482,8 @@ public class ContentBoxFactory {
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event -> {
+        saveButton.setOnAction(event ->
+        {
             try {
                 Settings.NUM_INITIAL_SUBJECTS = Float.parseFloat(textFishLoad.getText());
                 Settings.LOAD_PLANKTON = Float.parseFloat(textPlanktonLoad.getText());
@@ -494,7 +502,8 @@ public class ContentBoxFactory {
 
         Button launchSettings = new Button("Upload Settings");
         launchSettings.getStyleClass().add("buttonContent");
-        launchSettings.setOnAction(event -> {
+        launchSettings.setOnAction(event ->
+        {
             Settings.fromFile(choiceBox.getValue());
         });
 
@@ -548,16 +557,16 @@ public class ContentBoxFactory {
         Button saveButton1 = new Button("Save");
         saveButton1.getStyleClass().add("buttonContent");
 
-        grid.add(graph1,0,0);
-        grid.add(xData1,0,1);
-        grid.add(yData1, 2,1);
-        grid.add(xChoiceBox1,1,1);
-        grid.add(yChoiceBox1,3,1);
+        grid.add(graph1, 0, 0);
+        grid.add(xData1, 0, 1);
+        grid.add(yData1, 2, 1);
+        grid.add(xChoiceBox1, 1, 1);
+        grid.add(yChoiceBox1, 3, 1);
         grid.add(saveButton1, 4, 1);
 
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph1[0] = getChoice(xChoiceBox1));
-        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph1[1] = getChoice(yChoiceBox1));
+        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph1[0] = getChoice(xChoiceBox1));
+        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph1[1] = getChoice(yChoiceBox1));
 
         //First graph is generated and stored in the array of graphs
         ContentBox graphOneGenerate = generateGraph(root1, XYGraph1[0], XYGraph1[1]);
@@ -580,16 +589,16 @@ public class ContentBoxFactory {
         Button saveButton2 = new Button("Save");
         saveButton2.getStyleClass().add("buttonContent");
 
-        grid.add(graph2,0,2);
-        grid.add(xData2,0,3);
-        grid.add(yData2, 2,3);
-        grid.add(xChoiceBox2,1,3);
-        grid.add(yChoiceBox2,3,3);
+        grid.add(graph2, 0, 2);
+        grid.add(xData2, 0, 3);
+        grid.add(yData2, 2, 3);
+        grid.add(xChoiceBox2, 1, 3);
+        grid.add(yChoiceBox2, 3, 3);
         grid.add(saveButton2, 4, 3);
 
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph2[0] = getChoice(xChoiceBox2));
-        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph2[1] = getChoice(yChoiceBox2));
+        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph2[0] = getChoice(xChoiceBox2));
+        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph2[1] = getChoice(yChoiceBox2));
 
         //Second graph is generated and stored in the array of graphs
         ContentBox graphTwoGenerate = generateGraph(root2, XYGraph2[0], XYGraph2[1]);
@@ -612,16 +621,16 @@ public class ContentBoxFactory {
         Button saveButton3 = new Button("Save");
         saveButton3.getStyleClass().add("buttonContent");
 
-        grid.add(graph3,0,4);
-        grid.add(xData3,0,5);
-        grid.add(yData3, 2,5);
-        grid.add(xChoiceBox3,1,5);
-        grid.add(yChoiceBox3,3,5);
+        grid.add(graph3, 0, 4);
+        grid.add(xData3, 0, 5);
+        grid.add(yData3, 2, 5);
+        grid.add(xChoiceBox3, 1, 5);
+        grid.add(yChoiceBox3, 3, 5);
         grid.add(saveButton3, 4, 5);
 
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph3[0] = getChoice(xChoiceBox3));
-        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> XYGraph3[1] = getChoice(yChoiceBox3));
+        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph3[0] = getChoice(xChoiceBox3));
+        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph3[1] = getChoice(yChoiceBox3));
 
         //Third graph is generated and stored in the array of graphs
         ContentBox graphThreeGenerate = generateGraph(root3, XYGraph3[0], XYGraph3[1]);
@@ -640,31 +649,29 @@ public class ContentBoxFactory {
     }
 
     //Gives the string values on the list an int value to read the correct list
-    public int getChoice(ChoiceBox<String> choiceBox){
+    public int getChoice(ChoiceBox<String> choiceBox) {
 
         String choice = choiceBox.getValue();
         int choiceValue = 0;
 
-        if(choice.equals("List 1")){
+        if (choice.equals("List 1")) {
             choiceValue = 0;
-        }
-        else if(choice.equals("List 2")){
+        } else if (choice.equals("List 2")) {
             choiceValue = 1;
-        }
-        else if(choice.equals("List 3")){
+        } else if (choice.equals("List 3")) {
             choiceValue = 2;
         }
 
         return choiceValue;
     }
 
-    public ContentBox generateGraph(StackPane root, int xChoice, int yChoice){
+    public ContentBox generateGraph(StackPane root, int xChoice, int yChoice) {
 
         Graph graph = new Graph();
         ObservableList<XYChart.Series<Double, Double>> dataSet = graph.getChartData(xChoice, yChoice);
 
         //Name of content box
-        ContentBox contentBox = new ContentBox("Graph x: " + xChoice +", y: " + yChoice, 375, dragListener);
+        ContentBox contentBox = new ContentBox("Graph x: " + xChoice + ", y: " + yChoice, 375, dragListener);
 
         //Max sizes of XY-coordinates
         double xMax = graph.getxCoordinate().get(graph.getxCoordinate().size() - 1) + 1;
@@ -685,7 +692,7 @@ public class ContentBoxFactory {
 
         //Chart size
         scatterChart.setPrefWidth(375);
-        scatterChart.setPrefHeight(280);
+        scatterChart.setPrefHeight(300);
 
         //Pane window
         root.getChildren().add(scatterChart);

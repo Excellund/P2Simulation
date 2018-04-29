@@ -2,14 +2,12 @@ package utils;
 
 import java.util.Objects;
 
-public class Vector
-{
+public class Vector {
     // Fields:
     public int x, y;
-    
+
     // Constructor:
-    public Vector(int x, int y)
-    {
+    public Vector(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -21,10 +19,9 @@ public class Vector
     public static Vector subtract(Vector a, Vector b) {
         return new Vector(a.x - b.x, a.y - b.y);
     }
-    
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Vector { x: " + x + ", y: " + y + " }";
     }
 

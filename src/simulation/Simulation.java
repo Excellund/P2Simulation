@@ -27,7 +27,7 @@ public class Simulation {
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
-                space.getTile(x, y).addDensity(100000); //TODO: Should be a setting
+                space.getTile(x, y).addDensity(random.nextInt((int) Settings.INITIAL_MAX_PLANKTON_DENSITY));
             }
         }
 
@@ -38,11 +38,14 @@ public class Simulation {
             int posY = random.nextInt(height);
 
             FishGenome genome = new FishGenome(initialGenome);
-
             genome.mutate();
             Field subject = new Fish(genome, new Vector(posX, posY));
 
             space.addField(subject);
+
+            if (i % 200 == 0) {
+                initialGenome = new FishGenome();
+            }
         }
 
         for (int i = 0; i < Settings.NUM_VESSELS; ++i) {
@@ -61,7 +64,7 @@ public class Simulation {
             for (int x = 0; x < space.getWidth(); ++x) {
                 Tile current = space.getTile(x, y);
                 current.addDensity(calculateTilePlanktonGrowth(current, new Vector(x, y)));
-                current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 600));
+                current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 400));
             }
         }
     }
