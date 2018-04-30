@@ -76,7 +76,7 @@ public class Fish implements Field {
 
         final int SIZE_PENALTY = 1;
         final int SPEED_PENALTY = 1;
-        final int HERBIVORE_EFFICIENCY_PENALTY = 2;
+        final int HERBIVORE_EFFICIENCY_PENALTY = 5;
         final int CARNIVORE_EFFICIENCY_PENALTY = 1;
         final int ATTACK_ABILITY_PENALTY = 1;
         energy -= size * SIZE_PENALTY + speed * SPEED_PENALTY + genome.getHerbivoreEfficiency() * HERBIVORE_EFFICIENCY_PENALTY + genome.getCarnivoreEfficiency() * CARNIVORE_EFFICIENCY_PENALTY + genome.getAttackAbility() * ATTACK_ABILITY_PENALTY;
@@ -299,12 +299,12 @@ public class Fish implements Field {
     }
 
     private void mate(Fish mate, SimulationSpace space) {
-        this.energy -= Settings.MATING_ENERGY_CONSUMPTION;
-        mate.energy -= Settings.MATING_ENERGY_CONSUMPTION;
+        this.energy -= Settings.MATING_ENERGY_CONSUMPTION * size;
+        mate.energy -= Settings.MATING_ENERGY_CONSUMPTION * mate.getSize();
 
         FishGenome offSpringGenome = new FishGenome(this.genome, mate.getGenome());
 
-        int numEggs = (int) (2 * Settings.MATING_ENERGY_CONSUMPTION / Settings.ENERGY_PER_EGG);
+        int numEggs = (int) ((Settings.MATING_ENERGY_CONSUMPTION * size + Settings.MATING_ENERGY_CONSUMPTION * mate.getSize()) / Settings.ENERGY_PER_EGG);
 
         FishEgg offSpring = new FishEgg(position, offSpringGenome, numEggs);
 
@@ -385,7 +385,7 @@ public class Fish implements Field {
         Vector currentPosition;
         Fish temp;
 
-        if (genome.getSchoolingTendency() >= 0.5) //schooling is very expensive, should be limited where it's possible
+        if (genome.getSchoolingTendency() >= 0.3) //schooling is very expensive, should be limited where it's possible
         {
             for (int y = position.y - radius; y <= position.y + radius; y += 2) {
                 if (y >= 0 && y < space.getHeight()) {
@@ -419,7 +419,7 @@ public class Fish implements Field {
     private float nearbyMatingRating(Tile tile) {
         float bestCompatibility = 0;
 
-        if (energy >= Settings.MIN_ENERGY_MATING && matingTimer <= 0) {
+        if (energy >= Settings.MIN_ENERGY_MATING && matingTimer <= 0 && isMature) {
             float tempCompatibility;
 
             for (Field subject : tile.getSubjects()) {

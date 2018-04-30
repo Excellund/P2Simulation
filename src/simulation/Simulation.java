@@ -43,7 +43,7 @@ public class Simulation {
 
             space.addField(subject);
 
-            if (i % 200 == 0) {
+            if (i % 300 == 0) {
                 initialGenome = new FishGenome();
             }
         }

@@ -58,6 +58,6 @@ public class Carcass implements Field {
 
     @Override
     public void setPosition(Vector position) {
-
+        this.position = position;
     }
 }

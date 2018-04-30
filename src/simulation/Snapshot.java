@@ -79,7 +79,6 @@ public class Snapshot {
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 planktonDensities[y][x] = sim.getSpace().getTile(x, y).getMuDensity();
-                //writeInt(stream, snapshot.sim.getSpace().getTile(x, y).getMuDensity());
             }
         }
     }
