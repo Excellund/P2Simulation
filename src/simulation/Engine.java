@@ -40,7 +40,7 @@ public class Engine implements Runnable {
             {26, 24, -26, -24, 10, 0, -10, -7, -8, -5, -6.8, -3, -5.6, -1, -4.5, 1, -3.4, 3, -2.4, 5, -1.4, 7, -0.6, -7, 0.6, -5, 1.4, -3, 2.4, -1, 3.4, 1, 4.5, 3, 5.6, 5, 6.8, 7, 8}
     };
 
-    public Engine(Simulation simulation, Canvas canvas, int timeStepsPerFrame) {
+    public Engine(Simulation simulation, Canvas canvas) {
         this.simulation = simulation;
         this.canvas = canvas;
         this.timeStepsPerFrame = timeStepsPerFrame;
@@ -198,15 +198,5 @@ public class Engine implements Runnable {
         isRunning = false;
         animationTimer.stop();
         dataCollector.dispose();
-    }
-
-    // Getters/Setters
-
-    public int getTimeStepsPerFrame() {
-        return timeStepsPerFrame;
-    }
-
-    public void setTimeStepsPerFrame(int timeStepsPerFrame) {
-        this.timeStepsPerFrame = timeStepsPerFrame;
     }
 }

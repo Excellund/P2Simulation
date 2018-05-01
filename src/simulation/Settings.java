@@ -123,7 +123,7 @@ public class Settings {
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);
-        abbreviated.put("TARGET_FPS", 3f); //TODO: UI
+        abbreviated.put("TARGET_FPS", 60f); //TODO: UI
     }
 
     public static void useAbbreviated() {
