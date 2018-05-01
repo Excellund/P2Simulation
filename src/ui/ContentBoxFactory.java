@@ -356,8 +356,10 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB);
 
-        Label labelGamma = new Label("Gamma");
-        TextField textGamma = new TextField(Float.toString(Settings.GAMMA));
+        Label labelPlanktonGamma = new Label("Plankton gamma");
+        TextField textPlanktonGamma = new TextField(Float.toString(Settings.PLANKTON_GAMMA));
+        Label labelFishGamma = new Label("Fish gamma");
+        TextField textFishGamma = new TextField(Float.toString(Settings.FISH_GAMMA));
         Label labelFPS = new Label("Target FPS");
         TextField textFPS = new TextField(Float.toString(Settings.TARGET_FPS));
 
@@ -366,15 +368,18 @@ public class ContentBoxFactory {
         saveButton.setOnAction(event ->
         {
             try {
-                Settings.GAMMA = Float.parseFloat(textGamma.getText());
+                Settings.PLANKTON_GAMMA = Float.parseFloat(textPlanktonGamma.getText());
+                Settings.FISH_GAMMA = Float.parseFloat(textFishGamma.getText());
                 Settings.TARGET_FPS = Float.parseFloat(textFPS.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
         });
 
-        columnA.getChildren().add(labelGamma);
-        columnB.getChildren().add(textGamma);
+        columnA.getChildren().add(labelPlanktonGamma);
+        columnB.getChildren().add(textPlanktonGamma);
+        columnA.getChildren().add(labelFishGamma);
+        columnB.getChildren().add(textFishGamma);
         columnA.getChildren().add(labelFPS);
         columnB.getChildren().add(textFPS);
 
