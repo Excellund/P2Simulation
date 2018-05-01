@@ -358,6 +358,8 @@ public class ContentBoxFactory {
 
         Label labelGamma = new Label("Gamma");
         TextField textGamma = new TextField(Float.toString(Settings.GAMMA));
+        Label labelFPS = new Label("Target FPS");
+        TextField textFPS = new TextField(Float.toString(Settings.TARGET_FPS));
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
@@ -365,6 +367,7 @@ public class ContentBoxFactory {
         {
             try {
                 Settings.GAMMA = Float.parseFloat(textGamma.getText());
+                Settings.TARGET_FPS = Float.parseFloat(textFPS.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -372,6 +375,8 @@ public class ContentBoxFactory {
 
         columnA.getChildren().add(labelGamma);
         columnB.getChildren().add(textGamma);
+        columnA.getChildren().add(labelFPS);
+        columnB.getChildren().add(textFPS);
 
         columnB.getChildren().add(saveButton);
 
