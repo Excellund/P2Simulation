@@ -9,6 +9,7 @@ import utils.VectorTransformer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Net
 {
@@ -80,7 +81,7 @@ public class Net
             return;
         }
         
-        ArrayList<Field> tileEntities = space.getTile(tile.x, tile.y).getSubjects();
+        List<Field> tileEntities = space.getTile(tile.x, tile.y).getSubjects();
         
         for (Field subject : tileEntities)
         {

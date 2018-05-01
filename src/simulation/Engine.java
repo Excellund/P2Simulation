@@ -1,5 +1,6 @@
 package simulation;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.PixelFormat;
@@ -17,6 +18,7 @@ import static utils.VectorTransformer.*;
 public class Engine implements Runnable {
     private Simulation simulation;
     private Canvas canvas;
+    private AnimationTimer animationTimer;
     private PixelWriter pixelWriter;
     private boolean isRunning = true;
     private int timeStepsPerFrame;
@@ -45,9 +47,21 @@ public class Engine implements Runnable {
 
         pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
         dataCollector = new DataCollector();
+
+        animationTimer = new AnimationTimer() {
+            long last = 0;
+
+            @Override
+            public void handle(long now) {
+                if (now > last + 1E9 / Settings.TARGET_FPS) {
+                    drawFrame();
+                    last = now;
+                }
+            }
+        };
     }
 
-    private void drawFrame() {
+    public void drawFrame() {
         drawTiles();
         drawVessels();
     }
@@ -60,13 +74,15 @@ public class Engine implements Runnable {
         int[] newPixels = new int[(int) (canvas.getWidth() * canvas.getHeight())];
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
-                if (tiles[y][x].getSubjects().size() != 0 && tiles[y][x].getSubjects().get(0) != null) {
-                    newPixels[x + y * (int) canvas.getWidth()] = tiles[y][x].getSubjects().get(0).getColor().getIntRepresentation();
-                } else {
-                    double green = (((double) tiles[y][x].getMuDensity() / 1000000) * 80);
+                synchronized (tiles[y][x].getSubjects()) {
+                    if (tiles[y][x].getSubjects().size() != 0 && tiles[y][x].getSubjects().get(0) != null) {
+                        newPixels[x + y * (int) canvas.getWidth()] = tiles[y][x].getSubjects().get(0).getColor().getIntRepresentation();
+                    } else {
+                        double green = (((double) tiles[y][x].getMuDensity() / 1000000) * 80);
 
-                    green = Math.pow(green / 255.0, Settings.GAMMA) * 255;
-                    newPixels[x + y * (int) canvas.getWidth()] = ((int) green << 8);
+                        green = Math.pow(green / 255.0, Settings.GAMMA) * 255;
+                        newPixels[x + y * (int) canvas.getWidth()] = ((int) green << 8);
+                    }
                 }
             }
         }
@@ -168,20 +184,19 @@ public class Engine implements Runnable {
 
     @Override
     public void run() {
+        animationTimer.start();
+
         while (isRunning) {
-            for (int i = 0; i < timeStepsPerFrame; i++) {
-                simulation.timeStep();
+            simulation.timeStep();
 
-                currentTimeStep++;
-                dataCollector.append(simulation.getSpace(), currentTimeStep);
-            }
-
-            drawFrame();
+            currentTimeStep++;
+            dataCollector.append(simulation.getSpace(), currentTimeStep);
         }
     }
 
     public void stop() {
         isRunning = false;
+        animationTimer.stop();
         dataCollector.dispose();
     }
 

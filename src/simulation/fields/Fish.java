@@ -8,7 +8,7 @@ import utils.Color;
 import utils.CountingRandom;
 import utils.Vector;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Fish implements Field {
@@ -74,12 +74,11 @@ public class Fish implements Field {
 
         performAction(currentTile, space); //interact with environment
 
-        final int SIZE_PENALTY = 1;
-        final int SPEED_PENALTY = 1;
-        final int HERBIVORE_EFFICIENCY_PENALTY = 5;
-        final int CARNIVORE_EFFICIENCY_PENALTY = 1;
-        final int ATTACK_ABILITY_PENALTY = 1;
-        energy -= size * SIZE_PENALTY + speed * SPEED_PENALTY + genome.getHerbivoreEfficiency() * HERBIVORE_EFFICIENCY_PENALTY + genome.getCarnivoreEfficiency() * CARNIVORE_EFFICIENCY_PENALTY + genome.getAttackAbility() * ATTACK_ABILITY_PENALTY;
+        energy -= size * Settings.FISH_SIZE_PENALTY +
+                speed * Settings.FISH_SPEED_PENALTY +
+                genome.getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
+                genome.getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
+                genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY;
 
         if (size < genome.getSize()) {
             size += Settings.FISH_GROWTH_RATE_PER_TIMESTEP;
@@ -97,7 +96,6 @@ public class Fish implements Field {
                 health = size * Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
             }
         }
-
     }
 
     private void performAction(Tile currentTile, SimulationSpace space) {
@@ -146,7 +144,7 @@ public class Fish implements Field {
         tile.subtractDensity((int) (size * Settings.MAX_FISH_SIZE * 1000f));
     }
 
-    private void interactWithMostNutritious(ArrayList<Field> subjects, SimulationSpace space) {
+    private void interactWithMostNutritious(List<Field> subjects, SimulationSpace space) {
         float best = 0;
         float current;
         FishGenome temp;
@@ -177,7 +175,7 @@ public class Fish implements Field {
         }
     }
 
-    private void interactWithWeakestFish(ArrayList<Field> subjects, SimulationSpace space) {
+    private void interactWithWeakestFish(List<Field> subjects, SimulationSpace space) {
         float best = 0;
         float current;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
@@ -202,7 +200,7 @@ public class Fish implements Field {
         }
     }
 
-    private void interactWithMostCompatible(ArrayList<Field> subjects, SimulationSpace space) {
+    private void interactWithMostCompatible(List<Field> subjects, SimulationSpace space) {
         float best = 0;
         float current;
         Fish mostCompatible = null;

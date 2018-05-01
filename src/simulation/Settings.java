@@ -43,6 +43,11 @@ public class Settings {
     public static float MATING_DELAY;
     public static float VISION_RANGE;
     public static float FISH_GROWTH_RATE_PER_TIMESTEP;
+    public static float FISH_SIZE_PENALTY;
+    public static float FISH_SPEED_PENALTY;
+    public static float FISH_HERBIVORE_EFFICIENCY_PENALTY;
+    public static float FISH_CARNIVORE_EFFICIENCY_PENALTY;
+    public static float FISH_ATTACK_ABILITY_PENALTY;
 
     //Fishing settings
     public static float MAX_MORPHOLOGY;
@@ -61,6 +66,7 @@ public class Settings {
     public static float LOAD_PLANKTON;
     //Graphics settings
     public static float GAMMA;
+    public static float TARGET_FPS;
 
     private static Map<String, Float> abbreviated = new HashMap<>();
 
@@ -95,6 +101,11 @@ public class Settings {
         abbreviated.put("MATING_DELAY", 600f);
         abbreviated.put("VISION_RANGE", 4f);
         abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.05f);
+        abbreviated.put("FISH_SIZE_PENALTY", 1.0f); //TODO: UI
+        abbreviated.put("FISH_SPEED_PENALTY", 1.0f); //TODO: UI
+        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 5.0f); //TODO: UI
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 1.0f); //TODO: UI
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 1.0f); //TODO: UI
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);
         abbreviated.put("MIN_MORPHOLOGY", 0.1f);
@@ -112,8 +123,7 @@ public class Settings {
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);
-
-
+        abbreviated.put("TARGET_FPS", 3f); //TODO: UI
     }
 
     public static void useAbbreviated() {
@@ -147,6 +157,12 @@ public class Settings {
         MATING_DELAY = abbreviated.get("MATING_DELAY");
         VISION_RANGE = abbreviated.get("VISION_RANGE");
         FISH_GROWTH_RATE_PER_TIMESTEP = abbreviated.get("FISH_GROWTH_RATE_PER_TIMESTEP");
+        FISH_SIZE_PENALTY = abbreviated.get("FISH_SIZE_PENALTY");
+        FISH_SPEED_PENALTY = abbreviated.get("FISH_SPEED_PENALTY");
+        FISH_HERBIVORE_EFFICIENCY_PENALTY = abbreviated.get("FISH_HERBIVORE_EFFICIENCY_PENALTY");
+        FISH_CARNIVORE_EFFICIENCY_PENALTY = abbreviated.get("FISH_CARNIVORE_EFFICIENCY_PENALTY");
+        FISH_ATTACK_ABILITY_PENALTY = abbreviated.get("FISH_ATTACK_ABILITY_PENALTY");
+        FISH_SIZE_PENALTY = abbreviated.get("FISH_SIZE_PENALTY");
 
         MAX_MORPHOLOGY = abbreviated.get("MAX_MORPHOLOGY");
         MIN_MORPHOLOGY = abbreviated.get("MIN_MORPHOLOGY");
@@ -164,7 +180,7 @@ public class Settings {
         LOAD_PLANKTON = abbreviated.get("LOAD_PLANKTON");
 
         GAMMA = abbreviated.get("GAMMA");
-
+        TARGET_FPS = abbreviated.get("TARGET_FPS");
 
     }
 
@@ -199,6 +215,12 @@ public class Settings {
         abbreviated.put("MATING_DELAY", MATING_DELAY);
         abbreviated.put("VISION_RANGE", VISION_RANGE);
         abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", FISH_GROWTH_RATE_PER_TIMESTEP);
+        abbreviated.put("FISH_SIZE_PENALTY", FISH_SIZE_PENALTY);
+        abbreviated.put("FISH_SPEED_PENALTY", FISH_SPEED_PENALTY);
+        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", FISH_HERBIVORE_EFFICIENCY_PENALTY);
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", FISH_CARNIVORE_EFFICIENCY_PENALTY);
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", FISH_ATTACK_ABILITY_PENALTY);
+        abbreviated.put("FISH_SIZE_PENALTY", FISH_SIZE_PENALTY);
 
         abbreviated.put("MAX_MORPHOLOGY", MAX_MORPHOLOGY);
         abbreviated.put("MIN_MORPHOLOGY", MIN_MORPHOLOGY);
@@ -216,6 +238,7 @@ public class Settings {
         abbreviated.put("LOAD_PLANKTON", LOAD_PLANKTON);
 
         abbreviated.put("GAMMA", GAMMA);
+        abbreviated.put("TARGET_FPS", TARGET_FPS);
     }
 
     public static void toFile(String name) {

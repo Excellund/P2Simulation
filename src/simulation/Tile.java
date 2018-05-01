@@ -3,17 +3,19 @@ package simulation;
 import simulation.fields.Field;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Tile
 {
-    private ArrayList<Field> subjects;
+    private List<Field> subjects;
     private int muDensity;
 
     public Tile(int muDensity)
     {
         //creates a new tile with a specified mu density
         this.muDensity = muDensity;
-        subjects = new ArrayList<>();
+        subjects = Collections.synchronizedList(new ArrayList<Field>());
     }
 
     public void addSubject(Field subject)
@@ -54,7 +56,7 @@ public class Tile
 
     // Getters
 
-    public ArrayList<Field> getSubjects()
+    public List<Field> getSubjects()
     {
         return subjects;
     }
