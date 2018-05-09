@@ -2,7 +2,7 @@ package simulation;
 
 import simulation.fields.Field;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 public class SimulationSpaceIterator implements ListIterator<Field> {
@@ -11,7 +11,7 @@ public class SimulationSpaceIterator implements ListIterator<Field> {
     SimulationSpace space;
     Field currentElement = null;
 
-    SimulationSpaceIterator(SimulationSpace space, ArrayList<Field> activeSubjects) {
+    SimulationSpaceIterator(SimulationSpace space, List<Field> activeSubjects) {
         this.space = space;
         iterator = activeSubjects.listIterator();
     }

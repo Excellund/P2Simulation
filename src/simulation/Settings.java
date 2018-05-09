@@ -5,10 +5,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class Settings {
     //Simulation settings
@@ -123,7 +120,7 @@ public class Settings {
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("GAMMA", 0.6f);
-        abbreviated.put("TARGET_FPS", 60f); //TODO: UI
+        abbreviated.put("TARGET_FPS", 20f); //TODO: UI
     }
 
     public static void useAbbreviated() {
@@ -281,9 +278,9 @@ public class Settings {
         }
     }
 
-    public static ArrayList<String> getFiles() {
+    public static List<String> getFiles() {
         Path directory = Paths.get("settings/");
-        ArrayList<String> files = new ArrayList<>();
+        List<String> files = new ArrayList<>();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path file : stream) {

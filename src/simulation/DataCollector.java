@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataCollector {
     private BufferedWriter stream;
@@ -38,7 +39,7 @@ public class DataCollector {
     }
 
     public void append(SimulationSpace space, long timestep) {
-        ArrayList<Fish> fish = getFish(space);
+        List<Fish> fish = getFish(space);
         String line = String.valueOf(timestep) + ',';
 
         line += String.valueOf(averageBWD(fish));
@@ -79,7 +80,7 @@ public class DataCollector {
         }
     }
 
-    private float averageBWD(ArrayList<Fish> fish) {
+    private float averageBWD(List<Fish> fish) {
         float sum = 0;
 
         for (Fish subject : fish) {
@@ -125,8 +126,8 @@ public class DataCollector {
         return sum / (space.getHeight() * space.getWidth());
     }
 
-    private ArrayList<Fish> getFish(SimulationSpace space) {
-        ArrayList<Fish> fish = new ArrayList<>();
+    private List<Fish> getFish(SimulationSpace space) {
+        List<Fish> fish = new ArrayList<>();
 
         for (Field field : space) {
             if (field instanceof Fish) {
@@ -137,7 +138,7 @@ public class DataCollector {
         return fish;
     }
 
-    private double averageSchoolingTendency(ArrayList<Fish> fish) {
+    private double averageSchoolingTendency(List<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -147,7 +148,7 @@ public class DataCollector {
         return sum / fish.size();
     }
 
-    private double averageMaxSpawning(ArrayList<Fish> fish) {
+    private double averageMaxSpawning(List<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -157,7 +158,7 @@ public class DataCollector {
         return sum / fish.size();
     }
 
-    private double averageMorphology(ArrayList<Fish> fish) {
+    private double averageMorphology(List<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {

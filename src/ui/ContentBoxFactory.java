@@ -12,7 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import simulation.Settings;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class ContentBoxFactory {
@@ -500,7 +500,7 @@ public class ContentBoxFactory {
         columnA.getChildren().addAll(labelFishLoad, labelPlanktonLoad);
         columnB.getChildren().addAll(textFishLoad, textPlanktonLoad);
 
-        ArrayList<String> files = Settings.getFiles();
+        List<String> files = Settings.getFiles();
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(files);

@@ -383,7 +383,7 @@ public class Fish implements Field {
         Vector currentPosition;
         Fish temp;
 
-        if (genome.getSchoolingTendency() >= 0.3) //schooling is very expensive, should be limited where it's possible
+        if (genome.getSchoolingTendency() >= 0.4) //schooling is very expensive, should be limited where it's possible
         {
             for (int y = position.y - radius; y <= position.y + radius; y += 2) {
                 if (y >= 0 && y < space.getHeight()) {

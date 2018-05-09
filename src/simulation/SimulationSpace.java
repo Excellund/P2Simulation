@@ -5,13 +5,14 @@ import utils.Vector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 public class SimulationSpace implements Iterable<Field> {
     private Tile[][] tiles;
-    private ArrayList<Field> activeSubjects;
-    private ArrayList<Field> subjectsAddQueue;
-    private ArrayList<Field> subjectsRemoveQueue;
+    private List<Field> activeSubjects;
+    private List<Field> subjectsAddQueue;
+    private List<Field> subjectsRemoveQueue;
     private int width, height;
 
     public SimulationSpace(int width, int height) {

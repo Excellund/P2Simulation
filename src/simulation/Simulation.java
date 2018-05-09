@@ -6,6 +6,7 @@ import utils.CountingRandom;
 import utils.Vector;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
@@ -15,7 +16,7 @@ public class Simulation {
     private int width;
     private int height;
     private SimulationSpace space;
-    private ArrayList<Vessel> vessels;
+    private List<Vessel> vessels;
 
     // Constructor:
     public Simulation(int width, int height) {
@@ -74,9 +75,9 @@ public class Simulation {
         Vector max = new Vector(position.x + 1, position.y + 1);
         float sum = 0;
 
-        for (int y = min.y; y < max.y; ++y) {
+        for (int y = min.y; y <= max.y; ++y) {
             if (y >= 0 && y < height) {
-                for (int x = min.x; x < max.x; ++x) {
+                for (int x = min.x; x <= max.x; ++x) {
                     if (x >= 0 && x < width) {
                         sum += space.getTile(x, y).getMuDensity() / 1000000f; //1000000 as in the max µ density
                     }
@@ -117,7 +118,7 @@ public class Simulation {
         return space;
     }
 
-    public ArrayList<Vessel> getVessels() {
+    public List<Vessel> getVessels() {
         return vessels;
     }
 }
