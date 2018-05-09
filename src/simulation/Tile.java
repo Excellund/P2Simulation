@@ -13,7 +13,7 @@ public class Tile {
     public Tile(int muDensity) {
         //creates a new tile with a specified mu density
         this.muDensity = muDensity;
-        subjects = Collections.synchronizedList(new ArrayList<Field>());
+        subjects = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void addSubject(Field subject) {

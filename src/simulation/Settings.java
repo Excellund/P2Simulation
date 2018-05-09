@@ -62,7 +62,8 @@ public class Settings {
     public static float NUM_INITIAL_SUBJECTS;
     public static float LOAD_PLANKTON;
     //Graphics settings
-    public static float GAMMA;
+    public static float PLANKTON_GAMMA;
+    public static float FISH_GAMMA;
     public static float TARGET_FPS;
 
     private static Map<String, Float> abbreviated = new HashMap<>();
@@ -119,8 +120,9 @@ public class Settings {
         abbreviated.put("NUM_INITIAL_SUBJECTS", 3000f);
         abbreviated.put("LOAD_PLANKTON", 200000f);
 
-        abbreviated.put("GAMMA", 0.6f);
-        abbreviated.put("TARGET_FPS", 20f); //TODO: UI
+        abbreviated.put("PLANKTON_GAMMA", 1.0f);
+        abbreviated.put("FISH_GAMMA", 1.0f);
+        abbreviated.put("TARGET_FPS", 5.0f);
     }
 
     public static void useAbbreviated() {
@@ -176,7 +178,8 @@ public class Settings {
         NUM_INITIAL_SUBJECTS = abbreviated.get("NUM_INITIAL_SUBJECTS");
         LOAD_PLANKTON = abbreviated.get("LOAD_PLANKTON");
 
-        GAMMA = abbreviated.get("GAMMA");
+        PLANKTON_GAMMA = abbreviated.get("PLANKTON_GAMMA");
+        FISH_GAMMA = abbreviated.get("FISH_GAMMA");
         TARGET_FPS = abbreviated.get("TARGET_FPS");
 
     }
@@ -234,7 +237,8 @@ public class Settings {
         abbreviated.put("NUM_INITIAL_SUBJECTS", NUM_INITIAL_SUBJECTS);
         abbreviated.put("LOAD_PLANKTON", LOAD_PLANKTON);
 
-        abbreviated.put("GAMMA", GAMMA);
+        abbreviated.put("PLANKTON_GAMMA", PLANKTON_GAMMA);
+        abbreviated.put("FISH_GAMMA", FISH_GAMMA);
         abbreviated.put("TARGET_FPS", TARGET_FPS);
     }
 

@@ -75,13 +75,22 @@ public class Engine implements Runnable {
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
                 synchronized (tiles[y][x].getSubjects()) {
-                    if (tiles[y][x].getSubjects().size() != 0 && tiles[y][x].getSubjects().get(0) != null) {
-                        newPixels[x + y * (int) canvas.getWidth()] = tiles[y][x].getSubjects().get(0).getColor().getIntRepresentation();
-                    } else {
-                        double green = (((double) tiles[y][x].getMuDensity() / 1000000) * 80);
+                    utils.Color color;
 
-                        green = Math.pow(green / 255.0, Settings.GAMMA) * 255;
-                        newPixels[x + y * (int) canvas.getWidth()] = ((int) green << 8);
+                    if (tiles[y][x].getSubjects().size() != 0 && tiles[y][x].getSubjects().get(0) != null) {
+                        //Gamma correction for plankton
+                        color = tiles[y][x].getSubjects().get(0).getColor();
+                        color = utils.Color.getGammaCorrected(color, Settings.FISH_GAMMA);
+
+                        newPixels[x + y * (int) canvas.getWidth()] = color.getIntRepresentation();
+                    } else {
+                        int green = (int) ((tiles[y][x].getMuDensity() / 1000000f) * 255);
+
+                        //Gamma correction for fish and other fields
+                        color = new utils.Color(0, green, 0);
+                        color = utils.Color.getGammaCorrected(color, Settings.PLANKTON_GAMMA);
+
+                        newPixels[x + y * (int) canvas.getWidth()] = color.getIntRepresentation();
                     }
                 }
             }
