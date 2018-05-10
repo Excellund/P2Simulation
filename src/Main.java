@@ -1,19 +1,22 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import simulation.Engine;
 import simulation.Settings;
 import simulation.Simulation;
+import simulation.Snapshot;
 import ui.*;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -163,6 +166,63 @@ public class Main extends Application {
             }
 
             event.consume();
+        });
+
+        MenuItem itemSaveSettings = new MenuItem("Save Settings");
+        MenuItem itemLoadSettings = new MenuItem("Load Settings");
+        MenuItem itemSaveSnapshot = new MenuItem("Save Snapshot");
+        MenuItem itemLoadSnapshot = new MenuItem("Load Snapshot");
+
+        menuFile.getItems().addAll(itemSaveSettings, itemLoadSettings, itemSaveSnapshot, itemLoadSnapshot);
+
+        itemSaveSettings.setOnAction(event -> {
+            TextInputDialog saveSettings = new TextInputDialog();
+            saveSettings.setTitle("Save Settings");
+            saveSettings.setContentText("Save as");
+            Optional<String> result = saveSettings.showAndWait();
+            result.ifPresent(file -> {
+                Settings.toFile(file);
+            });
+        });
+
+        itemLoadSettings.setOnAction(event ->  {
+            ArrayList<String> files = new Settings().getFiles();
+            if (files.size() == 0){
+                Settings.defaultAbbreviated();
+                Settings.useAbbreviated();
+                Settings.toFile("default");
+                files.add("default");
+            }
+
+            ChoiceDialog<String> loadSettings = new ChoiceDialog<>(files.get(0), files);
+            loadSettings.setTitle("Load settings");
+            loadSettings.setContentText("Choose Settings:");
+            Optional<String> result = loadSettings.showAndWait();
+            result.ifPresent(file -> Settings.fromFile(file));
+        });
+
+        itemSaveSnapshot.setOnAction(event ->  {
+            FileChooser fileChooserSave = new FileChooser();
+            fileChooserSave.setTitle("Save snapshot");
+            fileChooserSave.getExtensionFilters().add(new FileChooser.ExtensionFilter("snapshot", "*.snapshot"));
+            fileChooserSave.setInitialFileName("*.snapshot");
+            File file = fileChooserSave.showSaveDialog(primaryStage);
+            if (file != null){
+                Snapshot snapshot = new Snapshot(simulation);
+                Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
+            }
+            
+        });
+
+        itemLoadSnapshot.setOnAction(event -> {
+            FileChooser fileChooserOpen = new FileChooser();
+            fileChooserOpen.setTitle("Open snapshot");
+            FileChooser.ExtensionFilter snapshotFilter = new FileChooser.ExtensionFilter("Snapshot file", "*.snapshot");
+            fileChooserOpen.getExtensionFilters().add(snapshotFilter);
+            File file = fileChooserOpen.showOpenDialog(primaryStage);
+            if (file != null){
+                Snapshot.loadSnapshot(file.getAbsolutePath());
+            }
         });
 
         root.getChildren().addAll(toolbar, menuBar, rowContainer, graphContainer);
