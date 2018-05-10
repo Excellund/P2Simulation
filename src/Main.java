@@ -16,6 +16,7 @@ import ui.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Main extends Application {
@@ -186,7 +187,7 @@ public class Main extends Application {
         });
 
         itemLoadSettings.setOnAction(event ->  {
-            ArrayList<String> files = new Settings().getFiles();
+            List<String> files = Settings.getFiles();
             if (files.size() == 0){
                 Settings.defaultAbbreviated();
                 Settings.useAbbreviated();

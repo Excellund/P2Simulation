@@ -99,11 +99,11 @@ public class Settings {
         abbreviated.put("MATING_DELAY", 600f);
         abbreviated.put("VISION_RANGE", 4f);
         abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.05f);
-        abbreviated.put("FISH_SIZE_PENALTY", 1.0f); //TODO: UI
-        abbreviated.put("FISH_SPEED_PENALTY", 1.0f); //TODO: UI
-        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 5.0f); //TODO: UI
-        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 1.0f); //TODO: UI
-        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 1.0f); //TODO: UI
+        abbreviated.put("FISH_SIZE_PENALTY", 1.0f);
+        abbreviated.put("FISH_SPEED_PENALTY", 1.0f);
+        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 5.0f);
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 1.0f);
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 1.0f);
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);
         abbreviated.put("MIN_MORPHOLOGY", 0.1f);

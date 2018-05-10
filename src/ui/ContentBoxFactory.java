@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import simulation.Settings;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 public class ContentBoxFactory {
@@ -189,6 +190,8 @@ public class ContentBoxFactory {
         TextField textPlanktonGrowth = new TextField(Float.toString(Settings.PLANKTON_GROWTH_PER_TIMESTEP));
         Label labelPlanktonMax = new Label("Max plankton");
         TextField textPlanktonMax = new TextField(Float.toString(Settings.MAX_PLANKTON));
+        Label labelInitialMaxPlanktonDensity = new Label("Max plankton density");
+        TextField textInitialMaxPlanktonDensity = new TextField(Float.toString(Settings.INITIAL_MAX_PLANKTON_DENSITY));
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
@@ -198,13 +201,14 @@ public class ContentBoxFactory {
                 Settings.NUM_VESSELS = Float.parseFloat(textNumVessel.getText());
                 Settings.PLANKTON_GROWTH_PER_TIMESTEP = Float.parseFloat(textPlanktonGrowth.getText());
                 Settings.MAX_PLANKTON = Float.parseFloat(textPlanktonMax.getText());
+            Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
         });
 
-        columnA.getChildren().addAll(labelNumVessel, labelPlanktonGrowth, labelPlanktonMax);
-        columnB.getChildren().addAll(textNumVessel, textPlanktonGrowth, textPlanktonMax);
+        columnA.getChildren().addAll(labelNumVessel, labelPlanktonGrowth, labelPlanktonMax, labelInitialMaxPlanktonDensity);
+        columnB.getChildren().addAll(textNumVessel, textPlanktonGrowth, textPlanktonMax, textInitialMaxPlanktonDensity);
 
         columnB.getChildren().add(saveButton);
         interactionBox.setContent(mainContent);
@@ -259,6 +263,26 @@ public class ContentBoxFactory {
         TextField textTimeToHatch = new TextField(Float.toString(Settings.TIME_BEFORE_HATCH));
         Label labelCarcassDecay = new Label("Carcass decay time");
         TextField textCarcassDecay = new TextField(Float.toString(Settings.CARCASS_DECAY_PER_TIMESTEP));
+        Label labelMaxMoveToSpeed = new Label("Max moves to Speed");
+        TextField textMaxMoveToSpeed = new TextField(Float.toString(Settings.MAX_MOVES_CORRESPONDING_TO_SPEED));
+        Label labelEnergySpeed = new Label("Energy speed correlation");
+        TextField textEnergySpeed = new TextField(Float.toString(Settings.ENERGY_SPEED_CORRELATION));
+        Label labelMatingDelay = new Label("Mating delay");
+        TextField textMatingDelay = new TextField(Float.toString(Settings.MATING_DELAY));
+        Label labelVisionRange = new Label("Vision range");
+        TextField textVisionRange = new TextField(Float.toString(Settings.VISION_RANGE));
+        Label labelFishGrowthTS = new Label("Fish Growth pr time step");
+        TextField textFishGrowthTS = new TextField(Float.toString(Settings.FISH_GROWTH_RATE_PER_TIMESTEP));
+        Label labelFishSizePenalty = new Label("Fish size penalty");
+        TextField textFishSizePenalty = new TextField(Float.toString(Settings.FISH_SIZE_PENALTY));
+        Label labelFishSpeedPenalty = new Label("Fish speed penalty");
+        TextField textFishSpeedPenalty = new TextField(Float.toString(Settings.FISH_SPEED_PENALTY));
+        Label labelFishHerbivorePenalty = new Label("Fish herbivore penalty");
+        TextField textFishHerbivorePenalty = new TextField(Float.toString(Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY));
+        Label labelFishCarnivorePenalty = new Label("Fish carnivore penalty");
+        TextField textFishCarnivorePenalty = new TextField(Float.toString(Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY));
+        Label labelFishAttackPenalty = new Label("Fish attack penalty");
+        TextField textFishAttackPenalty = new TextField(Float.toString(Settings.FISH_ATTACK_ABILITY_PENALTY);
 
 
         Button saveButton = new Button("Save");
@@ -286,6 +310,18 @@ public class ContentBoxFactory {
                 Settings.ENERGY_HEALTH_INCREASE = Float.parseFloat(textEnergyHealthIncrease.getText());
                 Settings.TIME_BEFORE_HATCH = Float.parseFloat(textTimeToHatch.getText());
                 Settings.CARCASS_DECAY_PER_TIMESTEP = Float.parseFloat(textCarcassDecay.getText());
+                Settings.MAX_MOVES_CORRESPONDING_TO_SPEED = Float.parseFloat(textMaxMoveToSpeed.getText());
+                Settings.ENERGY_SPEED_CORRELATION = Float.parseFloat(textEnergySpeed.getText());
+                Settings.MATING_DELAY = Float.parseFloat(textMatingDelay.getText());
+                Settings.VISION_RANGE = Float.parseFloat(textVisionRange.getText());
+                Settings.FISH_GROWTH_RATE_PER_TIMESTEP = Float.parseFloat(textFishGrowthTS.getText());
+                Settings.FISH_SIZE_PENALTY = Float.parseFloat(textFishSizePenalty.getText());
+                Settings.FISH_SPEED_PENALTY = Float.parseFloat(textFishSpeedPenalty.getText());
+                Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY = Float.parseFloat(textFishHerbivorePenalty.getText());
+                Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY = Float.parseFloat(textFishCarnivorePenalty.getText());
+                Settings.FISH_ATTACK_ABILITY_PENALTY = Float.parseFloat(textFishAttackPenalty.getText());
+
+
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -295,6 +331,9 @@ public class ContentBoxFactory {
         columnB.getChildren().addAll(textEnergyEgg, textHealth, textMinMating, textMaxDamage, textCompatibilitySteepness, textMutationAmount, textNutritionSize, textMatingEnergyUse, textMinEenergyIncrease, textTimeToHatch);
         columnA.getChildren().addAll(labelEnergy, labelMaxSize, labelMinPredation, labelEnergyUseAttack, labelCompatibilityMidpoint, labelMutationGaussian, labelMinEnergyMating, labelHealthReducLowEnergy, labelEnergyHealthIncrease, labelCarcassDecay);
         columnB.getChildren().addAll(textEnergy, textMaxSize, textMinPredation, textEnergyUseAttack, textCompatibilityMidpoint, textMutationGaussian, textMinEnergyMating, textHealthReducLowEnergy, textEnergyHealthIncrease, textCarcassDecay);
+        columnA.getChildren().addAll(labelMaxMoveToSpeed, labelEnergySpeed, labelMatingDelay, labelVisionRange, labelFishGrowthTS, labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
+        columnB.getChildren().addAll(textMaxMoveToSpeed, textEnergySpeed, textMatingDelay, textVisionRange, textFishGrowthTS, textFishSizePenalty, textFishSpeedPenalty, textFishHerbivorePenalty, textFishCarnivorePenalty, textFishAttackPenalty);
+
 
         columnB.getChildren().add(saveButton);
 
