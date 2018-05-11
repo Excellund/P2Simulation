@@ -15,7 +15,6 @@ import simulation.Snapshot;
 import ui.*;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -186,9 +185,9 @@ public class Main extends Application {
             });
         });
 
-        itemLoadSettings.setOnAction(event ->  {
+        itemLoadSettings.setOnAction(event -> {
             List<String> files = Settings.getFiles();
-            if (files.size() == 0){
+            if (files.size() == 0) {
                 Settings.defaultAbbreviated();
                 Settings.useAbbreviated();
                 Settings.toFile("default");
@@ -202,17 +201,17 @@ public class Main extends Application {
             result.ifPresent(file -> Settings.fromFile(file));
         });
 
-        itemSaveSnapshot.setOnAction(event ->  {
+        itemSaveSnapshot.setOnAction(event -> {
             FileChooser fileChooserSave = new FileChooser();
             fileChooserSave.setTitle("Save snapshot");
             fileChooserSave.getExtensionFilters().add(new FileChooser.ExtensionFilter("snapshot", "*.snapshot"));
             fileChooserSave.setInitialFileName("*.snapshot");
             File file = fileChooserSave.showSaveDialog(primaryStage);
-            if (file != null){
+            if (file != null) {
                 Snapshot snapshot = new Snapshot(simulation);
                 Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
             }
-            
+
         });
 
         itemLoadSnapshot.setOnAction(event -> {
@@ -221,7 +220,7 @@ public class Main extends Application {
             FileChooser.ExtensionFilter snapshotFilter = new FileChooser.ExtensionFilter("Snapshot file", "*.snapshot");
             fileChooserOpen.getExtensionFilters().add(snapshotFilter);
             File file = fileChooserOpen.showOpenDialog(primaryStage);
-            if (file != null){
+            if (file != null) {
                 Snapshot.loadSnapshot(file.getAbsolutePath());
             }
         });

@@ -12,7 +12,6 @@ import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DataCollector {
     private BufferedWriter stream;
@@ -39,24 +38,30 @@ public class DataCollector {
     }
 
     public void append(SimulationSpace space, long timestep) {
-        List<Fish> fish = getFish(space);
+        ArrayList<Fish> fish = getFish(space);
         String line = String.valueOf(timestep) + ',';
 
         line += String.valueOf(averageBWD(fish));
         line += ',';
         line += String.valueOf(averageMorphology(fish));
         line += ',';
+        line += String.valueOf(averageMaxSpawning(fish));
+        line += ',';
         line += String.valueOf(averagePlanktonDensity(space));
+        line += ',';
+        line += String.valueOf(averageSchoolingTendency(fish));
         line += ',';
         line += String.valueOf(fish.size());
         line += ',';
-        line += String.valueOf(carcassCount(space));
+        line += String.valueOf(carnivoreCount(fish));
+        line += ',';
+        line += String.valueOf(scavengerCount(fish));
+        line += ',';
+        line += String.valueOf(planktivoreCount(fish));
         line += ',';
         line += String.valueOf(fishEggCount(space));
         line += ',';
-        line += String.valueOf(averageMaxSpawning(fish));
-        line += ',';
-        line += String.valueOf(averageSchoolingTendency(fish));
+        line += String.valueOf(carcassCount(space));
         line += '\n';
 
         try {
@@ -80,11 +85,54 @@ public class DataCollector {
         }
     }
 
-    private float averageBWD(List<Fish> fish) {
+    private int carnivoreCount(ArrayList<Fish> fish) {
+        int count = 0;
+
+        for (Fish subject : fish) {
+            if (subject.getGenome().getPredationTendency() >= 0.5f) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    private int scavengerCount(ArrayList<Fish> fish) {
+        int count = 0;
+
+        for (Fish subject : fish) {
+            if (subject.getGenome().getScavengeTendency() >= 0.5f) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    private int planktivoreCount(ArrayList<Fish> fish) {
+        int count = 0;
+
+        for (Fish subject : fish) {
+            if (subject.getGenome().getHerbivoreTendency() >= 0.5f) {
+                ++count;
+            }
+        }
+
+        return count;
+    }
+
+    private float averageBWD(ArrayList<Fish> fish) {
         float sum = 0;
 
         for (Fish subject : fish) {
-            sum += subject.getSize() * subject.getSpeed();
+            float energyConsumption = subject.getSize() * Settings.FISH_SIZE_PENALTY +
+                    subject.getSpeed() * Settings.FISH_SPEED_PENALTY +
+                    subject.getGenome().getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
+                    subject.getGenome().getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
+                    subject.getGenome().getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY +
+                    subject.getSize() * subject.getSpeed() * Settings.ENERGY_SPEED_CORRELATION;
+
+            sum += energyConsumption / Math.pow((subject.getSize() * Settings.MAX_FISH_SIZE), 3) * 100;
         }
 
         return sum / fish.size();
@@ -126,8 +174,8 @@ public class DataCollector {
         return sum / (space.getHeight() * space.getWidth());
     }
 
-    private List<Fish> getFish(SimulationSpace space) {
-        List<Fish> fish = new ArrayList<>();
+    private ArrayList<Fish> getFish(SimulationSpace space) {
+        ArrayList<Fish> fish = new ArrayList<>();
 
         for (Field field : space) {
             if (field instanceof Fish) {
@@ -138,7 +186,7 @@ public class DataCollector {
         return fish;
     }
 
-    private double averageSchoolingTendency(List<Fish> fish) {
+    private double averageSchoolingTendency(ArrayList<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -148,17 +196,17 @@ public class DataCollector {
         return sum / fish.size();
     }
 
-    private double averageMaxSpawning(List<Fish> fish) {
+    private double averageMaxSpawning(ArrayList<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {
-            sum += subject.getSize() * Settings.MAX_FISH_SIZE;
+            sum += Settings.MATING_ENERGY_CONSUMPTION * subject.getSize();
         }
 
         return sum / fish.size();
     }
 
-    private double averageMorphology(List<Fish> fish) {
+    private double averageMorphology(ArrayList<Fish> fish) {
         double sum = 0;
 
         for (Fish subject : fish) {

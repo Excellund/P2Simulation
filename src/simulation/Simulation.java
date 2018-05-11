@@ -85,7 +85,7 @@ public class Simulation {
             }
         }
 
-        return (int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP * (sum / 9));
+        return (int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP * (sum / 9) / (tile.getMuDensity() / 10000f));
     }
 
     private void updateVessels() {

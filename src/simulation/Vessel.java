@@ -128,7 +128,7 @@ public class Vessel {
                 {0, 3, -3}};
 
         location = rotatePolygon(location, new Vector(0, 0), direction);
-        location = scalePolygon(location, 2);
+        location = scalePolygon(location, Settings.VESSEL_SCALE);
         location = translatePolygon(location, bow);
 
         this.bow = new Vector((int) location[0][0], (int) location[1][0]);
@@ -176,7 +176,7 @@ public class Vessel {
         //moves the vessel closer to the sought point
         //and refers the time-step call to the vessel's corresponding net
         move();
-        net.timeStep(getDirection(), 2, bow, stern, space);
+        net.timeStep(getDirection(), bow, stern, space);
     }
 
     private void move() {

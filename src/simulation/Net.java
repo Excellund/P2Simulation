@@ -35,7 +35,7 @@ public class Net {
         return requested.x < 0 || requested.x > max.x || requested.y < 0 || requested.y > max.y;
     }
 
-    public void timeStep(int direction, double scale, Vector bow, Vector[] stern, SimulationSpace space) {
+    public void timeStep(int direction, Vector bow, Vector[] stern, SimulationSpace space) {
         //should be called once every time-step.
         //Calculates collision between the net opening and fish,
         //determining whether said fish should be caught or escape
@@ -48,7 +48,7 @@ public class Net {
 
         double[][] entryLine = VectorTransformer.rotatePolygon(entry, new Vector(0, 0), direction);
 
-        entryLine = VectorTransformer.scalePolygon(entryLine, scale);
+        entryLine = VectorTransformer.scalePolygon(entryLine, Settings.VESSEL_SCALE);
         entryLine = VectorTransformer.translatePolygon(entryLine, bow);
 
         double x = entryLine[0][1] - entryLine[0][0];

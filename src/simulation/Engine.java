@@ -111,7 +111,7 @@ public class Engine implements Runnable {
         double[][] nettingMatrix;
 
         vesselMatrix = rotatePolygon(vesselShape, new Vector(0, 0), vessel.getDirection());
-        vesselMatrix = scalePolygon(vesselMatrix, 2);
+        vesselMatrix = scalePolygon(vesselMatrix, Settings.VESSEL_SCALE);
         vesselMatrix = translatePolygon(vesselMatrix, vessel.getBow());
 
         GraphicsContext context = canvas.getGraphicsContext2D();
@@ -124,11 +124,11 @@ public class Engine implements Runnable {
         }
 
         netMatrix = rotatePolygon(netShape, new Vector(0, 0), vessel.getDirection());
-        netMatrix = scalePolygon(netMatrix, 2);
+        netMatrix = scalePolygon(netMatrix, Settings.VESSEL_SCALE);
         netMatrix = translatePolygon(netMatrix, vessel.getBow());
 
         nettingMatrix = rotatePolygon(nettingPoints, new Vector(0, 0), vessel.getDirection());
-        nettingMatrix = scalePolygon(nettingMatrix, 2);
+        nettingMatrix = scalePolygon(nettingMatrix, Settings.VESSEL_SCALE);
         nettingMatrix = translatePolygon(nettingMatrix, vessel.getBow());
 
         fillNet(netMatrix, vessel.getNet());
@@ -171,22 +171,24 @@ public class Engine implements Runnable {
 
         ListIterator<Fish> iterator = net.getFish().listIterator();
 
-        for (int multiplierY = 1; multiplierY < 30 * 2; ++multiplierY) {
-            collectiveX = vec1X * multiplierY - vec2X * multiplierY;
-            collectiveY = vec1Y * multiplierY - vec2Y * multiplierY;
-            collectiveLength = Math.sqrt(Math.pow(collectiveX, 2) + Math.pow(collectiveY, 2));
-            collectiveVecX = collectiveX / collectiveLength;
-            collectiveVecY = collectiveY / collectiveLength;
+        synchronized (iterator) {
+            for (int multiplierY = 1; multiplierY < 30 * Settings.VESSEL_SCALE; ++multiplierY) {
+                collectiveX = vec1X * multiplierY - vec2X * multiplierY;
+                collectiveY = vec1Y * multiplierY - vec2Y * multiplierY;
+                collectiveLength = Math.sqrt(Math.pow(collectiveX, 2) + Math.pow(collectiveY, 2));
+                collectiveVecX = collectiveX / collectiveLength;
+                collectiveVecY = collectiveY / collectiveLength;
 
-            for (int multiplierX = 1; multiplierX < collectiveLength - 1; ++multiplierX) {
-                if (!iterator.hasNext()) {
-                    return; //all fish has been drawn
+                for (int multiplierX = 1; multiplierX < collectiveLength - 1; ++multiplierX) {
+                    if (!iterator.hasNext()) {
+                        return; //all fish has been drawn
+                    }
+
+                    utils.Color color = iterator.next().getColor();
+
+                    context.setFill(Color.rgb(color.getRed(), color.getGreen(), color.getBlue()));
+                    context.fillRect(collectiveVecX * multiplierX + vec2X * multiplierY + netMatrix[0][3], collectiveVecY * multiplierX + vec2Y * multiplierY + netMatrix[1][3], 2, 2);
                 }
-
-                utils.Color color = iterator.next().getColor();
-
-                context.setFill(Color.rgb(color.getRed(), color.getGreen(), color.getBlue()));
-                context.fillRect(collectiveVecX * multiplierX + vec2X * multiplierY + netMatrix[0][3], collectiveVecY * multiplierX + vec2Y * multiplierY + netMatrix[1][3], 2, 2);
             }
         }
     }

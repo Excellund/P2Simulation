@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import simulation.Settings;
 
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 
 public class ContentBoxFactory {
@@ -26,6 +25,7 @@ public class ContentBoxFactory {
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
     }
+
     /*All inputs to navigation box*/
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
@@ -129,6 +129,7 @@ public class ContentBoxFactory {
 
         return contentBox;
     }
+
     //Checking for each type of box, if its already open, if not it will open
     public void interactionBoxChecker(ContentBox interactionBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
         if (interactionBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
@@ -147,6 +148,7 @@ public class ContentBoxFactory {
             interactionBoxArea2.getChildren().add(launchBox);
         }
     }
+
     //Generate the difference boxes
     public ContentBox generateInteractionBox(double width) {
         ContentBox interactionBox = new ContentBox("Interaction", width, dragListener);
@@ -165,6 +167,7 @@ public class ContentBoxFactory {
 
         return launchBox;
     }
+
     //Generate the contents for each categories in the difference choices the user has
     public void interactionBoxSetContextSimulation(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Simulation settings");
@@ -175,7 +178,7 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB);
         /*Creating labels and texfields for everything, Label for the user to read and Textfield
-        * to display and change the current setting value*/
+         * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
         Label labelPlanktonGrowth = new Label("Growth pr. time step");
@@ -193,7 +196,7 @@ public class ContentBoxFactory {
                 Settings.NUM_VESSELS = Float.parseFloat(textNumVessel.getText());
                 Settings.PLANKTON_GROWTH_PER_TIMESTEP = Float.parseFloat(textPlanktonGrowth.getText());
                 Settings.MAX_PLANKTON = Float.parseFloat(textPlanktonMax.getText());
-            Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
+                Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
