@@ -55,19 +55,6 @@ public class Fish implements Field {
 
     @Override
     public void update(SimulationSpace space) {
-        //Decrease energy
-        //Decrease health if energy low
-        //Increase health if energy high
-        //Increase size if energy high and is able to grow due to genome
-        --matingTimer;
-
-        if (!isAlive()) //check whether fish should be removed
-        {
-            space.queueRemoveField(this);
-
-            return;
-        }
-
         move(space); //move towards optimal tile
 
         Tile currentTile = space.getTile(position);
@@ -95,6 +82,13 @@ public class Fish implements Field {
             if (health > size * Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS) {
                 health = size * Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
             }
+        }
+
+        --matingTimer;
+
+        if (!isAlive()) //check whether fish should be removed
+        {
+            space.queueRemoveField(this);
         }
     }
 
@@ -326,7 +320,7 @@ public class Fish implements Field {
     }
 
     private float nearbyPlanktonRating(Tile tile) {
-        return (tile.getMuDensity() / 1000000f) * genome.getHerbivoreEfficiency();
+        return (tile.getMuDensity() / 1000000f) * genome.getHerbivoreTendency();
     }
 
     private float nearbyScavengingRating(Tile tile) {
@@ -337,14 +331,14 @@ public class Fish implements Field {
         for (Field subject : tile.getSubjects()) {
             if (subject instanceof FishEgg) {
                 temp = ((FishEgg) subject).getGenome();
-                current = size * genome.getCarnivoreEfficiency() * temp.getSize();
+                current = size * genome.getScavengeTendency() * temp.getSize();
 
                 if (current > best) {
                     best = current;
                 }
             } else if (subject instanceof Carcass) {
                 float carcassEnergy = ((Carcass) subject).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
-                current = carcassEnergy * size * genome.getCarnivoreEfficiency();
+                current = carcassEnergy * size * genome.getScavengeTendency();
 
                 if (current > best) {
                     best = current;
@@ -383,7 +377,7 @@ public class Fish implements Field {
         Vector currentPosition;
         Fish temp;
 
-        if (genome.getSchoolingTendency() >= 0.4) //schooling is very expensive, should be limited where it's possible
+        if (genome.getSchoolingTendency() >= 0.0) //schooling is very expensive, should be limited where it's possible
         {
             for (int y = position.y - radius; y <= position.y + radius; y += 2) {
                 if (y >= 0 && y < space.getHeight()) {
@@ -528,11 +522,19 @@ public class Fish implements Field {
             sums[i] = sumTiles(tileRatings, tileValidity, mins[i], maxs[i]);
         }
 
+        int maxSumIndex = findMaxSumIndex(sums);
+
+        //Do function recursively at sub-area
+        return findOptimalTile(tileRatings, tileValidity, mins[maxSumIndex], maxs[maxSumIndex]);
+    }
+
+    private int findMaxSumIndex(float[] sums) {
         //Find max value, starting at a random index.
         Random r = CountingRandom.getInstance();
         int startIndex = r.nextInt(4);
         //startIndex = 2;
         float maxSum = 0;
+        int numAreas = sums.length;
         int maxSumIndex = startIndex;
 
         for (int i = startIndex; i < numAreas; i++) {
@@ -549,8 +551,7 @@ public class Fish implements Field {
             }
         }
 
-        //Do function recursively at sub-area
-        return findOptimalTile(tileRatings, tileValidity, mins[maxSumIndex], maxs[maxSumIndex]);
+        return maxSumIndex;
     }
 
     @Override
@@ -566,7 +567,15 @@ public class Fish implements Field {
 
     @Override
     public Color getColor() {
-        return genome.getColor();
+        if (Settings.COLOR_BY_TENDENCY < 1) {
+            return genome.getColor();
+        } else {
+            return new Color(
+                    255 * genome.getPredationTendency(),
+                    255 * genome.getHerbivoreTendency(),
+                    255 * genome.getScavengeTendency()
+            );
+        }
     }
 
     public float getHealth() {

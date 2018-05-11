@@ -5,7 +5,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class Settings {
     //Simulation settings
@@ -45,6 +48,7 @@ public class Settings {
     public static float FISH_HERBIVORE_EFFICIENCY_PENALTY;
     public static float FISH_CARNIVORE_EFFICIENCY_PENALTY;
     public static float FISH_ATTACK_ABILITY_PENALTY;
+    public static float COLOR_BY_TENDENCY;
 
     //Fishing settings
     public static float MAX_MORPHOLOGY;
@@ -53,6 +57,7 @@ public class Settings {
     public static float FISHING_QUOTAS_MAX;
     public static float VESSEL_TRAVEL_DISTANCE;
     public static float WIDTH_STEEPNESS;
+    public static float VESSEL_SCALE;
     //Spawn Vessel
     public static float MORPHOLOGY;
     public static float QUOTAS;
@@ -69,13 +74,13 @@ public class Settings {
     private static Map<String, Float> abbreviated = new HashMap<>();
 
     public static void defaultAbbreviated() {
-        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 3000f);
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 600f);
         abbreviated.put("NUM_VESSELS", 3f);
-        abbreviated.put("MAX_PLANKTON", 500000f);
-        abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", 600000f);
+        abbreviated.put("MAX_PLANKTON", 150000f);
+        abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", 300000f);
 
         abbreviated.put("MAX_FISH_SIZE", 100f);
-        abbreviated.put("ENERGY_PER_EGG", 1f);
+        abbreviated.put("ENERGY_PER_EGG", 3f);
         abbreviated.put("MIN_COMPATIBILITY_MATING", 0.8f);
         abbreviated.put("MIN_PREDATION_TENDENCY", 0.4f);
         abbreviated.put("MAX_ATTACK_DAMAGE", 20f);
@@ -85,8 +90,8 @@ public class Settings {
         abbreviated.put("EXPECTED_MUTATION_AMOUNT", 4f);
         abbreviated.put("MUTATION_GAUSSIAN_MEAN", 0.05f);
         abbreviated.put("NUTRITION_PER_SIZE_POINT", 0.01f);
-        abbreviated.put("MIN_ENERGY_MATING", 40f);
-        abbreviated.put("MATING_ENERGY_CONSUMPTION", 60f);
+        abbreviated.put("MIN_ENERGY_MATING", 60f);
+        abbreviated.put("MATING_ENERGY_CONSUMPTION", 200f);
         abbreviated.put("HEALTH_POINTS_PER_SIZE_POINTS", 1f);
         abbreviated.put("ENERGY_POINTS_PER_SIZE_POINTS", 2f);
         abbreviated.put("HEALTH_REDUCTION_ON_LOW_ENERGY", 10f);
@@ -97,13 +102,14 @@ public class Settings {
         abbreviated.put("MAX_MOVES_CORRESPONDING_TO_SPEED", 3f);
         abbreviated.put("ENERGY_SPEED_CORRELATION", 90f);
         abbreviated.put("MATING_DELAY", 600f);
-        abbreviated.put("VISION_RANGE", 4f);
+        abbreviated.put("VISION_RANGE", 3f);
         abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.05f);
-        abbreviated.put("FISH_SIZE_PENALTY", 1.0f);
-        abbreviated.put("FISH_SPEED_PENALTY", 1.0f);
-        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 5.0f);
-        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 1.0f);
-        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 1.0f);
+        abbreviated.put("FISH_SIZE_PENALTY", 2.0f); //TODO: UI
+        abbreviated.put("FISH_SPEED_PENALTY", 2.0f); //TODO: UI
+        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 10.0f); //TODO: UI
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 2.0f); //TODO: UI
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 2.0f); //TODO: UI
+        abbreviated.put("COLOR_BY_TENDENCY", 1.0f);
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);
         abbreviated.put("MIN_MORPHOLOGY", 0.1f);
@@ -111,6 +117,7 @@ public class Settings {
         abbreviated.put("FISHING_QUOTAS_MAX", 3000f);
         abbreviated.put("VESSEL_TRAVEL_DISTANCE", 600f);
         abbreviated.put("WIDTH_STEEPNESS", 20f);
+        abbreviated.put("VESSEL_SCALE", 2f);
 
         abbreviated.put("MORPHOLOGY", 0.5f);
         abbreviated.put("QUOTAS", 1500f);
@@ -122,7 +129,7 @@ public class Settings {
 
         abbreviated.put("PLANKTON_GAMMA", 1.0f);
         abbreviated.put("FISH_GAMMA", 1.0f);
-        abbreviated.put("TARGET_FPS", 5.0f);
+        abbreviated.put("TARGET_FPS", 2.0f);
     }
 
     public static void useAbbreviated() {
@@ -162,6 +169,7 @@ public class Settings {
         FISH_CARNIVORE_EFFICIENCY_PENALTY = abbreviated.get("FISH_CARNIVORE_EFFICIENCY_PENALTY");
         FISH_ATTACK_ABILITY_PENALTY = abbreviated.get("FISH_ATTACK_ABILITY_PENALTY");
         FISH_SIZE_PENALTY = abbreviated.get("FISH_SIZE_PENALTY");
+        COLOR_BY_TENDENCY = abbreviated.get("COLOR_BY_TENDENCY");
 
         MAX_MORPHOLOGY = abbreviated.get("MAX_MORPHOLOGY");
         MIN_MORPHOLOGY = abbreviated.get("MIN_MORPHOLOGY");
@@ -169,6 +177,7 @@ public class Settings {
         FISHING_QUOTAS_MAX = abbreviated.get("FISHING_QUOTAS_MAX");
         VESSEL_TRAVEL_DISTANCE = abbreviated.get("VESSEL_TRAVEL_DISTANCE");
         WIDTH_STEEPNESS = abbreviated.get("WIDTH_STEEPNESS");
+        VESSEL_SCALE = abbreviated.get("VESSEL_SCALE");
 
         MORPHOLOGY = abbreviated.get("MORPHOLOGY");
         QUOTAS = abbreviated.get("QUOTAS");
@@ -220,7 +229,7 @@ public class Settings {
         abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", FISH_HERBIVORE_EFFICIENCY_PENALTY);
         abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", FISH_CARNIVORE_EFFICIENCY_PENALTY);
         abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", FISH_ATTACK_ABILITY_PENALTY);
-        abbreviated.put("FISH_SIZE_PENALTY", FISH_SIZE_PENALTY);
+        abbreviated.put("COLOR_BY_TENDENCY", COLOR_BY_TENDENCY);
 
         abbreviated.put("MAX_MORPHOLOGY", MAX_MORPHOLOGY);
         abbreviated.put("MIN_MORPHOLOGY", MIN_MORPHOLOGY);
@@ -228,6 +237,7 @@ public class Settings {
         abbreviated.put("FISHING_QUOTAS_MAX", FISHING_QUOTAS_MAX);
         abbreviated.put("VESSEL_TRAVEL_DISTANCE", VESSEL_TRAVEL_DISTANCE);
         abbreviated.put("WIDTH_STEEPNESS", WIDTH_STEEPNESS);
+        abbreviated.put("VESSEL_SCALE", VESSEL_SCALE);
 
         abbreviated.put("MORPHOLOGY", MORPHOLOGY);
         abbreviated.put("QUOTAS", QUOTAS);
@@ -282,9 +292,9 @@ public class Settings {
         }
     }
 
-    public static List<String> getFiles() {
+    public static ArrayList<String> getFiles() {
         Path directory = Paths.get("settings/");
-        List<String> files = new ArrayList<>();
+        ArrayList<String> files = new ArrayList<>();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             for (Path file : stream) {

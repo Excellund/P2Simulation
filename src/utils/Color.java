@@ -55,11 +55,6 @@ public class Color {
     }
 
     public static Color getGammaCorrected(Color col, float gamma) {
-        /*return new Color(
-                (float) Math.pow(col.getRedNormalized(), gamma),
-                (float) Math.pow(col.getGreenNormalized(), gamma),
-                (float) Math.pow(col.getBlueNormalized(), gamma)
-        );*/
         return new Color(
                 (int) Math.pow(col.getRed(), gamma),
                 (int) Math.pow(col.getGreen(), gamma),
