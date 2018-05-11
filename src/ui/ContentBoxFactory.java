@@ -26,12 +26,12 @@ public class ContentBoxFactory {
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
     }
-
+    /*All inputs to navigation box*/
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        TreeItem<String> menuRoot = new TreeItem<>("simulation name");
+        TreeItem<String> menuRoot = new TreeItem<>("Fish simulation");
         TreeView<String> menu = new TreeView<>(menuRoot);
-
+        //Categories for settings
         TreeItem<String> itemSettings = new TreeItem<>("Settings");
         TreeItem<String> itemSimulation = new TreeItem<>("Simulation");
         TreeItem<String> itemFish = new TreeItem<>("Fish");
@@ -40,27 +40,27 @@ public class ContentBoxFactory {
         TreeItem<String> itemGraphics = new TreeItem<>("Graphics");
         TreeItem<String> itemSaveSettings = new TreeItem<>("Save settings");
 
-
         itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics, itemSaveSettings);
 
-        TreeItem<String> itemSnapshot = new TreeItem<>("Snapshot");
-
+        //Categories for AddItems
         TreeItem<String> itemAddItems = new TreeItem<>("Add items");
         TreeItem<String> itemAddVessel = new TreeItem<>("Vessel");
         TreeItem<String> itemAddPlankton = new TreeItem<>("Plankton");
 
+        itemAddItems.getChildren().addAll(itemAddVessel, itemAddPlankton);
+
+        //Categories for launch
         TreeItem<String> itemLaunch = new TreeItem<>("Launch simulation");
         TreeItem<String> itemStartLaunch = new TreeItem<>("New launch");
-        TreeItem<String> itemStartSnapshot = new TreeItem<>("Launch snapshot");
 
+        itemLaunch.getChildren().addAll(itemStartLaunch);
 
-        itemAddItems.getChildren().addAll(itemAddVessel, itemAddPlankton);
-        itemLaunch.getChildren().addAll(itemStartLaunch, itemStartSnapshot);
-        menuRoot.getChildren().addAll(itemSettings, itemSnapshot, itemAddItems, itemLaunch);
+        //Categories for Navigator
+        menuRoot.getChildren().addAll(itemSettings, itemAddItems, itemLaunch);
 
         contentBox.setContent(menu);
 
-
+        //Checking which category that has been pressed, and what contents the window should have
         menu.getSelectionModel().selectedItemProperty().addListener(event ->
         {
             switch (menu.getSelectionModel().getSelectedItem().getParent().getValue()) {
@@ -99,10 +99,6 @@ public class ContentBoxFactory {
                     }
                     break;
 
-                case "Snapshot":
-                    System.out.println("hej");
-                    break;
-
                 case "Add items":
                     switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
                         case "Vessel":
@@ -124,21 +120,16 @@ public class ContentBoxFactory {
                             launchBoxChecker(launchBox, interactionBoxArea2, menu);
                             break;
 
-                        case "Launch snapshot":
-                            launchBoxSetContextSnapshot(launchBox);
-                            launchBoxChecker(launchBox, interactionBoxArea2, menu);
-                            break;
                     }
                     break;
+
             }
-
-
         });
 
 
         return contentBox;
     }
-
+    //Checking for each type of box, if its already open, if not it will open
     public void interactionBoxChecker(ContentBox interactionBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
         if (interactionBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
             interactionBoxArea2.getChildren().add(interactionBox);
@@ -156,10 +147,9 @@ public class ContentBoxFactory {
             interactionBoxArea2.getChildren().add(launchBox);
         }
     }
-
+    //Generate the difference boxes
     public ContentBox generateInteractionBox(double width) {
         ContentBox interactionBox = new ContentBox("Interaction", width, dragListener);
-
 
         return interactionBox;
     }
@@ -175,15 +165,17 @@ public class ContentBoxFactory {
 
         return launchBox;
     }
-
+    //Generate the contents for each categories in the difference choices the user has
     public void interactionBoxSetContextSimulation(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Simulation settings");
+        //Adding boxes that can contain and post content
         HBox mainContent = new HBox(10);
         VBox columnA = new VBox();
         VBox columnB = new VBox(4);
 
         mainContent.getChildren().addAll(columnA, columnB);
-
+        /*Creating labels and texfields for everything, Label for the user to read and Textfield
+        * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
         Label labelPlanktonGrowth = new Label("Growth pr. time step");
@@ -192,7 +184,7 @@ public class ContentBoxFactory {
         TextField textPlanktonMax = new TextField(Float.toString(Settings.MAX_PLANKTON));
         Label labelInitialMaxPlanktonDensity = new Label("Max plankton density");
         TextField textInitialMaxPlanktonDensity = new TextField(Float.toString(Settings.INITIAL_MAX_PLANKTON_DENSITY));
-
+        //Save button that will store the settings, until you close the program
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
         saveButton.setOnAction(event ->
@@ -282,7 +274,7 @@ public class ContentBoxFactory {
         Label labelFishCarnivorePenalty = new Label("Fish carnivore penalty");
         TextField textFishCarnivorePenalty = new TextField(Float.toString(Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY));
         Label labelFishAttackPenalty = new Label("Fish attack penalty");
-        TextField textFishAttackPenalty = new TextField(Float.toString(Settings.FISH_ATTACK_ABILITY_PENALTY);
+        TextField textFishAttackPenalty = new TextField(Float.toString(Settings.FISH_ATTACK_ABILITY_PENALTY));
 
 
         Button saveButton = new Button("Save");
@@ -561,20 +553,6 @@ public class ContentBoxFactory {
         launchBox.setContent(mainContent);
     }
 
-    public void launchBoxSetContextSnapshot(ContentBox launchBox) {
-        HBox mainContent = new HBox(10);
-        VBox columnA = new VBox();
-        VBox columnB = new VBox(4);
-        VBox columnC = new VBox();
-        VBox columnD = new VBox(4);
-
-        mainContent.getChildren().addAll(columnA, columnB, columnC, columnD);
-
-        //Snapshot hello = new Snapshot();
-        //Snapshot.saveSnapshot("snapshots/hello", hello);
-
-        launchBox.setContent(mainContent);
-    }
 
     public ContentBox[] interactionBoxSetContentGraph(ContentBox interactionBox) {
 
