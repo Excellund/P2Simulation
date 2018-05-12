@@ -13,12 +13,12 @@ public class SimulationSpaceTest {
 
     @BeforeEach
     public void beforeEach() {
-        field = new Fish(new FishGenome(), new Vector(0,0 ));
+        field = new Fish(new FishGenome(), new Vector(0, 0));
         simulationSpace = new SimulationSpace(750, 750);
     }
 
     @Test
     public void addField() {
-        
+
     }
 }

@@ -14,10 +14,13 @@ import simulation.Simulation;
 import simulation.Snapshot;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-public class uiSetup {
+public class UISetup {
 
     public static Scene getScene(Stage primaryStage){
         DragListener dragListener = new DragListener();
@@ -56,7 +59,7 @@ public class uiSetup {
 
         rowContainer.getChildren().addAll(areaOne, canvasContainer, areaTwo);
 
-        MenuBar menuBar = getMenuBar(primaryStage, navigator, areaOne, simulation, graphAreaOne, graphAreaTwo,
+        setupMenuBar(primaryStage, navigator, areaOne, areaTwo, dragListener, simulation, engine, graphAreaOne, graphAreaTwo,
                 graphAreaThree, factory, interactionBox, root, toolbar, rowContainer);
 
         //GUI style
@@ -65,9 +68,9 @@ public class uiSetup {
         return scene;
     }
 
-    private static MenuBar getMenuBar(Stage primaryStage, ContentBox navigator, ContentArea areaOne, Simulation simulation
-            ,ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, ContentBoxFactory factory
-            ,ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer){
+    private static void setupMenuBar(Stage primaryStage, ContentBox navigator, ContentArea areaOne, ContentArea areaTwo, DragListener dragListener, Simulation simulation,
+                                     Engine engine, ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, ContentBoxFactory factory,
+                                     ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer){
 
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -89,13 +92,13 @@ public class uiSetup {
 
             event.consume();
         });
-        areaOne.getChildren().add(navigator);
 
-        setOnFileAction(menuFile, primaryStage, menuEdit, simulation);
+        areaOne.getChildren().add(navigator);
+        areaTwo.getChildren().add(engine.getStatisticsUI(375, dragListener));
+
+        setOnFileAction(menuFile, primaryStage, menuEdit, simulation, engine);
         HBox graphContainer = graphEvents(graphAreaOne, graphAreaTwo, graphAreaThree, menuView, factory, interactionBox);
         root.getChildren().addAll(toolbar, menuBar, rowContainer, graphContainer);
-
-        return menuBar;
     }
 
     private static void setOnMouseEvents(Delta deltaDrag, Stage primaryStage, Toolbar toolbar, Engine engine){
@@ -174,7 +177,7 @@ public class uiSetup {
         return graphContainer;
     }
 
-    private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation){
+    private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine){
         MenuItem itemSaveSettings = new MenuItem("Save Settings");
         MenuItem itemLoadSettings = new MenuItem("Load Settings");
         MenuItem itemSaveSnapshot = new MenuItem("Save Snapshot");
@@ -184,16 +187,20 @@ public class uiSetup {
 
         saveSettings(itemSaveSettings);
         loadSettings(itemLoadSettings);
-        saveSnapshot(itemSaveSnapshot, primaryStage, simulation);
-        loadSnapshot(itemLoadSnapshot, primaryStage);
+        saveSnapshot(itemSaveSnapshot, primaryStage, simulation, engine);
+        loadSnapshot(itemLoadSnapshot, primaryStage, simulation, engine);
 
         MenuItem itemRestartSimulation = new MenuItem("Restart simulation");
-        MenuItem itemPauseSimulation = new MenuItem("Start/Pause");
+        MenuItem itemTogglePauseSimulation = new MenuItem("Toggle pause");
 
-        menuEdit.getItems().addAll(itemPauseSimulation, itemRestartSimulation);
+        menuEdit.getItems().addAll(itemTogglePauseSimulation, itemRestartSimulation);
 
         itemRestartSimulation.setOnAction(event -> {
             Simulation restartSimulation = new Simulation(750, 750);
+        });
+
+        itemTogglePauseSimulation.setOnAction(event -> {
+            engine.togglePause();
         });
     }
 
@@ -227,30 +234,69 @@ public class uiSetup {
         });
     }
 
-    private static void loadSnapshot(MenuItem itemLoadSnapshot, Stage primaryStage){
-        itemLoadSnapshot.setOnAction(event -> {
+    private static void loadSnapshot(MenuItem itemLoadSnapshot, Stage primaryStage, Simulation simulation, Engine engine){
+        itemLoadSnapshot.setOnAction(event ->
+        {
             FileChooser fileChooserOpen = new FileChooser();
-            fileChooserOpen.setTitle("Open snapshot");
+            fileChooserOpen.setTitle("Load snapshot");
             FileChooser.ExtensionFilter snapshotFilter = new FileChooser.ExtensionFilter("Snapshot file", "*.snapshot");
             fileChooserOpen.getExtensionFilters().add(snapshotFilter);
-            File file = fileChooserOpen.showOpenDialog(primaryStage);
-            if (file != null){
-                Snapshot.loadSnapshot(file.getAbsolutePath());
+
+            Path path = Paths.get("snapshots");
+            if (Files.exists(path) && Files.isDirectory(path)) {
+                fileChooserOpen.setInitialDirectory(new File(path.toUri()));
             }
+
+            boolean pausedState = engine.isPaused();
+            engine.setIsPaused(true);
+
+            File file = fileChooserOpen.showOpenDialog(primaryStage);
+
+
+            if (file != null) {
+                while (engine.isProcessing()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) { }
+                }
+
+                Snapshot snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
+                simulation.applySnapshot(snapshot);
+            }
+
+            engine.setIsPaused(pausedState);
         });
     }
 
-    private static void saveSnapshot(MenuItem itemSaveSnapshot, Stage primaryStage, Simulation simulation){
-        itemSaveSnapshot.setOnAction(event ->  {
+    private static void saveSnapshot(MenuItem itemSaveSnapshot, Stage primaryStage, Simulation simulation, Engine engine){
+        itemSaveSnapshot.setOnAction(event ->
+        {
             FileChooser fileChooserSave = new FileChooser();
             fileChooserSave.setTitle("Save snapshot");
             fileChooserSave.getExtensionFilters().add(new FileChooser.ExtensionFilter("snapshot", "*.snapshot"));
             fileChooserSave.setInitialFileName("*.snapshot");
+
+            Path path = Paths.get("snapshots");
+            if (Files.exists(path) && Files.isDirectory(path)) {
+                fileChooserSave.setInitialDirectory(new File(path.toUri()));
+            }
+
+            boolean pausedState = engine.isPaused();
+            engine.setIsPaused(true);
+
             File file = fileChooserSave.showSaveDialog(primaryStage);
-            if (file != null){
+            if (file != null) {
+                while (engine.isProcessing()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) { }
+                }
+
                 Snapshot snapshot = new Snapshot(simulation);
                 Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
             }
+
+            engine.setIsPaused(pausedState);
         });
     }
 

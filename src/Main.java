@@ -32,7 +32,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = uiSetup.getScene(primaryStage);
+        Scene scene = UISetup.getScene(primaryStage);
 
         //initialize the main window
         scene.getStylesheets().add("body.css");

@@ -5,3 +5,5 @@ production
 debug
 .DS_Store
 output
+snapshots/*
+!snapshots/.gitkeep

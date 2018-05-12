@@ -8,6 +8,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
 import simulation.fields.Fish;
+import ui.ContentBox;
+import ui.DragListener;
 import utils.Vector;
 
 import java.nio.IntBuffer;
@@ -21,9 +23,10 @@ public class Engine implements Runnable {
     private AnimationTimer animationTimer;
     private PixelWriter pixelWriter;
     private boolean isRunning = true;
+    private volatile boolean isPaused = false;
     private int timeStepsPerFrame;
     private DataCollector dataCollector;
-    private long currentTimeStep = 0;
+    private  boolean isProcessing = false;
 
     private final double[][] vesselShape = {
             {0.0, -5.0, -20.0, -20.0, -5.0, 0.0},
@@ -61,7 +64,7 @@ public class Engine implements Runnable {
         };
     }
 
-    public void drawFrame() {
+    private void drawFrame() {
         drawTiles();
         drawVessels();
     }
@@ -198,16 +201,49 @@ public class Engine implements Runnable {
         animationTimer.start();
 
         while (isRunning) {
+            if (isPaused) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) { }
+
+                continue; //do nothing
+            }
+
+            isProcessing = true;
+
             simulation.timeStep();
 
-            currentTimeStep++;
-            dataCollector.append(simulation.getSpace(), currentTimeStep);
+            if (simulation.getCurrentTimeStep() % ((int) Settings.DATACOLLECTOR_APPEND_DELAY) == 0) {
+                dataCollector.append(simulation.getSpace(), simulation.getCurrentTimeStep());
+            }
+
+            isProcessing = false;
         }
+    }
+
+    public void togglePause() {
+        isPaused = !isPaused;
+    }
+
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public boolean isProcessing() {
+        return isProcessing;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
     public void stop() {
         isRunning = false;
         animationTimer.stop();
         dataCollector.dispose();
+    }
+
+    public ContentBox getStatisticsUI(double width, DragListener dragListener) {
+        return dataCollector.getStatisticsUI(width, dragListener);
     }
 }

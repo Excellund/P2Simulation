@@ -16,6 +16,7 @@ public class Settings {
     public static float NUM_VESSELS;
     public static float MAX_PLANKTON;
     public static float INITIAL_MAX_PLANKTON_DENSITY;
+    public static float DATACOLLECTOR_APPEND_DELAY;
 
     //Fish settings
     public static float MAX_FISH_SIZE;
@@ -75,9 +76,10 @@ public class Settings {
 
     public static void defaultAbbreviated() {
         abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 1300f);
-        abbreviated.put("NUM_VESSELS", 0f);
-        abbreviated.put("MAX_PLANKTON", 100000f);
+        abbreviated.put("NUM_VESSELS", 3f);
+        abbreviated.put("MAX_PLANKTON", 140000f);
         abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", 300000f);
+        abbreviated.put("DATACOLLECTOR_APPEND_DELAY", 100f);
 
         abbreviated.put("MAX_FISH_SIZE", 100f);
         abbreviated.put("ENERGY_PER_EGG", 3f);
@@ -129,7 +131,7 @@ public class Settings {
 
         abbreviated.put("PLANKTON_GAMMA", 1.0f);
         abbreviated.put("FISH_GAMMA", 1.0f);
-        abbreviated.put("TARGET_FPS", 10.0f);
+        abbreviated.put("TARGET_FPS", 7.0f);
     }
 
     public static void useAbbreviated() {
@@ -137,6 +139,7 @@ public class Settings {
         NUM_VESSELS = abbreviated.get("NUM_VESSELS");
         MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
         INITIAL_MAX_PLANKTON_DENSITY = abbreviated.get("INITIAL_MAX_PLANKTON_DENSITY");
+        DATACOLLECTOR_APPEND_DELAY = abbreviated.get("DATACOLLECTOR_APPEND_DELAY");
 
         MAX_FISH_SIZE = abbreviated.get("MAX_FISH_SIZE");
         ENERGY_PER_EGG = abbreviated.get("ENERGY_PER_EGG");
@@ -198,6 +201,7 @@ public class Settings {
         abbreviated.put("NUM_VESSELS", NUM_VESSELS);
         abbreviated.put("MAX_PLANKTON", MAX_PLANKTON);
         abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", INITIAL_MAX_PLANKTON_DENSITY);
+        abbreviated.put("DATACOLLECTOR_APPEND_DELAY", DATACOLLECTOR_APPEND_DELAY);
 
         abbreviated.put("MAX_FISH_SIZE", MAX_FISH_SIZE);
         abbreviated.put("ENERGY_PER_EGG", ENERGY_PER_EGG);

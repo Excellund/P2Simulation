@@ -12,6 +12,7 @@ public class Simulation {
     private Random random = CountingRandom.getInstance();
     private SimulationSpace space;
     private List<Vessel> vessels;
+    private long currentTimeStep = 0;
 
     // Constructor:
     public Simulation(int width, int height) {
@@ -105,6 +106,8 @@ public class Simulation {
         updatePlankton();
         updateVessels();
         space.processQueue();
+
+        currentTimeStep++;
     }
 
     // Getters:
@@ -116,8 +119,13 @@ public class Simulation {
         return vessels;
     }
 
+    public long getCurrentTimeStep() {
+        return currentTimeStep;
+    }
+
     public void applySnapshot(Snapshot snapshot) {
         CountingRandom.getInstance().setState(snapshot.getRandomSeed(), snapshot.getRandomCounter());
+        currentTimeStep = snapshot.getCurrentTimeStep();
 
         space = new SimulationSpace(space.getWidth(), space.getHeight());
         space.applySnapshot(snapshot);
