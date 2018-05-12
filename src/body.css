@@ -38,7 +38,6 @@
     -fx-background-color: #36393e;
     -fx-padding: 1 4 -1 4;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-background-radius: 0 0 0 0;
 }
 
@@ -200,7 +199,7 @@
 }
 
 .choice-box {
-    -fx-background-color: #444a4e;
+    -fx-background-color: #474b51;
     -fx-font-family: "System";
-    -fx-max-width: 100px;
+    -fx-max-width: 90px;
 }

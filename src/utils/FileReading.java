@@ -32,26 +32,32 @@ public class FileReading {
 
         //Load data into lists
         while ((line = reader.readLine()) != null) {
-            //Split array
-            String[] splitted = line.split(",");
 
-            //Put data in each of their lists
-            timeStep.add(Double.parseDouble(splitted[0]));
-            avgBWD.add(Double.parseDouble(splitted[1]));
-            avgMorph.add(Double.parseDouble(splitted[2]));
-            avgMaxSpawning.add(Double.parseDouble(splitted[3]));
-            avgPlankton.add(Double.parseDouble(splitted[4]));
-            avgSchoolTend.add(Double.parseDouble(splitted[5]));
-            fishCount.add(Double.parseDouble(splitted[6]));
-            carnivoreCount.add(Double.parseDouble(splitted[7]));
-            planktivoreCount.add(Double.parseDouble(splitted[8]));
-            scavengerCount.add(Double.parseDouble(splitted[9]));
-            fishEggCount.add(Double.parseDouble(splitted[10]));
-            carcassCount.add(Double.parseDouble(splitted[11]));
+            if(!line.equals("Timestep,%BWD,Morphology,Spawn,Plankton,Schooling,Fish,Carnivores,Scavengers,Planktivores,Fish eggs,Carcasses")){
+
+                //Split array
+                String[] splitted = line.split(",");
+
+                //Put data in each of their lists
+                timeStep.add(Double.parseDouble(splitted[0]));
+                avgBWD.add(Double.parseDouble(splitted[1]));
+                avgMorph.add(Double.parseDouble(splitted[2]));
+                avgMaxSpawning.add(Double.parseDouble(splitted[3]));
+                avgPlankton.add(Double.parseDouble(splitted[4]));
+                avgSchoolTend.add(Double.parseDouble(splitted[5]));
+                fishCount.add(Double.parseDouble(splitted[6]));
+                carnivoreCount.add(Double.parseDouble(splitted[7]));
+                planktivoreCount.add(Double.parseDouble(splitted[8]));
+                scavengerCount.add(Double.parseDouble(splitted[9]));
+                fishEggCount.add(Double.parseDouble(splitted[10]));
+                carcassCount.add(Double.parseDouble(splitted[11]));
+            }
         }
 
         //List of lists
         collectedLists();
+
+
 
     }
 

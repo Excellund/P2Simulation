@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import utils.FileReading;
+import utils.GraphSettings;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ public class Graph {
 
     private List<Double> xCoordinate = new ArrayList<>();
     private List<Double> yCoordinate = new ArrayList<>();
-    private int count = 1;
+    /*private int count = 1;
 
     public void setCount(int count) {
         this.count = count;
-    }
+    }*/
 
     public ObservableList<Series<Double, Double>> getChartData(int xChoice, int yChoice) {
 
@@ -29,7 +30,7 @@ public class Graph {
         //Calls the file
         FileReading file = null;
         try {
-            file = new FileReading("output/data_" + count + ".txt");
+            file = new FileReading("output/data_" + GraphSettings.FILE_NUMBER + ".txt");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,18 +2,21 @@ package ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import simulation.Settings;
+import utils.GraphSettings;
 
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 
 public class ContentBoxFactory {
@@ -22,7 +25,6 @@ public class ContentBoxFactory {
     private StackPane root1 = new StackPane();
     private StackPane root2 = new StackPane();
     private StackPane root3 = new StackPane();
-    private int count = 1;
 
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
@@ -30,10 +32,12 @@ public class ContentBoxFactory {
     /*All inputs to navigation box*/
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        TreeItem<String> menuRoot = new TreeItem<>("Fish simulation");
+        Node simLogo = new ImageView( new Image(getClass().getResourceAsStream("logo.png")));
+        TreeItem<String> menuRoot = new TreeItem<>("Fish simulation", simLogo);
         TreeView<String> menu = new TreeView<>(menuRoot);
         //Categories for settings
-        TreeItem<String> itemSettings = new TreeItem<>("Settings");
+        Node settings = new ImageView(new Image(getClass().getResourceAsStream("settings.png")));
+        TreeItem<String> itemSettings = new TreeItem<>("Settings", settings);
         TreeItem<String> itemSimulation = new TreeItem<>("Simulation");
         TreeItem<String> itemFish = new TreeItem<>("Fish");
         TreeItem<String> itemFishery = new TreeItem<>("Fishery");
@@ -43,14 +47,16 @@ public class ContentBoxFactory {
         itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics);
 
         //Categories for AddItems
-        TreeItem<String> itemAddItems = new TreeItem<>("Add items");
+        Node insert = new ImageView(new Image(getClass().getResourceAsStream("insert.png")));
+        TreeItem<String> itemAddItems = new TreeItem<>("Add items", insert);
         TreeItem<String> itemAddVessel = new TreeItem<>("Vessel");
         TreeItem<String> itemAddPlankton = new TreeItem<>("Plankton");
 
         itemAddItems.getChildren().addAll(itemAddVessel, itemAddPlankton);
 
         //Categories for launch
-        TreeItem<String> itemLaunch = new TreeItem<>("Launch simulation");
+        Node time = new ImageView(new Image(getClass().getResourceAsStream("clock.png")));
+        TreeItem<String> itemLaunch = new TreeItem<>("Launch simulation", time);
         TreeItem<String> itemStartLaunch = new TreeItem<>("New launch");
 
         itemLaunch.getChildren().addAll(itemStartLaunch);
@@ -124,15 +130,6 @@ public class ContentBoxFactory {
 
 
         return contentBox;
-    }
-
-    //Counter for which file should be read
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getCount() {
-        return count;
     }
 
 
@@ -548,10 +545,6 @@ public class ContentBoxFactory {
                 "Avg. Plankton Density", "Avg. Schooling Tendency", "Number of Fish",
                 "Number of Carnivores", "Number of Planktivores", "Number of Scavengers",
                 "Number of Eggs", "Number of Carcass");
-        //XY-coordinates for the different graphs
-        int[] XYGraph1 = new int[2];
-        int[] XYGraph2 = new int[2];
-        int[] XYGraph3 = new int[2];
 
         //Array of content boxes which holds the three graphs
         ContentBox[] graphs = new ContentBox[3];
@@ -577,16 +570,21 @@ public class ContentBoxFactory {
         grid.add(yChoiceBox1, 3, 1);
         grid.add(saveButton1, 4, 1);
 
+        xChoiceBox1.setValue(GraphSettings.CHOICE_ONE_X);
+        yChoiceBox1.setValue(GraphSettings.CHOICE_ONE_Y);
+
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph1[0] = getChoice(xChoiceBox1));
-        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph1[1] = getChoice(yChoiceBox1));
+        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_ONE_X = getChoice(xChoiceBox1));
+        xChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_ONE_X = (String) xChoiceBox1.getValue());
+        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_ONE_Y = getChoice(yChoiceBox1));
+        yChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_ONE_Y = (String) yChoiceBox1.getValue());
 
         //First graph is generated and stored in the array of graphs
-        ContentBox graphOneGenerate = generateGraph(root1, XYGraph1[0], XYGraph1[1], xChoiceBox1, yChoiceBox1);
+        ContentBox graphOneGenerate = generateGraph(root1, GraphSettings.GRAPH_ONE_X, GraphSettings.GRAPH_ONE_Y, xChoiceBox1, yChoiceBox1);
         graphs[0] = graphOneGenerate;
 
         //Update action when save button is pressed
-        saveButton1.setOnAction(e -> updateGraph(root1, XYGraph1[0], XYGraph1[1], xChoiceBox1, yChoiceBox1));
+        saveButton1.setOnAction(e -> updateGraph(root1, GraphSettings.GRAPH_ONE_X, GraphSettings.GRAPH_ONE_Y, xChoiceBox1, yChoiceBox1));
 
         //Graph 2
         //Labels
@@ -597,6 +595,9 @@ public class ContentBoxFactory {
         // Choice boxes
         final ChoiceBox xChoiceBox2 = new ChoiceBox(options);
         final ChoiceBox yChoiceBox2 = new ChoiceBox(options);
+
+        xChoiceBox2.setValue(GraphSettings.CHOICE_TWO_X);
+        yChoiceBox2.setValue(GraphSettings.CHOICE_TWO_Y);
 
         //Save button for graph 2
         Button saveButton2 = new Button("Save");
@@ -610,15 +611,18 @@ public class ContentBoxFactory {
         grid.add(saveButton2, 4, 3);
 
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph2[0] = getChoice(xChoiceBox2));
-        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph2[1] = getChoice(yChoiceBox2));
+        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_TWO_X = getChoice(xChoiceBox2));
+        xChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_TWO_X = (String) xChoiceBox2.getValue());
+        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_TWO_Y = getChoice(yChoiceBox2));
+        yChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_TWO_Y = (String) yChoiceBox2.getValue());
+
 
         //Second graph is generated and stored in the array of graphs
-        ContentBox graphTwoGenerate = generateGraph(root2, XYGraph2[0], XYGraph2[1], xChoiceBox2, yChoiceBox2);
+        ContentBox graphTwoGenerate = generateGraph(root2, GraphSettings.GRAPH_TWO_X, GraphSettings.GRAPH_TWO_Y, xChoiceBox2, yChoiceBox2);
         graphs[1] = graphTwoGenerate;
 
         //Update action when save button is pressed
-        saveButton2.setOnAction(e -> updateGraph(root2, XYGraph2[0], XYGraph2[1], xChoiceBox2, yChoiceBox2));
+        saveButton2.setOnAction(e -> updateGraph(root2, GraphSettings.GRAPH_TWO_X, GraphSettings.GRAPH_TWO_Y, xChoiceBox2, yChoiceBox2));
 
         //Graph 3
         //Labels
@@ -629,6 +633,9 @@ public class ContentBoxFactory {
         //Choice boxes
         final ChoiceBox xChoiceBox3 = new ChoiceBox(options);
         final ChoiceBox yChoiceBox3 = new ChoiceBox(options);
+
+        xChoiceBox3.setValue(GraphSettings.CHOICE_THREE_X);
+        yChoiceBox3.setValue(GraphSettings.CHOICE_THREE_Y);
 
         //Save button
         Button saveButton3 = new Button("Save");
@@ -642,15 +649,17 @@ public class ContentBoxFactory {
         grid.add(saveButton3, 4, 5);
 
         //Chosen value in choice box gets stored in XY-coordinates
-        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph3[0] = getChoice(xChoiceBox3));
-        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph3[1] = getChoice(yChoiceBox3));
+        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_THREE_X = getChoice(xChoiceBox3));
+        xChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_THREE_X = (String) xChoiceBox3.getValue());
+        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.GRAPH_THREE_Y = getChoice(yChoiceBox3));
+        yChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> GraphSettings.CHOICE_THREE_Y = (String) yChoiceBox3.getValue());
 
         //Third graph is generated and stored in the array of graphs
-        ContentBox graphThreeGenerate = generateGraph(root3, XYGraph3[0], XYGraph3[1], xChoiceBox3, yChoiceBox3);
+        ContentBox graphThreeGenerate = generateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y, xChoiceBox3, yChoiceBox3);
         graphs[2] = graphThreeGenerate;
 
         //Update action when save button is pressed
-        saveButton3.setOnAction(e -> updateGraph(root3, XYGraph3[0], XYGraph3[1],  xChoiceBox3, yChoiceBox3));
+        saveButton3.setOnAction(e -> updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y,  xChoiceBox3, yChoiceBox3));
 
         //Load data file
         TextField textFileNumber = new TextField("File number...");
@@ -659,9 +668,7 @@ public class ContentBoxFactory {
 
         Button loadFileChoice = new Button("Load");
         loadFileChoice.getStyleClass().add("buttonContent");
-        loadFileChoice.setOnAction(event -> updateFileAndGraphs(XYGraph1[0], XYGraph1[1],
-                XYGraph2[0], XYGraph2[1],
-                XYGraph3[0], XYGraph3[1],
+        loadFileChoice.setOnAction(event -> updateFileAndGraphs(
                 xChoiceBox1, yChoiceBox1,
                 xChoiceBox2, yChoiceBox2,
                 xChoiceBox3, yChoiceBox3,
@@ -718,9 +725,6 @@ public class ContentBoxFactory {
 
         Graph graph = new Graph();
 
-        //Which data file that should be used
-        graph.setCount(getCount());
-
         ObservableList<XYChart.Series<Double, Double>> dataSet = graph.getChartData(xChoice, yChoice);
 
         //Name of content box
@@ -763,7 +767,6 @@ public class ContentBoxFactory {
         NumberAxis xAxis = new NumberAxis(xMin - 1, xMax + 1, graph.tickUnit(xMax));
         NumberAxis yAxis = new NumberAxis(yMin - 1, yMax + 1, graph.tickUnit(yMax));
 
-
         //Axis name
         xAxis.setLabel((String) xChoiceBox.getValue());
         yAxis.setLabel((String) yChoiceBox.getValue());
@@ -794,15 +797,14 @@ public class ContentBoxFactory {
     }
 
     // Update all graphs to be the data from the new file
-    public void updateFileAndGraphs(int xChoice, int yChoice, int xChoice2, int yChoice2, int xChoice3, int yChoice3,
-                                    ChoiceBox choiceBox1, ChoiceBox choiceBox2,
+    public void updateFileAndGraphs(ChoiceBox choiceBox1, ChoiceBox choiceBox2,
                                     ChoiceBox choiceBox3, ChoiceBox choiceBox4,
                                     ChoiceBox choiceBox5, ChoiceBox choiceBox6, TextField textField){
 
-        setCount(Integer.parseInt(textField.getText()));
-        updateGraph(root1, xChoice, yChoice,  choiceBox1, choiceBox2);
-        updateGraph(root2, xChoice2, yChoice2,  choiceBox3, choiceBox4);
-        updateGraph(root3, xChoice3, yChoice3,  choiceBox5, choiceBox6);
+        GraphSettings.FILE_NUMBER = Integer.parseInt(textField.getText());
+        updateGraph(root1, GraphSettings.GRAPH_ONE_X, GraphSettings.GRAPH_ONE_Y,  choiceBox1, choiceBox2);
+        updateGraph(root2, GraphSettings.GRAPH_TWO_X, GraphSettings.GRAPH_TWO_Y,  choiceBox3, choiceBox4);
+        updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y,  choiceBox5, choiceBox6);
 
     }
 
