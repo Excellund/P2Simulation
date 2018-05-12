@@ -25,7 +25,6 @@ public class Main extends Application {
         Settings.toFile("default");
         Settings.fromFile("default");
         launch(args);
-
     }
 
 
@@ -221,7 +220,9 @@ public class Main extends Application {
             fileChooserOpen.getExtensionFilters().add(snapshotFilter);
             File file = fileChooserOpen.showOpenDialog(primaryStage);
             if (file != null) {
-                Snapshot.loadSnapshot(file.getAbsolutePath());
+                Snapshot snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
+                //TODO: synchronize engine/simulation before loading snapshot
+                simulation.applySnapshot(snapshot);
             }
         });
 

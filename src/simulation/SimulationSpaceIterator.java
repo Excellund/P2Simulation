@@ -11,9 +11,9 @@ public class SimulationSpaceIterator implements ListIterator<Field> {
     SimulationSpace space;
     Field currentElement = null;
 
-    SimulationSpaceIterator(SimulationSpace space, List<Field> activeSubjects) {
+    SimulationSpaceIterator(SimulationSpace space, List<Field> activeFields) {
         this.space = space;
-        iterator = activeSubjects.listIterator();
+        iterator = activeFields.listIterator();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SimulationSpaceIterator implements ListIterator<Field> {
 
         //Remove from simulation
         if (currentElement != null) {
-            space.getTile(currentElement.getPosition()).removeSubject(currentElement);
+            space.getTile(currentElement.getPosition()).removeField(currentElement);
         }
     }
 

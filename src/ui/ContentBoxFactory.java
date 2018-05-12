@@ -241,7 +241,7 @@ public class ContentBoxFactory {
         Label labelMutationAmount = new Label("Mutation amount");
         TextField textMutationAmount = new TextField(Float.toString(Settings.EXPECTED_MUTATION_AMOUNT));
         Label labelMutationGaussian = new Label("Mutation gaussian");
-        TextField textMutationGaussian = new TextField(Float.toString(Settings.MUTATION_GAUSSIAN_MEAN));
+        TextField textMutationGaussian = new TextField(Float.toString(Settings.MUTATION_GAUSSIAN_VARIANCE));
         Label labelNutritionSize = new Label("Nutrition per size");
         TextField textNutritionSize = new TextField(Float.toString(Settings.NUTRITION_PER_SIZE_POINT));
         Label labelMinEnergyMating = new Label("Min energy for mating");
@@ -296,7 +296,7 @@ public class ContentBoxFactory {
                 Settings.COMPATIBILITY_STEEPNESS = Float.parseFloat(textCompatibilitySteepness.getText());
                 Settings.COMPATIBILITY_MIDPOINT = Float.parseFloat(textCompatibilityMidpoint.getText());
                 Settings.EXPECTED_MUTATION_AMOUNT = Float.parseFloat(textMutationAmount.getText());
-                Settings.MUTATION_GAUSSIAN_MEAN = Float.parseFloat(textMutationGaussian.getText());
+                Settings.MUTATION_GAUSSIAN_VARIANCE = Float.parseFloat(textMutationGaussian.getText());
                 Settings.NUTRITION_PER_SIZE_POINT = Float.parseFloat(textNutritionSize.getText());
                 Settings.MIN_ENERGY_MATING = Float.parseFloat(textMinEnergyMating.getText());
                 Settings.MATING_ENERGY_CONSUMPTION = Float.parseFloat(textMatingEnergyUse.getText());
@@ -520,7 +520,7 @@ public class ContentBoxFactory {
         mainContent.getChildren().addAll(columnA, columnB, columnC, columnD);
 
         Label labelFishLoad = new Label("Fish load");
-        TextField textFishLoad = new TextField(Float.toString(Settings.NUM_INITIAL_SUBJECTS));
+        TextField textFishLoad = new TextField(Float.toString(Settings.NUM_INITIAL_FISH));
         Label labelPlanktonLoad = new Label("Plankton load");
         TextField textPlanktonLoad = new TextField(Float.toString(Settings.LOAD_PLANKTON));
 
@@ -529,7 +529,7 @@ public class ContentBoxFactory {
         saveButton.setOnAction(event ->
         {
             try {
-                Settings.NUM_INITIAL_SUBJECTS = Float.parseFloat(textFishLoad.getText());
+                Settings.NUM_INITIAL_FISH = Float.parseFloat(textFishLoad.getText());
                 Settings.LOAD_PLANKTON = Float.parseFloat(textPlanktonLoad.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());

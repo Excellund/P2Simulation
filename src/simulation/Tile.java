@@ -7,23 +7,23 @@ import java.util.Collections;
 import java.util.List;
 
 public class Tile {
-    private List<Field> subjects;
+    private List<Field> fields;
     private int muDensity;
 
     public Tile(int muDensity) {
         //creates a new tile with a specified mu density
         this.muDensity = muDensity;
-        subjects = Collections.synchronizedList(new ArrayList<>());
+        fields = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public void addSubject(Field subject) {
+    public void addField(Field field) {
         //adds a field to the tile
-        subjects.add(subject);
+        fields.add(field);
     }
 
-    public void removeSubject(Field subject) {
+    public void removeField(Field field) {
         //removes a field from the tile
-        subjects.remove(subject);
+        fields.remove(field);
     }
 
     public void addDensity(int amount) {
@@ -48,8 +48,8 @@ public class Tile {
 
     // Getters
 
-    public List<Field> getSubjects() {
-        return subjects;
+    public List<Field> getFields() {
+        return fields;
     }
 
     public int getMuDensity() {

@@ -188,7 +188,7 @@ public class FishGenome {
         // Mutate attributes
         for (int index : mutationIndices) {
             // Normal distribution
-            attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_MEAN;
+            attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_VARIANCE;
 
             // Make sure attributes are within bounds
             if (attributes[index] < 0) {

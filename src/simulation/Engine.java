@@ -74,12 +74,12 @@ public class Engine implements Runnable {
         int[] newPixels = new int[(int) (canvas.getWidth() * canvas.getHeight())];
         for (int y = 0; y < tiles.length; ++y) {
             for (int x = 0; x < tiles[0].length; ++x) {
-                synchronized (tiles[y][x].getSubjects()) {
+                synchronized (tiles[y][x].getFields()) {
                     utils.Color color;
 
-                    if (tiles[y][x].getSubjects().size() != 0 && tiles[y][x].getSubjects().get(0) != null) {
+                    if (tiles[y][x].getFields().size() != 0 && tiles[y][x].getFields().get(0) != null) {
                         //Gamma correction for plankton
-                        color = tiles[y][x].getSubjects().get(0).getColor();
+                        color = tiles[y][x].getFields().get(0).getColor();
                         color = utils.Color.getGammaCorrected(color, Settings.FISH_GAMMA);
 
                         newPixels[x + y * (int) canvas.getWidth()] = color.getIntRepresentation();
