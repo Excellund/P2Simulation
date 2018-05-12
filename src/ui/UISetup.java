@@ -29,6 +29,7 @@ public class UISetup {
         Scene scene = new Scene(root, 1500, 1080);
 
         Toolbar toolbar = new Toolbar("EFSOS", 1500, "toolbar");
+        toolbar.setStyle("-fx-font: 20 system;");
 
         ContentBoxFactory factory = new ContentBoxFactory(dragListener);
         HBox rowContainer = new HBox();
@@ -36,9 +37,9 @@ public class UISetup {
         Canvas canvas = new Canvas(750, 750);
         ContentArea areaOne = new ContentArea(375, 750, dragListener);
         ContentArea areaTwo = new ContentArea(375, 750, dragListener);
-        ContentArea graphAreaOne = new ContentArea(375, 280, dragListener);
-        ContentArea graphAreaTwo = new ContentArea(750, 280, dragListener);
-        ContentArea graphAreaThree = new ContentArea(375, 280, dragListener);
+        ContentArea graphAreaOne = new ContentArea(375, 500, dragListener);
+        ContentArea graphAreaTwo = new ContentArea(750, 500, dragListener);
+        ContentArea graphAreaThree = new ContentArea(375, 500, dragListener);
 
         ContentBox interactionBox = factory.generateInteractionBox(375);
         ContentBox spawnBox = factory.generateSpawnBox(375);
@@ -103,7 +104,9 @@ public class UISetup {
 
     private static void setOnMouseEvents(Delta deltaDrag, Stage primaryStage, Toolbar toolbar, Engine engine){
         Button exitButton = new Button("x");
+        exitButton.setStyle("-fx-font: 20 Arial;");
         Button minimizeButton = new Button("-");
+        minimizeButton.setStyle("-fx-font: 20 Arial;");
         toolbar.setOnMousePressed(event ->
         {
             //calculate mouse position relative to window size on mouse press

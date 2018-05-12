@@ -22,6 +22,7 @@ public class ContentBoxFactory {
     private StackPane root1 = new StackPane();
     private StackPane root2 = new StackPane();
     private StackPane root3 = new StackPane();
+    private int count = 1;
 
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
@@ -124,6 +125,17 @@ public class ContentBoxFactory {
 
         return contentBox;
     }
+
+    //Counter for which file should be read
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+
     //Checking for each type of box, if its already open, if not it will open
     public void interactionBoxChecker(ContentBox interactionBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
         if (interactionBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
@@ -529,10 +541,13 @@ public class ContentBoxFactory {
 
         HBox mainContent = new HBox(10);
         GridPane grid = new GridPane();
+        grid.setVgap(10);
 
         //ChoiceBox choices
-        ObservableList<String> options = FXCollections.observableArrayList("List 1", "List 2", "List 3");
-
+        ObservableList<String> options = FXCollections.observableArrayList("Time Step", "Avg. BWD%", "Avg. Morphology", "Avg. Max Spawning",
+                "Avg. Plankton Density", "Avg. Schooling Tendency", "Number of Fish",
+                "Number of Carnivores", "Number of Planktivores", "Number of Scavengers",
+                "Number of Eggs", "Number of Carcass");
         //XY-coordinates for the different graphs
         int[] XYGraph1 = new int[2];
         int[] XYGraph2 = new int[2];
@@ -544,8 +559,8 @@ public class ContentBoxFactory {
         //Graph 1
         //Labels
         Label graph1 = new Label("Graph 1");
-        Label xData1 = new Label("x plot: ");
-        Label yData1 = new Label("y plot:");
+        Label xData1 = new Label("x plot ");
+        Label yData1 = new Label("y plot");
 
         //Choice boxes
         final ChoiceBox xChoiceBox1 = new ChoiceBox(options);
@@ -567,17 +582,17 @@ public class ContentBoxFactory {
         yChoiceBox1.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph1[1] = getChoice(yChoiceBox1));
 
         //First graph is generated and stored in the array of graphs
-        ContentBox graphOneGenerate = generateGraph(root1, XYGraph1[0], XYGraph1[1]);
+        ContentBox graphOneGenerate = generateGraph(root1, XYGraph1[0], XYGraph1[1], xChoiceBox1, yChoiceBox1);
         graphs[0] = graphOneGenerate;
 
         //Update action when save button is pressed
-        saveButton1.setOnAction(e -> updateGraph(root1, XYGraph1[0], XYGraph1[1]));
+        saveButton1.setOnAction(e -> updateGraph(root1, XYGraph1[0], XYGraph1[1], xChoiceBox1, yChoiceBox1));
 
         //Graph 2
         //Labels
         Label graph2 = new Label("Graph 2");
-        Label xData2 = new Label("x plot: ");
-        Label yData2 = new Label("y plot:");
+        Label xData2 = new Label("x plot ");
+        Label yData2 = new Label("y plot");
 
         // Choice boxes
         final ChoiceBox xChoiceBox2 = new ChoiceBox(options);
@@ -599,17 +614,17 @@ public class ContentBoxFactory {
         yChoiceBox2.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph2[1] = getChoice(yChoiceBox2));
 
         //Second graph is generated and stored in the array of graphs
-        ContentBox graphTwoGenerate = generateGraph(root2, XYGraph2[0], XYGraph2[1]);
+        ContentBox graphTwoGenerate = generateGraph(root2, XYGraph2[0], XYGraph2[1], xChoiceBox2, yChoiceBox2);
         graphs[1] = graphTwoGenerate;
 
         //Update action when save button is pressed
-        saveButton2.setOnAction(e -> updateGraph(root2, XYGraph2[0], XYGraph2[1]));
+        saveButton2.setOnAction(e -> updateGraph(root2, XYGraph2[0], XYGraph2[1], xChoiceBox2, yChoiceBox2));
 
         //Graph 3
         //Labels
         Label graph3 = new Label("Graph 3");
-        Label xData3 = new Label("x plot: ");
-        Label yData3 = new Label("y plot:");
+        Label xData3 = new Label("x plot ");
+        Label yData3 = new Label("y plot");
 
         //Choice boxes
         final ChoiceBox xChoiceBox3 = new ChoiceBox(options);
@@ -631,11 +646,29 @@ public class ContentBoxFactory {
         yChoiceBox3.getSelectionModel().selectedItemProperty().addListener((v, oldValue, newValue) -> XYGraph3[1] = getChoice(yChoiceBox3));
 
         //Third graph is generated and stored in the array of graphs
-        ContentBox graphThreeGenerate = generateGraph(root3, XYGraph3[0], XYGraph3[1]);
+        ContentBox graphThreeGenerate = generateGraph(root3, XYGraph3[0], XYGraph3[1], xChoiceBox3, yChoiceBox3);
         graphs[2] = graphThreeGenerate;
 
         //Update action when save button is pressed
-        saveButton3.setOnAction(e -> updateGraph(root3, XYGraph3[0], XYGraph3[1]));
+        saveButton3.setOnAction(e -> updateGraph(root3, XYGraph3[0], XYGraph3[1],  xChoiceBox3, yChoiceBox3));
+
+        //Load data file
+        TextField textFileNumber = new TextField("File number...");
+        textFileNumber.setMaxWidth(100);
+        textFileNumber.setOnMouseClicked(event -> textFileNumber.clear());
+
+        Button loadFileChoice = new Button("Load");
+        loadFileChoice.getStyleClass().add("buttonContent");
+        loadFileChoice.setOnAction(event -> updateFileAndGraphs(XYGraph1[0], XYGraph1[1],
+                XYGraph2[0], XYGraph2[1],
+                XYGraph3[0], XYGraph3[1],
+                xChoiceBox1, yChoiceBox1,
+                xChoiceBox2, yChoiceBox2,
+                xChoiceBox3, yChoiceBox3,
+                textFileNumber));
+
+        grid.add(textFileNumber, 3, 8);
+        grid.add(loadFileChoice, 4, 8);
 
         //Add all graph UI to main content
         mainContent.getChildren().add(grid);
@@ -652,36 +685,88 @@ public class ContentBoxFactory {
         String choice = choiceBox.getValue();
         int choiceValue = 0;
 
-        if (choice.equals("List 1")) {
+        if (choice.equals("Time Step")) {
             choiceValue = 0;
-        } else if (choice.equals("List 2")) {
+        } else if (choice.equals("Avg. BWD%")) {
             choiceValue = 1;
-        } else if (choice.equals("List 3")) {
+        } else if (choice.equals("Avg. Morphology")) {
             choiceValue = 2;
+        } else if(choice.equals("Avg. Max Spawning")) {
+            choiceValue = 3;
+        } else if(choice.equals("Avg. Plankton Density")) {
+            choiceValue = 4;
+        } else if(choice.equals("Avg. Schooling Tendency")){
+            choiceValue = 5;
+        } else if(choice.equals("Number of Fish")){
+            choiceValue = 6;
+        } else if(choice.equals("Number of Carnivores")) {
+            choiceValue = 7;
+        } else if(choice.equals( "Number of Planktivores")){
+            choiceValue = 8;
+        } else if(choice.equals( "Number of Scavengers")){
+            choiceValue = 9;
+        } else if(choice.equals("Number of Eggs")){
+            choiceValue = 10;
+        } else if(choice.equals("Number of Carcass")){
+            choiceValue = 11;
         }
 
         return choiceValue;
     }
 
-    public ContentBox generateGraph(StackPane root, int xChoice, int yChoice) {
+    public ContentBox generateGraph(StackPane root, int xChoice, int yChoice, ChoiceBox xChoiceBox, ChoiceBox yChoiceBox) {
 
         Graph graph = new Graph();
+
+        //Which data file that should be used
+        graph.setCount(getCount());
+
         ObservableList<XYChart.Series<Double, Double>> dataSet = graph.getChartData(xChoice, yChoice);
 
         //Name of content box
-        ContentBox contentBox = new ContentBox("Graph x: " + xChoice + ", y: " + yChoice, 375, dragListener);
+        ContentBox contentBox = new ContentBox("Graph", 375, dragListener);
 
-        //Max sizes of XY-coordinates
-        double xMax = graph.getxCoordinate().get(graph.getxCoordinate().size() - 1) + 1;
-        double yMax = graph.getyCoordinate().get(graph.getyCoordinate().size() - 1) + 1;
+        //Max and minimum size of XY-coordinates
+        double xMax = 0;
+        double yMax = 0;
+
+        for (int i = 0; i < graph.getxCoordinate().size(); i++)
+        {
+            if (graph.getxCoordinate().get(i) > xMax)
+            {
+                xMax = graph.getxCoordinate().get(i);
+            }
+
+            if (graph.getyCoordinate().get(i) > yMax)
+            {
+                yMax = graph.getyCoordinate().get(i);
+            }
+        }
+
+        double xMin = xMax;
+        double yMin = yMax;
+
+        for (int i = 0; i < graph.getxCoordinate().size(); i++)
+        {
+            if (graph.getxCoordinate().get(i) < xMin)
+            {
+                xMin = graph.getxCoordinate().get(i);
+            }
+
+            if (graph.getyCoordinate().get(i) < yMin)
+            {
+                yMin = graph.getyCoordinate().get(i);
+            }
+        }
 
         //Axis size
-        NumberAxis xAxis = new NumberAxis(0, xMax, graph.tickUnit(xMax));
-        NumberAxis yAxis = new NumberAxis(0, yMax, graph.tickUnit(yMax));
+        NumberAxis xAxis = new NumberAxis(xMin - 1, xMax + 1, graph.tickUnit(xMax));
+        NumberAxis yAxis = new NumberAxis(yMin - 1, yMax + 1, graph.tickUnit(yMax));
+
 
         //Axis name
-        xAxis.setLabel(Integer.toString(xChoice));
-        yAxis.setLabel(Integer.toString(yChoice));
+        xAxis.setLabel((String) xChoiceBox.getValue());
+        yAxis.setLabel((String) yChoiceBox.getValue());
 
         //Load data into chart
         ScatterChart<Double, Double> scatterChart = new ScatterChart(xAxis, yAxis);
@@ -690,7 +775,7 @@ public class ContentBoxFactory {
 
         //Chart size
         scatterChart.setPrefWidth(375);
-        scatterChart.setPrefHeight(300);
+        scatterChart.setPrefHeight(250);
 
         //Pane window
         root.getChildren().add(scatterChart);
@@ -701,10 +786,23 @@ public class ContentBoxFactory {
         return contentBox;
     }
 
-    public void updateGraph(StackPane root, int xChoice, int yChoice) {
+    public void updateGraph(StackPane root, int xChoice, int yChoice, ChoiceBox choiceBox1, ChoiceBox choiceBox2) {
 
         root.getChildren().clear();
-        generateGraph(root, xChoice, yChoice);
+        generateGraph(root, xChoice, yChoice, choiceBox1, choiceBox2);
+
+    }
+
+    // Update all graphs to be the data from the new file
+    public void updateFileAndGraphs(int xChoice, int yChoice, int xChoice2, int yChoice2, int xChoice3, int yChoice3,
+                                    ChoiceBox choiceBox1, ChoiceBox choiceBox2,
+                                    ChoiceBox choiceBox3, ChoiceBox choiceBox4,
+                                    ChoiceBox choiceBox5, ChoiceBox choiceBox6, TextField textField){
+
+        setCount(Integer.parseInt(textField.getText()));
+        updateGraph(root1, xChoice, yChoice,  choiceBox1, choiceBox2);
+        updateGraph(root2, xChoice2, yChoice2,  choiceBox3, choiceBox4);
+        updateGraph(root3, xChoice3, yChoice3,  choiceBox5, choiceBox6);
 
     }
 

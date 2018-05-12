@@ -15,6 +15,11 @@ public class Graph {
 
     private List<Double> xCoordinate = new ArrayList<>();
     private List<Double> yCoordinate = new ArrayList<>();
+    private int count = 163;
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public ObservableList<Series<Double, Double>> getChartData(int xChoice, int yChoice) {
 
@@ -24,7 +29,7 @@ public class Graph {
         //Calls the file
         FileReading file = null;
         try {
-            file = new FileReading("TestData");
+            file = new FileReading("output/data_" + count + ".txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,20 +60,49 @@ public class Graph {
     }
 
     //Tick units so the graph doesn't get too cluttered
-    int tickUnit(double listMax) {
+    double tickUnit(double listMax) {
 
-        int tickUnitValue = 1;
+        double tickUnitValue = 1;
 
-        if (listMax >= 20) {
+        if(listMax >= 100000){
 
-            tickUnitValue = 5;
-        } else if (listMax >= 50) {
+            tickUnitValue = 10000;
 
-            tickUnitValue = 10;
+        } else if(listMax >= 20000){
+
+            tickUnitValue = 5000;
+
+        } else if (listMax >= 5000){
+
+            tickUnitValue = 1000;
 
         } else if (listMax >= 1000) {
 
             tickUnitValue = 500;
+
+        } else if(listMax >= 500){
+
+            tickUnitValue = 100;
+
+        } else if(listMax >= 100) {
+
+            tickUnitValue = 100;
+
+        } else if (listMax >= 50) {
+
+            tickUnitValue = 10;
+
+        } else if (listMax >= 20) {
+
+            tickUnitValue = 5;
+
+        } else if (listMax < 20){
+
+            tickUnitValue = 1;
+
+        } else if (listMax <= 1){
+
+            tickUnitValue = 0.1;
         }
 
         return tickUnitValue;
