@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import simulation.Settings;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 public class ContentBoxFactory {
@@ -25,7 +26,6 @@ public class ContentBoxFactory {
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
     }
-
     /*All inputs to navigation box*/
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
@@ -38,9 +38,8 @@ public class ContentBoxFactory {
         TreeItem<String> itemFishery = new TreeItem<>("Fishery");
         TreeItem<String> itemGraph = new TreeItem<>("Graph");
         TreeItem<String> itemGraphics = new TreeItem<>("Graphics");
-        TreeItem<String> itemSaveSettings = new TreeItem<>("Save settings");
 
-        itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics, itemSaveSettings);
+        itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics);
 
         //Categories for AddItems
         TreeItem<String> itemAddItems = new TreeItem<>("Add items");
@@ -92,10 +91,6 @@ public class ContentBoxFactory {
                             interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
                             break;
 
-                        case "Save settings":
-                            interactionBoxSetContentSaveSettings(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
-                            break;
                     }
                     break;
 
@@ -129,7 +124,6 @@ public class ContentBoxFactory {
 
         return contentBox;
     }
-
     //Checking for each type of box, if its already open, if not it will open
     public void interactionBoxChecker(ContentBox interactionBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
         if (interactionBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
@@ -148,7 +142,6 @@ public class ContentBoxFactory {
             interactionBoxArea2.getChildren().add(launchBox);
         }
     }
-
     //Generate the difference boxes
     public ContentBox generateInteractionBox(double width) {
         ContentBox interactionBox = new ContentBox("Interaction", width, dragListener);
@@ -167,7 +160,6 @@ public class ContentBoxFactory {
 
         return launchBox;
     }
-
     //Generate the contents for each categories in the difference choices the user has
     public void interactionBoxSetContextSimulation(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Simulation settings");
@@ -178,7 +170,7 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB);
         /*Creating labels and texfields for everything, Label for the user to read and Textfield
-         * to display and change the current setting value*/
+        * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
         Label labelPlanktonGrowth = new Label("Growth pr. time step");
@@ -196,7 +188,7 @@ public class ContentBoxFactory {
                 Settings.NUM_VESSELS = Float.parseFloat(textNumVessel.getText());
                 Settings.PLANKTON_GROWTH_PER_TIMESTEP = Float.parseFloat(textPlanktonGrowth.getText());
                 Settings.MAX_PLANKTON = Float.parseFloat(textPlanktonMax.getText());
-                Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
+            Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -418,30 +410,6 @@ public class ContentBoxFactory {
         columnB.getChildren().add(textFPS);
 
         columnB.getChildren().add(saveButton);
-
-        interactionBox.setContent(mainContent);
-    }
-
-    public void interactionBoxSetContentSaveSettings(ContentBox interactionBox) {
-        interactionBox.getToolbar().setTitle("Save settings");
-        HBox mainContent = new HBox(10);
-        VBox columnA = new VBox();
-        VBox columnB = new VBox(4);
-
-        mainContent.getChildren().addAll(columnA, columnB);
-
-        Label labelSave = new Label("Save as");
-        TextField textSave = new TextField();
-
-        Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event ->
-        {
-            Settings.toFile(textSave.getText());
-        });
-
-        columnA.getChildren().addAll(labelSave);
-        columnB.getChildren().addAll(textSave, saveButton);
 
         interactionBox.setContent(mainContent);
     }
