@@ -15,7 +15,7 @@ public class Graph {
 
     private List<Double> xCoordinate = new ArrayList<>();
     private List<Double> yCoordinate = new ArrayList<>();
-    private int count = 163;
+    private int count = 1;
 
     public void setCount(int count) {
         this.count = count;
