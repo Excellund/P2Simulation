@@ -16,6 +16,15 @@ public class Simulation {
 
     // Constructor:
     public Simulation(int width, int height) {
+        initialize(width, height);
+    }
+
+    public void restart() {
+        CountingRandom.getInstance().setState(System.nanoTime(), 0);
+        initialize(space.getWidth(), space.getHeight());
+    }
+
+    private void initialize(int width, int height) {
         space = new SimulationSpace(width, height);
         vessels = new ArrayList<>();
 
@@ -45,6 +54,8 @@ public class Simulation {
         for (int i = 0; i < Settings.NUM_VESSELS; ++i) {
             vessels.add(new Vessel(new Vector(width, height)));
         }
+
+        currentTimeStep = 0;
     }
 
     private void updateFields() {

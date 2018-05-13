@@ -69,62 +69,64 @@ public class ContentBoxFactory {
         //Checking which category that has been pressed, and what contents the window should have
         menu.getSelectionModel().selectedItemProperty().addListener(event ->
         {
-            switch (menu.getSelectionModel().getSelectedItem().getParent().getValue()) {
-                case "Settings":
-                    switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
-                        case "Simulation":
-                            interactionBoxSetContextSimulation(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
-                            break;
+            if (menu.getSelectionModel().getSelectedItem().getParent() != null) {
+                switch (menu.getSelectionModel().getSelectedItem().getParent().getValue()) {
+                    case "Settings":
+                        switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
+                            case "Simulation":
+                                interactionBoxSetContextSimulation(interactionBox);
+                                interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                                break;
 
-                        case "Fish":
-                            interactionBoxSetContextFish(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
-                            break;
+                            case "Fish":
+                                interactionBoxSetContextFish(interactionBox);
+                                interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                                break;
 
-                        case "Fishery":
-                            interactionBoxSetContextFishery(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                            case "Fishery":
+                                interactionBoxSetContextFishery(interactionBox);
+                                interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
 
-                            break;
+                                break;
 
-                        case "Graph":
-                            interactionBoxSetContentGraph(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
-                            break;
+                            case "Graph":
+                                interactionBoxSetContentGraph(interactionBox);
+                                interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                                break;
 
-                        case "Graphics":
-                            interactionBoxSetContextGraphics(interactionBox);
-                            interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
-                            break;
+                            case "Graphics":
+                                interactionBoxSetContextGraphics(interactionBox);
+                                interactionBoxChecker(interactionBox, interactionBoxArea2, menu);
+                                break;
 
-                    }
-                    break;
+                        }
+                        break;
 
-                case "Add items":
-                    switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
-                        case "Vessel":
-                            spawnBoxSetContextVessel(spawnBox);
-                            spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
-                            break;
+                    case "Add items":
+                        switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
+                            case "Vessel":
+                                spawnBoxSetContextVessel(spawnBox);
+                                spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
+                                break;
 
-                        case "Plankton":
-                            spawnBoxSetContextPlankton(spawnBox);
-                            spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
-                            break;
-                    }
-                    break;
+                            case "Plankton":
+                                spawnBoxSetContextPlankton(spawnBox);
+                                spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
+                                break;
+                        }
+                        break;
 
-                case "Launch simulation":
-                    switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
-                        case "New launch":
-                            launchBoxSetContextStart(launchBox);
-                            launchBoxChecker(launchBox, interactionBoxArea2, menu);
-                            break;
+                    case "Launch simulation":
+                        switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
+                            case "New launch":
+                                launchBoxSetContextStart(launchBox);
+                                launchBoxChecker(launchBox, interactionBoxArea2, menu);
+                                break;
 
-                    }
-                    break;
+                        }
+                        break;
 
+                }
             }
         });
 

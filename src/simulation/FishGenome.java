@@ -116,7 +116,7 @@ public class FishGenome {
         this.schoolingTendency = r.nextFloat();
         this.attackAbility = r.nextFloat();
         this.numSpawns = r.nextFloat();
-        this.spawnSize = size / numSpawns / 4;
+        this.spawnSize = size / (numSpawns * Settings.MAX_FISH_SIZE);
         this.color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
 
         parentGenomeA = new FishGenome(this);

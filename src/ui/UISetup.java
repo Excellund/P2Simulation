@@ -199,12 +199,29 @@ public class UISetup {
         menuEdit.getItems().addAll(itemTogglePauseSimulation, itemRestartSimulation);
 
         itemRestartSimulation.setOnAction(event -> {
-            Simulation restartSimulation = new Simulation(750, 750);
+            Alert confimation = new Alert(Alert.AlertType.CONFIRMATION);
+            confimation.setTitle("Restart simulation");
+            confimation.setHeaderText("Confirm simulation restart");
+            confimation.setContentText("Are you sure you want to restart the simulation? This action can't be undone.");
+
+            Optional<ButtonType> result = confimation.showAndWait();
+
+            if (result.get() == ButtonType.OK) {
+                boolean pausedState = engine.isPaused();
+                engine.setIsPaused(true);
+
+                while (engine.isProcessing()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) { }
+                }
+
+                simulation.restart();
+                engine.setIsPaused(pausedState);
+            }
         });
 
-        itemTogglePauseSimulation.setOnAction(event -> {
-            engine.togglePause();
-        });
+        itemTogglePauseSimulation.setOnAction(event -> engine.togglePause());
     }
 
     private static void saveSettings(MenuItem itemSaveSettings){
@@ -254,7 +271,6 @@ public class UISetup {
             engine.setIsPaused(true);
 
             File file = fileChooserOpen.showOpenDialog(primaryStage);
-
 
             if (file != null) {
                 while (engine.isProcessing()) {

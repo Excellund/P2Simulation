@@ -100,7 +100,7 @@ public class Settings {
         abbreviated.put("MIN_ENERGY_HEALTH_INCREASE", 80f);
         abbreviated.put("ENERGY_HEALTH_INCREASE", 5f);
         abbreviated.put("TIME_BEFORE_HATCH", 50f);
-        abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", 1f);
+        abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", 0.2f);
         abbreviated.put("MAX_MOVES_CORRESPONDING_TO_SPEED", 3f);
         abbreviated.put("ENERGY_SPEED_CORRELATION", 90f);
         abbreviated.put("MATING_DELAY", 600f);
