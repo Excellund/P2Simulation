@@ -60,15 +60,15 @@ public class Graph {
 
         double tickUnitValue = 1;
 
-        if(listMax >= 100000){
+        if (listMax >= 100000) {
 
             tickUnitValue = 10000;
 
-        } else if(listMax >= 20000){
+        } else if (listMax >= 20000) {
 
             tickUnitValue = 5000;
 
-        } else if (listMax >= 5000){
+        } else if (listMax >= 5000) {
 
             tickUnitValue = 1000;
 
@@ -76,11 +76,11 @@ public class Graph {
 
             tickUnitValue = 500;
 
-        } else if(listMax >= 500){
+        } else if (listMax >= 500) {
 
             tickUnitValue = 100;
 
-        } else if(listMax >= 100) {
+        } else if (listMax >= 100) {
 
             tickUnitValue = 100;
 
@@ -92,11 +92,11 @@ public class Graph {
 
             tickUnitValue = 5;
 
-        } else if (listMax < 20){
+        } else if (listMax < 20) {
 
             tickUnitValue = 1;
 
-        } else if (listMax <= 1){
+        } else if (listMax <= 1) {
 
             tickUnitValue = 0.1;
         }

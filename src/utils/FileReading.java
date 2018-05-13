@@ -33,7 +33,7 @@ public class FileReading {
         //Load data into lists
         while ((line = reader.readLine()) != null) {
 
-            if(!line.equals("Timestep,%BWD,Morphology,Spawn,Plankton,Schooling,Fish,Carnivores,Scavengers,Planktivores,Fish eggs,Carcasses")){
+            if (!line.equals("Timestep,%BWD,Morphology,Spawn,Plankton,Schooling,Fish,Carnivores,Scavengers,Planktivores,Fish eggs,Carcasses")) {
 
                 //Split array
                 String[] splitted = line.split(",");
@@ -56,7 +56,6 @@ public class FileReading {
 
         //List of lists
         collectedLists();
-
 
 
     }

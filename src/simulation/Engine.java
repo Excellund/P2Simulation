@@ -25,7 +25,7 @@ public class Engine implements Runnable {
     private boolean isRunning = true;
     private volatile boolean isPaused = false;
     private DataCollector dataCollector;
-    private  boolean isProcessing = false;
+    private boolean isProcessing = false;
 
     private final double[][] vesselShape = {
             {0.0, -5.0, -20.0, -20.0, -5.0, 0.0},
@@ -207,7 +207,8 @@ public class Engine implements Runnable {
             if (isPaused) {
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
 
                 continue; //do nothing
             }

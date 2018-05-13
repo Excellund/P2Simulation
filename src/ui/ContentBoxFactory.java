@@ -29,10 +29,11 @@ public class ContentBoxFactory {
     public ContentBoxFactory(DragListener dragListener) {
         this.dragListener = dragListener;
     }
+
     /*All inputs to navigation box*/
     public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
-        Node simLogo = new ImageView( new Image(getClass().getResourceAsStream("logo.png")));
+        Node simLogo = new ImageView(new Image(getClass().getResourceAsStream("logo.png")));
         TreeItem<String> menuRoot = new TreeItem<>("Fish simulation", simLogo);
         TreeView<String> menu = new TreeView<>(menuRoot);
         //Categories for settings
@@ -153,6 +154,7 @@ public class ContentBoxFactory {
             interactionBoxArea2.getChildren().add(launchBox);
         }
     }
+
     //Generate the difference boxes
     public ContentBox generateInteractionBox(double width) {
         ContentBox interactionBox = new ContentBox("Interaction", width, dragListener);
@@ -171,6 +173,7 @@ public class ContentBoxFactory {
 
         return launchBox;
     }
+
     //Generate the contents for each categories in the difference choices the user has
     public void interactionBoxSetContextSimulation(ContentBox interactionBox) {
         interactionBox.getToolbar().setTitle("Simulation settings");
@@ -181,7 +184,7 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB);
         /*Creating labels and texfields for everything, Label for the user to read and Textfield
-        * to display and change the current setting value*/
+         * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
         Label labelPlanktonGrowth = new Label("Growth per time step");
@@ -199,7 +202,7 @@ public class ContentBoxFactory {
                 Settings.NUM_VESSELS = Float.parseFloat(textNumVessel.getText());
                 Settings.PLANKTON_GROWTH_PER_TIMESTEP = Float.parseFloat(textPlanktonGrowth.getText());
                 Settings.MAX_PLANKTON = Float.parseFloat(textPlanktonMax.getText());
-            Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
+                Settings.INITIAL_MAX_PLANKTON_DENSITY = Float.parseFloat(textInitialMaxPlanktonDensity.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -326,7 +329,7 @@ public class ContentBoxFactory {
         });
 
         columnA.getChildren().addAll(labelFishGrowthTS, labelMaxSize, labelNutritionSize, labelEnergy, labelHealth, labelMinEnergyIncrease, labelEnergyHealthIncrease, labelHealthReducLowEnergy, labelMinPredation, labelEnergyUseAttack, labelMaxDamage, labelMaxMoveToSpeed, labelEnergySpeed, labelVisionRange);
-        columnB.getChildren().addAll(textFishGrowthTS, textMaxSize,  textNutritionSize, textEnergy, textHealth, textMinEenergyIncrease, textEnergyHealthIncrease, textHealthReducLowEnergy, textMinPredation, textEnergyUseAttack, textMaxDamage, textMaxMoveToSpeed, textEnergySpeed, textVisionRange);
+        columnB.getChildren().addAll(textFishGrowthTS, textMaxSize, textNutritionSize, textEnergy, textHealth, textMinEenergyIncrease, textEnergyHealthIncrease, textHealthReducLowEnergy, textMinPredation, textEnergyUseAttack, textMaxDamage, textMaxMoveToSpeed, textEnergySpeed, textVisionRange);
         columnA.getChildren().addAll(labelCompatibilitySteepness, labelCompatibilityMidpoint, labelMinMating, labelMatingEnergyUse, labelMinEnergyMating, labelMatingDelay, labelEnergyEgg, labelTimeToHatch, labelMutationAmount, labelMutationGaussian, labelCarcassDecay);
         columnB.getChildren().addAll(textCompatibilitySteepness, textCompatibilityMidpoint, textMinMating, textMatingEnergyUse, textMinEnergyMating, textMatingDelay, textEnergyEgg, textTimeToHatch, textMutationAmount, textMutationGaussian, textCarcassDecay);
         columnA.getChildren().addAll(labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
@@ -670,7 +673,7 @@ public class ContentBoxFactory {
         graphs[2] = graphThreeGenerate;
 
         //Update action when save button is pressed
-        saveButton3.setOnAction(e -> updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y,  xChoiceBox3, yChoiceBox3));
+        saveButton3.setOnAction(e -> updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y, xChoiceBox3, yChoiceBox3));
 
         //Load data file
         TextField textFileNumber = new TextField("File number...");
@@ -709,23 +712,23 @@ public class ContentBoxFactory {
             choiceValue = 1;
         } else if (choice.equals("Avg. Morphology")) {
             choiceValue = 2;
-        } else if(choice.equals("Avg. Max Spawning")) {
+        } else if (choice.equals("Avg. Max Spawning")) {
             choiceValue = 3;
-        } else if(choice.equals("Avg. Plankton Density")) {
+        } else if (choice.equals("Avg. Plankton Density")) {
             choiceValue = 4;
-        } else if(choice.equals("Avg. Schooling Tendency")){
+        } else if (choice.equals("Avg. Schooling Tendency")) {
             choiceValue = 5;
-        } else if(choice.equals("Number of Fish")){
+        } else if (choice.equals("Number of Fish")) {
             choiceValue = 6;
-        } else if(choice.equals("Number of Carnivores")) {
+        } else if (choice.equals("Number of Carnivores")) {
             choiceValue = 7;
-        } else if(choice.equals( "Number of Planktivores")){
+        } else if (choice.equals("Number of Planktivores")) {
             choiceValue = 8;
-        } else if(choice.equals( "Number of Scavengers")){
+        } else if (choice.equals("Number of Scavengers")) {
             choiceValue = 9;
-        } else if(choice.equals("Number of Eggs")){
+        } else if (choice.equals("Number of Eggs")) {
             choiceValue = 10;
-        } else if(choice.equals("Number of Carcass")){
+        } else if (choice.equals("Number of Carcass")) {
             choiceValue = 11;
         }
 
@@ -745,15 +748,12 @@ public class ContentBoxFactory {
         double xMax = 0;
         double yMax = 0;
 
-        for (int i = 0; i < graph.getxCoordinate().size(); i++)
-        {
-            if (graph.getxCoordinate().get(i) > xMax)
-            {
+        for (int i = 0; i < graph.getxCoordinate().size(); i++) {
+            if (graph.getxCoordinate().get(i) > xMax) {
                 xMax = graph.getxCoordinate().get(i);
             }
 
-            if (graph.getyCoordinate().get(i) > yMax)
-            {
+            if (graph.getyCoordinate().get(i) > yMax) {
                 yMax = graph.getyCoordinate().get(i);
             }
         }
@@ -761,15 +761,12 @@ public class ContentBoxFactory {
         double xMin = xMax;
         double yMin = yMax;
 
-        for (int i = 0; i < graph.getxCoordinate().size(); i++)
-        {
-            if (graph.getxCoordinate().get(i) < xMin)
-            {
+        for (int i = 0; i < graph.getxCoordinate().size(); i++) {
+            if (graph.getxCoordinate().get(i) < xMin) {
                 xMin = graph.getxCoordinate().get(i);
             }
 
-            if (graph.getyCoordinate().get(i) < yMin)
-            {
+            if (graph.getyCoordinate().get(i) < yMin) {
                 yMin = graph.getyCoordinate().get(i);
             }
         }
@@ -810,12 +807,12 @@ public class ContentBoxFactory {
     // Update all graphs to be the data from the new file
     public void updateFileAndGraphs(ChoiceBox choiceBox1, ChoiceBox choiceBox2,
                                     ChoiceBox choiceBox3, ChoiceBox choiceBox4,
-                                    ChoiceBox choiceBox5, ChoiceBox choiceBox6, TextField textField){
+                                    ChoiceBox choiceBox5, ChoiceBox choiceBox6, TextField textField) {
 
         GraphSettings.FILE_NUMBER = Integer.parseInt(textField.getText());
-        updateGraph(root1, GraphSettings.GRAPH_ONE_X, GraphSettings.GRAPH_ONE_Y,  choiceBox1, choiceBox2);
-        updateGraph(root2, GraphSettings.GRAPH_TWO_X, GraphSettings.GRAPH_TWO_Y,  choiceBox3, choiceBox4);
-        updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y,  choiceBox5, choiceBox6);
+        updateGraph(root1, GraphSettings.GRAPH_ONE_X, GraphSettings.GRAPH_ONE_Y, choiceBox1, choiceBox2);
+        updateGraph(root2, GraphSettings.GRAPH_TWO_X, GraphSettings.GRAPH_TWO_Y, choiceBox3, choiceBox4);
+        updateGraph(root3, GraphSettings.GRAPH_THREE_X, GraphSettings.GRAPH_THREE_Y, choiceBox5, choiceBox6);
 
     }
 

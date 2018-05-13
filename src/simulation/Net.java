@@ -27,7 +27,7 @@ public class Net {
         //creates a net with and initial population of fish.
         //This is used for snapshot functionality.
         this.favoredMorphology = favoredMorphology;
-        this.fish =  Collections.synchronizedList(new LinkedList<>(Arrays.asList(fish)));
+        this.fish = Collections.synchronizedList(new LinkedList<>(Arrays.asList(fish)));
     }
 
     private boolean isOutOfBounds(Vector requested, Vector max) {

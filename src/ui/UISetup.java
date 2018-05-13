@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class UISetup {
 
-    public static Scene getScene(Stage primaryStage){
+    public static Scene getScene(Stage primaryStage) {
         DragListener dragListener = new DragListener();
         final Delta deltaDrag = new Delta();
         VBox root = new VBox();
@@ -71,7 +71,7 @@ public class UISetup {
 
     private static void setupMenuBar(Stage primaryStage, ContentBox navigator, ContentArea areaOne, ContentArea areaTwo, DragListener dragListener, Simulation simulation,
                                      Engine engine, ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, ContentBoxFactory factory,
-                                     ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer){
+                                     ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer) {
 
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -102,7 +102,7 @@ public class UISetup {
         root.getChildren().addAll(toolbar, menuBar, rowContainer, graphContainer);
     }
 
-    private static void setOnMouseEvents(Delta deltaDrag, Stage primaryStage, Toolbar toolbar, Engine engine){
+    private static void setOnMouseEvents(Delta deltaDrag, Stage primaryStage, Toolbar toolbar, Engine engine) {
         Button exitButton = new Button("x");
         exitButton.setStyle("-fx-font: 20 Arial;");
         Button minimizeButton = new Button("-");
@@ -133,7 +133,7 @@ public class UISetup {
         });
     }
 
-    private static HBox graphEvents(ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, Menu menuView, ContentBoxFactory factory, ContentBox interactionBox){
+    private static HBox graphEvents(ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, Menu menuView, ContentBoxFactory factory, ContentBox interactionBox) {
         HBox graphContainer = new HBox();
 
         graphContainer.getChildren().addAll(graphAreaOne, graphAreaTwo, graphAreaThree);
@@ -180,7 +180,7 @@ public class UISetup {
         return graphContainer;
     }
 
-    private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine){
+    private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine) {
         MenuItem itemSaveSettings = new MenuItem("Save Settings");
         MenuItem itemLoadSettings = new MenuItem("Load Settings");
         MenuItem itemSaveSnapshot = new MenuItem("Save Snapshot");
@@ -213,7 +213,8 @@ public class UISetup {
                 while (engine.isProcessing()) {
                     try {
                         Thread.sleep(100);
-                    } catch (InterruptedException e) { }
+                    } catch (InterruptedException e) {
+                    }
                 }
 
                 simulation.restart();
@@ -224,7 +225,7 @@ public class UISetup {
         itemTogglePauseSimulation.setOnAction(event -> engine.togglePause());
     }
 
-    private static void saveSettings(MenuItem itemSaveSettings){
+    private static void saveSettings(MenuItem itemSaveSettings) {
         itemSaveSettings.setOnAction(event -> {
             TextInputDialog saveSettings = new TextInputDialog();
             saveSettings.setTitle("Save Settings");
@@ -236,10 +237,10 @@ public class UISetup {
         });
     }
 
-    private static void loadSettings(MenuItem itemLoadSettings){
-        itemLoadSettings.setOnAction(event ->  {
+    private static void loadSettings(MenuItem itemLoadSettings) {
+        itemLoadSettings.setOnAction(event -> {
             List<String> files = Settings.getFiles();
-            if (files.size() == 0){
+            if (files.size() == 0) {
                 Settings.defaultAbbreviated();
                 Settings.useAbbreviated();
                 Settings.toFile("default");
@@ -254,7 +255,7 @@ public class UISetup {
         });
     }
 
-    private static void loadSnapshot(MenuItem itemLoadSnapshot, Stage primaryStage, Simulation simulation, Engine engine){
+    private static void loadSnapshot(MenuItem itemLoadSnapshot, Stage primaryStage, Simulation simulation, Engine engine) {
         itemLoadSnapshot.setOnAction(event ->
         {
             FileChooser fileChooserOpen = new FileChooser();
@@ -276,7 +277,8 @@ public class UISetup {
                 while (engine.isProcessing()) {
                     try {
                         Thread.sleep(100);
-                    } catch (InterruptedException e) { }
+                    } catch (InterruptedException e) {
+                    }
                 }
 
                 Snapshot snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
@@ -287,7 +289,7 @@ public class UISetup {
         });
     }
 
-    private static void saveSnapshot(MenuItem itemSaveSnapshot, Stage primaryStage, Simulation simulation, Engine engine){
+    private static void saveSnapshot(MenuItem itemSaveSnapshot, Stage primaryStage, Simulation simulation, Engine engine) {
         itemSaveSnapshot.setOnAction(event ->
         {
             FileChooser fileChooserSave = new FileChooser();
@@ -308,7 +310,8 @@ public class UISetup {
                 while (engine.isProcessing()) {
                     try {
                         Thread.sleep(100);
-                    } catch (InterruptedException e) { }
+                    } catch (InterruptedException e) {
+                    }
                 }
 
                 Snapshot snapshot = new Snapshot(simulation);
@@ -320,6 +323,7 @@ public class UISetup {
     }
 
 }
+
 class Delta {
     //used to store mouse position relative to window size
     //The double variables must be encapsulated to allow change in lambda expressions

@@ -26,14 +26,14 @@ public class SimulationSpaceTest {
     @Test
     public void addField() {
         simulationSpace.addField(field);
-        assertTrue(simulationSpace.getActiveSubjects().contains(field));
+        assertTrue(simulationSpace.getActiveFields().contains(field));
     }
 
     @Test
     public void removeField() {
         simulationSpace.addField(field);
         simulationSpace.removeField(field);
-        assertFalse(simulationSpace.getActiveSubjects().contains(field));
+        assertFalse(simulationSpace.getActiveFields().contains(field));
     }
 
 
