@@ -184,7 +184,7 @@ public class ContentBoxFactory {
         * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
-        Label labelPlanktonGrowth = new Label("Growth pr. time step");
+        Label labelPlanktonGrowth = new Label("Growth per time step");
         TextField textPlanktonGrowth = new TextField(Float.toString(Settings.PLANKTON_GROWTH_PER_TIMESTEP));
         Label labelPlanktonMax = new Label("Max plankton");
         TextField textPlanktonMax = new TextField(Float.toString(Settings.MAX_PLANKTON));
@@ -223,9 +223,9 @@ public class ContentBoxFactory {
         mainContent.getChildren().addAll(columnA, columnB);
         Label labelEnergyEgg = new Label("Energy per egg");
         TextField textEnergyEgg = new TextField(Float.toString(Settings.ENERGY_PER_EGG));
-        Label labelEnergy = new Label("Energy/Size");
+        Label labelEnergy = new Label("Energy per size");
         TextField textEnergy = new TextField(Float.toString(Settings.ENERGY_POINTS_PER_SIZE_POINTS));
-        Label labelHealth = new Label("Health/Size");
+        Label labelHealth = new Label("Health per size");
         TextField textHealth = new TextField(Float.toString(Settings.HEALTH_POINTS_PER_SIZE_POINTS));
         Label labelMaxSize = new Label("Max Fish size");
         TextField textMaxSize = new TextField(Float.toString(Settings.MAX_FISH_SIZE));
@@ -249,7 +249,7 @@ public class ContentBoxFactory {
         TextField textNutritionSize = new TextField(Float.toString(Settings.NUTRITION_PER_SIZE_POINT));
         Label labelMinEnergyMating = new Label("Min energy for mating");
         TextField textMinEnergyMating = new TextField(Float.toString(Settings.MIN_ENERGY_MATING));
-        Label labelMatingEnergyUse = new Label("Energi used for mating");
+        Label labelMatingEnergyUse = new Label("Energy used for mating");
         TextField textMatingEnergyUse = new TextField(Float.toString(Settings.MATING_ENERGY_CONSUMPTION));
         Label labelHealthReducLowEnergy = new Label("Health reduction with low energy");
         TextField textHealthReducLowEnergy = new TextField(Float.toString(Settings.HEALTH_REDUCTION_ON_LOW_ENERGY));
@@ -269,7 +269,7 @@ public class ContentBoxFactory {
         TextField textMatingDelay = new TextField(Float.toString(Settings.MATING_DELAY));
         Label labelVisionRange = new Label("Vision range");
         TextField textVisionRange = new TextField(Float.toString(Settings.VISION_RANGE));
-        Label labelFishGrowthTS = new Label("Fish Growth pr time step");
+        Label labelFishGrowthTS = new Label("Fish Growth per time step");
         TextField textFishGrowthTS = new TextField(Float.toString(Settings.FISH_GROWTH_RATE_PER_TIMESTEP));
         Label labelFishSizePenalty = new Label("Fish size penalty");
         TextField textFishSizePenalty = new TextField(Float.toString(Settings.FISH_SIZE_PENALTY));
@@ -325,12 +325,12 @@ public class ContentBoxFactory {
             }
         });
 
-        columnA.getChildren().addAll(labelEnergyEgg, labelHealth, labelMinMating, labelMaxDamage, labelCompatibilitySteepness, labelMutationAmount, labelNutritionSize, labelMatingEnergyUse, labelMinEnergyIncrease, labelTimeToHatch);
-        columnB.getChildren().addAll(textEnergyEgg, textHealth, textMinMating, textMaxDamage, textCompatibilitySteepness, textMutationAmount, textNutritionSize, textMatingEnergyUse, textMinEenergyIncrease, textTimeToHatch);
-        columnA.getChildren().addAll(labelEnergy, labelMaxSize, labelMinPredation, labelEnergyUseAttack, labelCompatibilityMidpoint, labelMutationGaussian, labelMinEnergyMating, labelHealthReducLowEnergy, labelEnergyHealthIncrease, labelCarcassDecay);
-        columnB.getChildren().addAll(textEnergy, textMaxSize, textMinPredation, textEnergyUseAttack, textCompatibilityMidpoint, textMutationGaussian, textMinEnergyMating, textHealthReducLowEnergy, textEnergyHealthIncrease, textCarcassDecay);
-        columnA.getChildren().addAll(labelMaxMoveToSpeed, labelEnergySpeed, labelMatingDelay, labelVisionRange, labelFishGrowthTS, labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
-        columnB.getChildren().addAll(textMaxMoveToSpeed, textEnergySpeed, textMatingDelay, textVisionRange, textFishGrowthTS, textFishSizePenalty, textFishSpeedPenalty, textFishHerbivorePenalty, textFishCarnivorePenalty, textFishAttackPenalty);
+        columnA.getChildren().addAll(labelFishGrowthTS, labelMaxSize, labelNutritionSize, labelEnergy, labelHealth, labelMinEnergyIncrease, labelEnergyHealthIncrease, labelHealthReducLowEnergy, labelMinPredation, labelEnergyUseAttack, labelMaxDamage, labelMaxMoveToSpeed, labelEnergySpeed, labelVisionRange);
+        columnB.getChildren().addAll(textFishGrowthTS, textMaxSize,  textNutritionSize, textEnergy, textHealth, textMinEenergyIncrease, textEnergyHealthIncrease, textHealthReducLowEnergy, textMinPredation, textEnergyUseAttack, textMaxDamage, textMaxMoveToSpeed, textEnergySpeed, textVisionRange);
+        columnA.getChildren().addAll(labelCompatibilitySteepness, labelCompatibilityMidpoint, labelMinMating, labelMatingEnergyUse, labelMinEnergyMating, labelMatingDelay, labelEnergyEgg, labelTimeToHatch, labelMutationAmount, labelMutationGaussian, labelCarcassDecay);
+        columnB.getChildren().addAll(textCompatibilitySteepness, textCompatibilityMidpoint, textMinMating, textMatingEnergyUse, textMinEnergyMating, textMatingDelay, textEnergyEgg, textTimeToHatch, textMutationAmount, textMutationGaussian, textCarcassDecay);
+        columnA.getChildren().addAll(labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
+        columnB.getChildren().addAll(textFishSizePenalty, textFishSpeedPenalty, textFishHerbivorePenalty, textFishCarnivorePenalty, textFishAttackPenalty);
 
 
         columnB.getChildren().add(saveButton);
