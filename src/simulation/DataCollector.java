@@ -37,6 +37,20 @@ public class DataCollector {
     private TextField eggField = new TextField("0");
     private TextField carcassField = new TextField("0");
 
+
+    private String latestTimestep;
+    private String latestBwd;
+    private String latestMorphology;
+    private String latestSpawning;
+    private String latestPlankton;
+    private String latestSchooling;
+    private String latestFishCount;
+    private String latestCarnivores;
+    private String latestScavengers;
+    private String latestPlanktivores;
+    private String latestFishEggs;
+    private String latestCarcasses;
+
     public DataCollector() {
         flushTimer = 100;
 
@@ -60,43 +74,43 @@ public class DataCollector {
 
     public void append(SimulationSpace space, long timestep) {
         ArrayList<Fish> fish = getFish(space);
-        String timestepString = String.valueOf(timestep);
-        String bwd = String.valueOf(averageBWD(fish));
-        String morphology = String.valueOf(averageMorphology(fish));
-        String spawning = String.valueOf(averageMaxSpawning(fish));
-        String plankton = String.valueOf(averagePlanktonDensity(space));
-        String schooling = String.valueOf(averageSchoolingTendency(fish));
-        String fishCount = String.valueOf(fish.size());
-        String carnivores = String.valueOf(carnivoreCount(fish));
-        String scavengers = String.valueOf(scavengerCount(fish));
-        String planktivores = String.valueOf(planktivoreCount(fish));
-        String fishEggs = String.valueOf(fishEggCount(space));
-        String carcasses = String.valueOf(carcassCount(space));
+        latestTimestep = String.valueOf(timestep);
+        latestBwd = String.valueOf(averageBWD(fish));
+        latestMorphology = String.valueOf(averageMorphology(fish));
+        latestSpawning = String.valueOf(averageMaxSpawning(fish));
+        latestPlankton = String.valueOf(averagePlanktonDensity(space));
+        latestSchooling = String.valueOf(averageSchoolingTendency(fish));
+        latestFishCount = String.valueOf(fish.size());
+        latestCarnivores = String.valueOf(carnivoreCount(fish));
+        latestScavengers = String.valueOf(scavengerCount(fish));
+        latestPlanktivores = String.valueOf(planktivoreCount(fish));
+        latestFishEggs = String.valueOf(fishEggCount(space));
+        latestCarcasses = String.valueOf(carcassCount(space));
         StringBuilder builder = new StringBuilder();
 
-        builder.append(timestepString);
+        builder.append(latestTimestep);
         builder.append(',');
-        builder.append(bwd);
+        builder.append(latestBwd);
         builder.append(',');
-        builder.append(morphology);
+        builder.append(latestMorphology);
         builder.append(',');
-        builder.append(spawning);
+        builder.append(latestSpawning);
         builder.append(',');
-        builder.append(plankton);
+        builder.append(latestPlankton);
         builder.append(',');
-        builder.append(schooling);
+        builder.append(latestSchooling);
         builder.append(',');
-        builder.append(fishCount);
+        builder.append(latestFishCount);
         builder.append(',');
-        builder.append(carnivores);
+        builder.append(latestCarnivores);
         builder.append(',');
-        builder.append(scavengers);
+        builder.append(latestScavengers);
         builder.append(',');
-        builder.append(planktivores);
+        builder.append(latestPlanktivores);
         builder.append(',');
-        builder.append(fishEggs);
+        builder.append(latestFishEggs);
         builder.append(',');
-        builder.append(carcasses);
+        builder.append(latestCarcasses);
         builder.append('\n');
 
         try {
@@ -110,23 +124,21 @@ public class DataCollector {
         } catch (IOException e) {
             e.getMessage();
         }
-
-        updateTextField(timestepField, timestepString);
-        updateTextField(bwdField, bwd);
-        updateTextField(morphologyField, morphology);
-        updateTextField(spawningField, spawning);
-        updateTextField(planktonField, plankton);
-        updateTextField(schoolingField, schooling);
-        updateTextField(fishField, fishCount);
-        updateTextField(predatorField, carnivores);
-        updateTextField(scavengerField, scavengers);
-        updateTextField(planktivoreField, planktivores);
-        updateTextField(eggField, fishEggs);
-        updateTextField(carcassField, carcasses);
     }
 
-    private synchronized void updateTextField(TextField field, String text) {
-        field.setText(text);
+    public void showLatestValues() {
+        timestepField.setText(latestTimestep);
+        bwdField.setText(latestBwd);
+        morphologyField.setText(latestMorphology);
+        spawningField.setText(latestSpawning);
+        planktonField.setText(latestPlankton);
+        schoolingField.setText(latestSchooling);
+        fishField.setText(latestFishCount);
+        predatorField.setText(latestCarnivores);
+        scavengerField.setText(latestScavengers);
+        planktivoreField.setText(latestPlanktivores);
+        eggField.setText(latestFishEggs);
+        carcassField.setText(latestCarcasses);
     }
 
     public void dispose() {

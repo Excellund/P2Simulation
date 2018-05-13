@@ -27,7 +27,7 @@ public class FishGenomeTest {
         genomeCrossOver = new FishGenome(new FishGenome(), new FishGenome());
         float[] genomeArray = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 255f, 255f, 255f};
         genomeFromArray = new FishGenome(genomeArray, new FishGenome(), new FishGenome());
-        genomeSpecificAttributes = new FishGenome(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 0.10f, 0.11f, new Color(255, 255, 255), new FishGenome(), new FishGenome());
+        genomeSpecificAttributes = new FishGenome(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 0.11f, new Color(255, 255, 255), new FishGenome(), new FishGenome());
     }
 
     @Test
@@ -134,11 +134,6 @@ public class FishGenomeTest {
     @Test
     public void getColor() {
         assertEquals(new Color(255, 255, 255).getIntRepresentation(), genomeSpecificAttributes.getColor().getIntRepresentation());
-    }
-
-    @Test
-    public void getNumSpawns() {
-        assertEquals(0.1f, genomeSpecificAttributes.getNumSpawns());
     }
 
     @Test

@@ -24,7 +24,6 @@ public class Engine implements Runnable {
     private PixelWriter pixelWriter;
     private boolean isRunning = true;
     private volatile boolean isPaused = false;
-    private int timeStepsPerFrame;
     private DataCollector dataCollector;
     private  boolean isProcessing = false;
 
@@ -46,7 +45,6 @@ public class Engine implements Runnable {
     public Engine(Simulation simulation, Canvas canvas) {
         this.simulation = simulation;
         this.canvas = canvas;
-        this.timeStepsPerFrame = timeStepsPerFrame;
 
         pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
         dataCollector = new DataCollector();
@@ -58,6 +56,8 @@ public class Engine implements Runnable {
             public void handle(long now) {
                 if (now > last + 1E9 / Settings.TARGET_FPS) {
                     drawFrame();
+                    dataCollector.showLatestValues();
+
                     last = now;
                 }
             }
@@ -103,9 +103,12 @@ public class Engine implements Runnable {
     }
 
     private void drawVessels() {
-        for (Vessel vessel : simulation.getVessels()) {
-            drawVessel(vessel);
+        synchronized (simulation.getVessels()) {
+            for (Vessel vessel : simulation.getVessels()) {
+                drawVessel(vessel);
+            }
         }
+
     }
 
     private void drawVessel(Vessel vessel) {
@@ -174,7 +177,7 @@ public class Engine implements Runnable {
 
         ListIterator<Fish> iterator = net.getFish().listIterator();
 
-        synchronized (iterator) {
+        synchronized (net.getFish()) {
             for (int multiplierY = 1; multiplierY < 30 * Settings.VESSEL_SCALE; ++multiplierY) {
                 collectiveX = vec1X * multiplierY - vec2X * multiplierY;
                 collectiveY = vec1Y * multiplierY - vec2Y * multiplierY;
@@ -221,7 +224,7 @@ public class Engine implements Runnable {
         }
     }
 
-    public void togglePause() {
+    public synchronized void togglePause() {
         isPaused = !isPaused;
     }
 

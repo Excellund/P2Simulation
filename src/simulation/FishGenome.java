@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class FishGenome {
-    public static final int NUM_ATTRIBUTES = 14;
+    public static final int NUM_ATTRIBUTES = 13;
 
     //All attributes (genes) will have values between 0 and 1
     private float size;
@@ -25,13 +25,12 @@ public class FishGenome {
 
     private float attackAbility; //Amount of damage capable of doing to other fish.
 
-    private float numSpawns; //Number of eggs laid
     private float spawnSize; //Size of fish at birth/hatch
 
     private FishGenome parentGenomeA, parentGenomeB;
 
     //Creates a FishGenome from specified attributes
-    public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+    public FishGenome(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         setGenes(
                 size,
                 speed,
@@ -42,7 +41,6 @@ public class FishGenome {
                 scavengeTendency,
                 schoolingTendency,
                 attackAbility,
-                numSpawns,
                 spawnSize,
                 color,
                 parentGenomeA,
@@ -95,8 +93,7 @@ public class FishGenome {
                 genomeResultArray[7],
                 genomeResultArray[8],
                 genomeResultArray[9],
-                genomeResultArray[10],
-                new Color(genomeResultArray[11], genomeResultArray[12], genomeResultArray[13]),
+                new Color(genomeResultArray[10], genomeResultArray[11], genomeResultArray[12]),
                 new FishGenome(genomeA),
                 new FishGenome(genomeB)
         );
@@ -115,8 +112,7 @@ public class FishGenome {
         this.scavengeTendency = r.nextFloat();
         this.schoolingTendency = r.nextFloat();
         this.attackAbility = r.nextFloat();
-        this.numSpawns = r.nextFloat();
-        this.spawnSize = size / (numSpawns * Settings.MAX_FISH_SIZE);
+        this.spawnSize = size / (r.nextFloat() * Settings.MAX_FISH_SIZE);
         this.color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
 
         parentGenomeA = new FishGenome(this);
@@ -138,8 +134,7 @@ public class FishGenome {
                 genome[7],
                 genome[8],
                 genome[9],
-                genome[10],
-                new Color(genome[11], genome[12], genome[13]),
+                new Color(genome[10], genome[11], genome[12]),
                 parentGenomeA,
                 parentGenomeB
         );
@@ -157,7 +152,6 @@ public class FishGenome {
                 other.scavengeTendency,
                 other.schoolingTendency,
                 other.attackAbility,
-                other.numSpawns,
                 other.spawnSize,
                 other.color,
                 other.parentGenomeA,
@@ -266,7 +260,7 @@ public class FishGenome {
 
     //Setters
     //Set attributes to specified values
-    private void setGenes(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float numSpawns, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+    private void setGenes(float size, float speed, float herbivoreEfficiency, float carnivoreEfficiency, float herbivoreTendency, float predationTendency, float scavengeTendency, float schoolingTendency, float attackAbility, float spawnSize, Color color, FishGenome parentGenomeA, FishGenome parentGenomeB) {
         this.size = size;
         this.speed = speed;
         this.herbivoreEfficiency = herbivoreEfficiency;
@@ -276,7 +270,6 @@ public class FishGenome {
         this.scavengeTendency = scavengeTendency;
         this.schoolingTendency = schoolingTendency;
         this.attackAbility = attackAbility;
-        this.numSpawns = numSpawns;
         this.spawnSize = spawnSize;
         this.color = color;
         this.parentGenomeA = parentGenomeA;
@@ -298,8 +291,7 @@ public class FishGenome {
                 array[7],
                 array[8],
                 array[9],
-                array[10],
-                new Color(array[11], array[12], array[13]),
+                new Color(array[10], array[11], array[12]),
                 this.parentGenomeA,
                 this.parentGenomeB
 
@@ -321,7 +313,6 @@ public class FishGenome {
                 this.scavengeTendency,
                 this.schoolingTendency,
                 this.attackAbility,
-                this.numSpawns,
                 this.spawnSize,
                 this.color.getRedNormalized(),
                 this.color.getGreenNormalized(),
@@ -367,10 +358,6 @@ public class FishGenome {
 
     public float getSpeed() {
         return speed;
-    }
-
-    public float getNumSpawns() {
-        return numSpawns;
     }
 
     public float getSpawnSize() {
