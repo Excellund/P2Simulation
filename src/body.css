@@ -16,8 +16,12 @@
     -fx-background-radius: 0 0 0 0;
 }
 
+#button.content-box-factory:hover{
+    -fx-text-fill: white;
+}
+
 .tree-view {
-    -fx-font: 10px "System";
+    -fx-font: 13px "System";
     -fx-background-color: #36393e;
     -fx-padding: 1 4 -1 4;
     -fx-text-fill: white;
@@ -30,12 +34,18 @@
 }
 
 .tree-cell {
-    -fx-font: 12px "System";
+    -fx-font: 13px "System";
     -fx-background-color: #36393e;
     -fx-padding: 1 4 -1 4;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
     -fx-background-radius: 0 0 0 0;
+}
+
+.tree-cell > .tree-disclosure-node > .arrow  {
+    -fx-background-color: white;
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow {
+    -fx-background-color: white;
 }
 
 .toolbar {
@@ -79,6 +89,19 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 0 0 0 0;
+}
+
+.button:hover{
+    -fx-background-color: #0ba1da;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 1px, 1px, 1px, 1px;
+    -fx-text-fill:white;
+    -fx-alignment: CENTER;
+    -fx-content-display: LEFT;
+}
+
+.content-box-factory:hover{
+    -fx-background-color: #4d5058;
 }
 
 .box {
@@ -171,11 +194,12 @@
 .default-color0.chart-symbol { /* hollow circle */
     -fx-background-color: #d5362c;
     -fx-background-insets: 0, 2;
-    -fx-background-radius: 3px;
-    -fx-padding: 3px;
+    -fx-background-radius: 1px;
+    -fx-padding: 1px;
 }
 
 .choice-box {
-    -fx-background-color: #53595d;
+    -fx-background-color: #474b51;
     -fx-font-family: "System";
+    -fx-max-width: 90px;
 }

@@ -1,9 +1,17 @@
 package simulation;
 
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import simulation.fields.Carcass;
 import simulation.fields.Field;
 import simulation.fields.Fish;
 import simulation.fields.FishEgg;
+import ui.ContentBox;
+import ui.DragListener;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -16,6 +24,18 @@ import java.util.ArrayList;
 public class DataCollector {
     private BufferedWriter stream;
     private int flushTimer;
+    private TextField timestepField = new TextField("0");
+    private TextField bwdField = new TextField("0");
+    private TextField morphologyField = new TextField("0");
+    private TextField spawningField = new TextField("0");
+    private TextField planktonField = new TextField("0");
+    private TextField schoolingField = new TextField("0");
+    private TextField fishField = new TextField("0");
+    private TextField predatorField = new TextField("0");
+    private TextField scavengerField = new TextField("0");
+    private TextField planktivoreField = new TextField("0");
+    private TextField eggField = new TextField("0");
+    private TextField carcassField = new TextField("0");
 
     public DataCollector() {
         flushTimer = 100;
@@ -32,6 +52,7 @@ public class DataCollector {
             }
 
             stream = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("output/data_" + count + ".txt"), "utf-8"));
+            stream.write("Timestep,%BWD,Morphology,Spawn,Plankton,Schooling,Fish,Carnivores,Scavengers,Planktivores,Fish eggs,Carcasses\n");
         } catch (IOException e) {
             e.getMessage();
         }
@@ -39,33 +60,47 @@ public class DataCollector {
 
     public void append(SimulationSpace space, long timestep) {
         ArrayList<Fish> fish = getFish(space);
-        String line = String.valueOf(timestep) + ',';
+        String timestepString = String.valueOf(timestep);
+        String bwd = String.valueOf(averageBWD(fish));
+        String morphology = String.valueOf(averageMorphology(fish));
+        String spawning = String.valueOf(averageMaxSpawning(fish));
+        String plankton = String.valueOf(averagePlanktonDensity(space));
+        String schooling = String.valueOf(averageSchoolingTendency(fish));
+        String fishCount = String.valueOf(fish.size());
+        String carnivores = String.valueOf(carnivoreCount(fish));
+        String scavengers = String.valueOf(scavengerCount(fish));
+        String planktivores = String.valueOf(planktivoreCount(fish));
+        String fishEggs = String.valueOf(fishEggCount(space));
+        String carcasses = String.valueOf(carcassCount(space));
+        StringBuilder builder = new StringBuilder();
 
-        line += String.valueOf(averageBWD(fish));
-        line += ',';
-        line += String.valueOf(averageMorphology(fish));
-        line += ',';
-        line += String.valueOf(averageMaxSpawning(fish));
-        line += ',';
-        line += String.valueOf(averagePlanktonDensity(space));
-        line += ',';
-        line += String.valueOf(averageSchoolingTendency(fish));
-        line += ',';
-        line += String.valueOf(fish.size());
-        line += ',';
-        line += String.valueOf(carnivoreCount(fish));
-        line += ',';
-        line += String.valueOf(scavengerCount(fish));
-        line += ',';
-        line += String.valueOf(planktivoreCount(fish));
-        line += ',';
-        line += String.valueOf(fishEggCount(space));
-        line += ',';
-        line += String.valueOf(carcassCount(space));
-        line += '\n';
+        builder.append(timestepString);
+        builder.append(',');
+        builder.append(bwd);
+        builder.append(',');
+        builder.append(morphology);
+        builder.append(',');
+        builder.append(spawning);
+        builder.append(',');
+        builder.append(plankton);
+        builder.append(',');
+        builder.append(schooling);
+        builder.append(',');
+        builder.append(fishCount);
+        builder.append(',');
+        builder.append(carnivores);
+        builder.append(',');
+        builder.append(scavengers);
+        builder.append(',');
+        builder.append(planktivores);
+        builder.append(',');
+        builder.append(fishEggs);
+        builder.append(',');
+        builder.append(carcasses);
+        builder.append('\n');
 
         try {
-            stream.write(line);
+            stream.write(builder.toString());
             --flushTimer;
 
             if (flushTimer == 0) {
@@ -75,6 +110,23 @@ public class DataCollector {
         } catch (IOException e) {
             e.getMessage();
         }
+
+        updateTextField(timestepField, timestepString);
+        updateTextField(bwdField, bwd);
+        updateTextField(morphologyField, morphology);
+        updateTextField(spawningField, spawning);
+        updateTextField(planktonField, plankton);
+        updateTextField(schoolingField, schooling);
+        updateTextField(fishField, fishCount);
+        updateTextField(predatorField, carnivores);
+        updateTextField(scavengerField, scavengers);
+        updateTextField(planktivoreField, planktivores);
+        updateTextField(eggField, fishEggs);
+        updateTextField(carcassField, carcasses);
+    }
+
+    private synchronized void updateTextField(TextField field, String text) {
+        field.setText(text);
     }
 
     public void dispose() {
@@ -167,7 +219,7 @@ public class DataCollector {
 
         for (int y = 0; y < space.getHeight(); ++y) {
             for (int x = 0; x < space.getWidth(); ++x) {
-                sum += space.getTile(x, y).getMuDensity();
+                sum += space.getTile(x, y).getMuDensity() / Settings.MAX_PLANKTON;
             }
         }
 
@@ -210,9 +262,45 @@ public class DataCollector {
         double sum = 0;
 
         for (Fish subject : fish) {
-            sum += subject.getSize();
+            sum += subject.getSize() * Settings.MAX_FISH_SIZE;
         }
 
         return sum / fish.size();
+    }
+
+    public ContentBox getStatisticsUI(double width, DragListener dragListener) {
+        ContentBox contentBox = new ContentBox("Statistics", width, dragListener);
+        VBox content = new VBox(1);
+
+        content.setFillWidth(true);
+        content.getChildren().addAll(
+                getLine("Timestep:", timestepField),
+                getLine("Average %BWD:", bwdField),
+                getLine("Average morphology:", morphologyField),
+                getLine("Average spawn:", spawningField),
+                getLine("Plankton density:", planktonField),
+                getLine("Average schooling:", schoolingField),
+                getLine("Fish population:", fishField),
+                getLine("Carnivore population:", predatorField),
+                getLine("Scavenger population:", scavengerField),
+                getLine("Planktivore population:", planktivoreField),
+                getLine("Fish egg population:", eggField),
+                getLine("Carcass population:", carcassField));
+
+        contentBox.setContent(content);
+
+        return contentBox;
+    }
+
+    private HBox getLine(String label, TextField field) {
+        HBox line = new HBox(2);
+
+        Region spacer = new Region();
+
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        line.getChildren().addAll(new Label(label), spacer, field);
+
+        return line;
     }
 }

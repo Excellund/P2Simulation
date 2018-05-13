@@ -63,7 +63,7 @@ public class FishGenomeTest {
 
     @Test
     public void mutationBounds() {
-        MUTATION_GAUSSIAN_MEAN = 1000;
+        MUTATION_GAUSSIAN_VARIANCE = 1000;
         genome.mutate();
         boolean isBoundsCorrect = true;
         for (float attribute : genome.getArray()) {

@@ -19,6 +19,7 @@ public class Snapshot {
     private int numFish, numFishEgg, numCarcass, numVessels;
     private long randomSeed;
     private long randomCounter;
+    private long currentTimeStep;
 
     private Fish[] fish;
     private FishEgg[] fishEggs;
@@ -40,6 +41,7 @@ public class Snapshot {
         numVessels = sim.getVessels().size();
         randomSeed = CountingRandom.getInstance().getInitialSeed();
         randomCounter = CountingRandom.getInstance().getCounter();
+        currentTimeStep = sim.getCurrentTimeStep();
 
         //Get number of Fish, FishEgg, Carcass
         for (Field field : sim.getSpace()) {
@@ -94,6 +96,7 @@ public class Snapshot {
             writeInt(stream, snapshot.numVessels);
             writeLong(stream, snapshot.randomSeed);
             writeLong(stream, snapshot.randomCounter);
+            writeLong(stream, snapshot.currentTimeStep);
             stream.write(GROUP_SEPARATOR);
 
             //Write plankton densities
@@ -148,6 +151,7 @@ public class Snapshot {
             snapshot.numVessels = readInt(stream);
             snapshot.randomSeed = readLong(stream);
             snapshot.randomCounter = readLong(stream);
+            snapshot.currentTimeStep = readLong(stream); //Replace with "snapshot.currentTimeStep = 0;" for old snapshot files
 
             if (stream.read() != GROUP_SEPARATOR) {
                 return null;
@@ -423,5 +427,9 @@ public class Snapshot {
 
     public int[][] getPlanktonDensities() {
         return planktonDensities;
+    }
+
+    public long getCurrentTimeStep() {
+        return currentTimeStep;
     }
 }

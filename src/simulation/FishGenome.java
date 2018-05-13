@@ -116,7 +116,7 @@ public class FishGenome {
         this.schoolingTendency = r.nextFloat();
         this.attackAbility = r.nextFloat();
         this.numSpawns = r.nextFloat();
-        this.spawnSize = size / numSpawns / 4;
+        this.spawnSize = size / (numSpawns * Settings.MAX_FISH_SIZE);
         this.color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
 
         parentGenomeA = new FishGenome(this);
@@ -188,7 +188,7 @@ public class FishGenome {
         // Mutate attributes
         for (int index : mutationIndices) {
             // Normal distribution
-            attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_MEAN;
+            attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_VARIANCE;
 
             // Make sure attributes are within bounds
             if (attributes[index] < 0) {

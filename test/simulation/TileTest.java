@@ -22,15 +22,15 @@ public class TileTest {
 
     @Test
     public void addSubject() {
-        tile.addSubject(fish);
-        assertTrue(tile.getSubjects().contains(fish));
+        tile.addField(fish);
+        assertTrue(tile.getFields().contains(fish));
     }
 
     @Test
     public void removeSubject() {
-        tile.addSubject(fish);
-        tile.removeSubject(fish);
-        assertFalse(tile.getSubjects().contains(fish));
+        tile.addField(fish);
+        tile.removeField(fish);
+        assertFalse(tile.getFields().contains(fish));
     }
 
     @Test

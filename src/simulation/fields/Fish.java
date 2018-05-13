@@ -48,8 +48,6 @@ public class Fish implements Field {
     public float getCompatibility(Fish other) {
         float genomeSimilarity = genome.calculateSimilarity(other.genome);
 
-        //Logistic function
-        //1/(1+e^(-STEEPNESS(x-MIDPOINT)))
         return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
     }
 
@@ -102,11 +100,11 @@ public class Fish implements Field {
         if (planktonDesire >= matingDesire && planktonDesire >= predationDesire && planktonDesire >= scavengingDesire) {
             interactWithPlankton(space);
         } else if (matingDesire >= planktonDesire && matingDesire >= predationDesire && matingDesire >= scavengingDesire) {
-            interactWithMostCompatible(currentTile.getSubjects(), space);
+            interactWithMostCompatible(currentTile.getFields(), space);
         } else if (predationDesire >= planktonDesire && predationDesire >= matingDesire && predationDesire >= scavengingDesire) {
-            interactWithWeakestFish(currentTile.getSubjects(), space);
+            interactWithWeakestFish(currentTile.getFields(), space);
         } else {
-            interactWithMostNutritious(currentTile.getSubjects(), space);
+            interactWithMostNutritious(currentTile.getFields(), space);
         }
 
         if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
@@ -138,28 +136,26 @@ public class Fish implements Field {
         tile.subtractDensity((int) (size * Settings.MAX_FISH_SIZE * 1000f));
     }
 
-    private void interactWithMostNutritious(List<Field> subjects, SimulationSpace space) {
+    private void interactWithMostNutritious(List<Field> fields, SimulationSpace space) {
         float best = 0;
-        float current;
-        FishGenome temp;
         Field mostNutritious = null;
 
-        for (Field subject : subjects) {
-            if (subject instanceof FishEgg) {
-                temp = ((FishEgg) subject).getGenome();
-                current = size * genome.getCarnivoreEfficiency() * temp.getSize();
+        for (Field currentField : fields) {
+            if (currentField instanceof FishEgg) {
+                FishGenome eggGenome = ((FishEgg) currentField).getGenome();
+                float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize();
 
                 if (current > best) {
                     best = current;
-                    mostNutritious = subject;
+                    mostNutritious = currentField;
                 }
-            } else if (subject instanceof Carcass) {
-                float carcassEnergy = ((Carcass) subject).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
-                current = carcassEnergy * size * genome.getCarnivoreEfficiency();
+            } else if (currentField instanceof Carcass) {
+                float carcassEnergy = ((Carcass) currentField).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
+                float current = carcassEnergy * size * genome.getCarnivoreEfficiency();
 
                 if (current > best) {
                     best = current;
-                    mostNutritious = subject;
+                    mostNutritious = currentField;
                 }
             }
         }
@@ -169,43 +165,41 @@ public class Fish implements Field {
         }
     }
 
-    private void interactWithWeakestFish(List<Field> subjects, SimulationSpace space) {
-        float best = 0;
-        float current;
+    private void interactWithWeakestFish(List<Field> fields, SimulationSpace space) {
+        float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
-        Fish weakest = null;
-        Fish temp;
+        Fish weakestFish = null;
 
-        for (Field subject : subjects) {
-            if (subject instanceof Fish && subject != this) {
-                temp = (Fish) subject;
-                current = 1 - (temp.getSize() * (temp.getHealth() / healthQuotient));
-                current *= 1 - getCompatibility(temp);
+        for (Field currentField : fields) {
+            if (currentField instanceof Fish && currentField != this) {
+                Fish other = (Fish) currentField;
 
-                if (current > best) {
-                    best = current;
-                    weakest = (Fish) subject;
+                float currentRating = 1 - (other.getSize() * (other.getHealth() / healthQuotient));
+                currentRating *= 1 - getCompatibility(other);
+
+                if (currentRating > bestRating) {
+                    bestRating = currentRating;
+                    weakestFish = other;
                 }
             }
         }
 
-        if (weakest != null) {
-            interact(weakest, space);
+        if (weakestFish != null) {
+            interact(weakestFish, space);
         }
     }
 
-    private void interactWithMostCompatible(List<Field> subjects, SimulationSpace space) {
-        float best = 0;
-        float current;
+    private void interactWithMostCompatible(List<Field> fields, SimulationSpace space) {
+        float bestCompatibility = 0;
         Fish mostCompatible = null;
 
-        for (Field subject : subjects) {
-            if (subject instanceof Fish && subject != this) {
-                current = getCompatibility((Fish) subject);
+        for (Field currentField : fields) {
+            if (currentField instanceof Fish && currentField != this) {
+                float currentCompatibility = getCompatibility((Fish) currentField);
 
-                if (current > best) {
-                    best = current;
-                    mostCompatible = (Fish) subject;
+                if (currentCompatibility > bestCompatibility) {
+                    bestCompatibility = currentCompatibility;
+                    mostCompatible = (Fish) currentField;
                 }
             }
         }
@@ -245,34 +239,34 @@ public class Fish implements Field {
         space.moveField(newPosition, this);
     }
 
-    private void interact(Field subject, SimulationSpace space) {
-        if (subject instanceof FishEgg) {
-            energy += ((FishEgg) subject).subtractEggs((int) (size * Settings.MAX_FISH_SIZE)) * Settings.ENERGY_PER_EGG * genome.getCarnivoreEfficiency();
+    private void interact(Field currentField, SimulationSpace space) {
+        if (currentField instanceof FishEgg) {
+            energy += ((FishEgg) currentField).subtractEggs((int) (size * Settings.MAX_FISH_SIZE)) * Settings.ENERGY_PER_EGG * genome.getCarnivoreEfficiency();
 
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
-        } else if (subject instanceof Carcass) {
-            energy += ((Carcass) subject).consume((int) (size * Settings.MAX_FISH_SIZE)) * genome.getCarnivoreEfficiency();
+        } else if (currentField instanceof Carcass) {
+            energy += ((Carcass) currentField).consume((int) (size * Settings.MAX_FISH_SIZE)) * genome.getCarnivoreEfficiency();
 
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
-        } else if (subject instanceof Fish) {  //future maintainability
-            for (Field field : space.getTile(position).getSubjects()) {
+        } else if (currentField instanceof Fish) {  //future maintainability
+            for (Field field : space.getTile(position).getFields()) {
                 if (!(field instanceof Fish)) {
                     return; //don't stack eggs or carcasses
                 }
             }
 
-            float compatibility = getCompatibility((Fish) subject);
+            float compatibility = getCompatibility((Fish) currentField);
 
-            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING && ((Fish) subject).getEnergy() >= Settings.MIN_ENERGY_MATING) {
-                if (matingTimer <= 0 && ((Fish) subject).getMatingTimer() <= 0 && isMature && ((Fish) subject).isMature()) {
-                    mate((Fish) subject, space);
+            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING && ((Fish) currentField).getEnergy() >= Settings.MIN_ENERGY_MATING) {
+                if (matingTimer <= 0 && ((Fish) currentField).getMatingTimer() <= 0 && isMature && ((Fish) currentField).isMature()) {
+                    mate((Fish) currentField, space);
                 }
             } else if (genome.getPredationTendency() >= Settings.MIN_PREDATION_TENDENCY) {
-                attack((Fish) subject, space);
+                attack((Fish) currentField, space);
             }
         }
     }
@@ -324,76 +318,71 @@ public class Fish implements Field {
     }
 
     private float nearbyScavengingRating(Tile tile) {
-        float best = 0;
-        float current;
-        FishGenome temp;
+        float bestRating = 0;
 
-        for (Field subject : tile.getSubjects()) {
-            if (subject instanceof FishEgg) {
-                temp = ((FishEgg) subject).getGenome();
-                current = size * genome.getScavengeTendency() * temp.getSize();
+        for (Field currentField : tile.getFields()) {
+            if (currentField instanceof FishEgg) {
+                FishGenome genome = ((FishEgg) currentField).getGenome();
+                float currentRating = size * genome.getScavengeTendency() * genome.getSize();
 
-                if (current > best) {
-                    best = current;
+                if (currentRating > bestRating) {
+                    bestRating = currentRating;
                 }
-            } else if (subject instanceof Carcass) {
-                float carcassEnergy = ((Carcass) subject).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
-                current = carcassEnergy * size * genome.getScavengeTendency();
+            } else if (currentField instanceof Carcass) {
+                float carcassEnergy = ((Carcass) currentField).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
+                float currentRating = carcassEnergy * size * genome.getScavengeTendency();
 
-                if (current > best) {
-                    best = current;
+                if (currentRating > bestRating) {
+                    bestRating = currentRating;
                 }
             }
         }
 
-        return best;
+        return bestRating;
     }
 
     private float nearbyPredationRating(Tile tile) {
-        float best = 0;
-        float current;
+        float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
-        Fish temp;
 
-        for (Field subject : tile.getSubjects()) {
-            if (subject instanceof Fish && subject != this) {
-                temp = (Fish) subject;
-                current = 1 - (temp.getSize() * (temp.getHealth() / healthQuotient));
-                current *= 1 - getCompatibility(temp);
+        for (Field currentField : tile.getFields()) {
+            if (currentField instanceof Fish && currentField != this) {
+                Fish other = (Fish) currentField;
 
-                if (current > best) {
-                    best = current;
+                float currentRating = 1 - (other.getSize() * (other.getHealth() / healthQuotient));
+                currentRating *= 1 - getCompatibility(other);
+
+                if (currentRating > bestRating) {
+                    bestRating = currentRating;
                 }
             }
         }
 
-        return best;
+        return bestRating;
     }
 
     private float nearbySchoolingRating(Vector position, SimulationSpace space) {
-        int radius = 2;
-        float best = 0;
-        float current;
-        Vector currentPosition;
-        Fish temp;
+        int radius = 5;
+        float bestRating = 0;
+        int offset = CountingRandom.getInstance().nextInt(3) - 1;
 
-        if (genome.getSchoolingTendency() >= 0.0) //schooling is very expensive, should be limited where it's possible
+        if (genome.getSchoolingTendency() >= 0.3) //schooling is very expensive, should be limited where it's possible
         {
-            for (int y = position.y - radius; y <= position.y + radius; y += 2) {
+            for (int y = position.y - radius + offset; y <= position.y + radius + offset; y += 2) {
                 if (y >= 0 && y < space.getHeight()) {
-                    for (int x = position.x - radius; x <= position.x + radius; x += 2) {
-                        currentPosition = new Vector(x, y);
+                    for (int x = position.x - radius + offset; x <= position.x + radius + offset; x += 2) {
+                        Vector currentPosition = new Vector(x, y);
 
                         if (x >= 0 && x < space.getWidth() && !currentPosition.equals(position)) {
-                            for (Field subject : space.getTile(currentPosition).getSubjects()) {
-                                if (subject instanceof Fish && subject != this) {
-                                    temp = (Fish) subject;
-                                    current = getCompatibility(temp);
+                            for (Field currentField : space.getTile(currentPosition).getFields()) {
+                                if (currentField instanceof Fish && currentField != this) {
+                                    Fish other = (Fish) currentField;
+                                    float currentRating = getCompatibility(other);
 
-                                    if (current > best) {
-                                        best = current;
+                                    if (currentRating > bestRating) {
+                                        bestRating = currentRating;
 
-                                        if (best >= 0.9) {
+                                        if (bestRating >= 0.9) {
                                             break; //another limit to schooling
                                         }
                                     }
@@ -405,18 +394,16 @@ public class Fish implements Field {
             }
         }
 
-        return best * genome.getSchoolingTendency();
+        return bestRating * genome.getSchoolingTendency();
     }
 
     private float nearbyMatingRating(Tile tile) {
         float bestCompatibility = 0;
 
         if (energy >= Settings.MIN_ENERGY_MATING && matingTimer <= 0 && isMature) {
-            float tempCompatibility;
-
-            for (Field subject : tile.getSubjects()) {
-                if (subject instanceof Fish && subject != this) {
-                    tempCompatibility = getCompatibility((Fish) subject);
+            for (Field currentField : tile.getFields()) {
+                if (currentField instanceof Fish && currentField != this) {
+                    float tempCompatibility = getCompatibility((Fish) currentField);
 
                     if (tempCompatibility > bestCompatibility) {
                         bestCompatibility = tempCompatibility;
@@ -429,25 +416,22 @@ public class Fish implements Field {
     }
 
     private float nearbyPredatorRating(Tile tile) {
-        float worst = 0;
-        float current;
-        float compatibility;
-        Fish temp;
+        float worstRating = 0;
 
-        for (Field subject : tile.getSubjects()) {
-            if (subject instanceof Fish && subject != this) {
-                temp = (Fish) subject;
-                compatibility = getCompatibility(temp);
-                current = temp.getGenome().getPredationTendency() * temp.getGenome().getAttackAbility(); //danger level
-                current *= 1 - compatibility;
+        for (Field currentField : tile.getFields()) {
+            if (currentField instanceof Fish && currentField != this) {
+                Fish temp = (Fish) currentField;
+                float compatibility = getCompatibility(temp);
+                float currentRating = temp.getGenome().getPredationTendency() * temp.getGenome().getAttackAbility(); //danger level
+                currentRating *= 1 - compatibility;
 
-                if (current > worst) {
-                    worst = current;
+                if (currentRating > worstRating) {
+                    worstRating = currentRating;
                 }
             }
         }
 
-        return worst / size;
+        return worstRating / size;
     }
 
     private boolean[][] getSurroundingTileValidity(SimulationSpace space, int radius) {
@@ -530,9 +514,8 @@ public class Fish implements Field {
 
     private int findMaxSumIndex(float[] sums) {
         //Find max value, starting at a random index.
-        Random r = CountingRandom.getInstance();
-        int startIndex = r.nextInt(4);
-        //startIndex = 2;
+        Random random = CountingRandom.getInstance();
+        int startIndex = random.nextInt(4);
         float maxSum = 0;
         int numAreas = sums.length;
         int maxSumIndex = startIndex;
@@ -571,9 +554,9 @@ public class Fish implements Field {
             return genome.getColor();
         } else {
             return new Color(
-                    255 * genome.getPredationTendency(),
-                    255 * genome.getHerbivoreTendency(),
-                    255 * genome.getScavengeTendency()
+                    genome.getPredationTendency(),
+                    genome.getHerbivoreTendency(),
+                    genome.getScavengeTendency()
             );
         }
     }

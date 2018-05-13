@@ -20,7 +20,7 @@ public class CountingRandom extends Random {
     public void setState(long seed, long counter) {
         setSeed(seed);
 
-        for (int i = 0; i < counter; i++) {
+        for (long i = 0; i < counter; i++) {
             next(0);
         }
     }

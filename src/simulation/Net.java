@@ -72,7 +72,7 @@ public class Net {
             return;
         }
 
-        List<Field> tileEntities = space.getTile(tile.x, tile.y).getSubjects();
+        List<Field> tileEntities = space.getTile(tile.x, tile.y).getFields();
 
         for (Field subject : tileEntities) {
             if (subject instanceof Fish && !fishEscapes((Fish) subject)) {
