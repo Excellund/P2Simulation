@@ -41,14 +41,14 @@ public class SimulationSpace implements Iterable<Field> {
 
     //Removes a field in the simulation
     public void removeField(Field field) {
-        utils.Vector pos = field.getPosition();
+        Vector pos = field.getPosition();
         tiles[pos.y][pos.x].removeSubject(field);
         activeSubjects.remove(field);
     }
 
     //Moves a field within the simulation to a specific tile position
-    public void moveField(utils.Vector tilePos, Field field) {
-        utils.Vector oldPos = field.getPosition();
+    public void moveField(Vector tilePos, Field field) {
+        Vector oldPos = field.getPosition();
         field.setPosition(tilePos);
         tiles[oldPos.y][oldPos.x].removeSubject(field);
         tiles[tilePos.y][tilePos.x].addSubject(field);
@@ -119,5 +119,17 @@ public class SimulationSpace implements Iterable<Field> {
 
     public int getNumActiveFields() {
         return activeSubjects.size();
+    }
+
+    public List<Field> getActiveSubjects() {
+        return activeSubjects;
+    }
+
+    public List<Field> getSubjectsAddQueue() {
+        return subjectsAddQueue;
+    }
+
+    public List<Field> getSubjectsRemoveQueue() {
+        return subjectsRemoveQueue;
     }
 }
