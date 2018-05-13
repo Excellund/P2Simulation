@@ -184,7 +184,7 @@ public class ContentBoxFactory {
         * to display and change the current setting value*/
         Label labelNumVessel = new Label("Number of vessels");
         TextField textNumVessel = new TextField(Float.toString(Settings.NUM_VESSELS));
-        Label labelPlanktonGrowth = new Label("Growth pr. time step");
+        Label labelPlanktonGrowth = new Label("Growth per time step");
         TextField textPlanktonGrowth = new TextField(Float.toString(Settings.PLANKTON_GROWTH_PER_TIMESTEP));
         Label labelPlanktonMax = new Label("Max plankton");
         TextField textPlanktonMax = new TextField(Float.toString(Settings.MAX_PLANKTON));
@@ -223,9 +223,9 @@ public class ContentBoxFactory {
         mainContent.getChildren().addAll(columnA, columnB);
         Label labelEnergyEgg = new Label("Energy per egg");
         TextField textEnergyEgg = new TextField(Float.toString(Settings.ENERGY_PER_EGG));
-        Label labelEnergy = new Label("Energy/Size");
+        Label labelEnergy = new Label("Energy per size");
         TextField textEnergy = new TextField(Float.toString(Settings.ENERGY_POINTS_PER_SIZE_POINTS));
-        Label labelHealth = new Label("Health/Size");
+        Label labelHealth = new Label("Health per size");
         TextField textHealth = new TextField(Float.toString(Settings.HEALTH_POINTS_PER_SIZE_POINTS));
         Label labelMaxSize = new Label("Max Fish size");
         TextField textMaxSize = new TextField(Float.toString(Settings.MAX_FISH_SIZE));
@@ -249,7 +249,7 @@ public class ContentBoxFactory {
         TextField textNutritionSize = new TextField(Float.toString(Settings.NUTRITION_PER_SIZE_POINT));
         Label labelMinEnergyMating = new Label("Min energy for mating");
         TextField textMinEnergyMating = new TextField(Float.toString(Settings.MIN_ENERGY_MATING));
-        Label labelMatingEnergyUse = new Label("Energi used for mating");
+        Label labelMatingEnergyUse = new Label("Energy used for mating");
         TextField textMatingEnergyUse = new TextField(Float.toString(Settings.MATING_ENERGY_CONSUMPTION));
         Label labelHealthReducLowEnergy = new Label("Health reduction with low energy");
         TextField textHealthReducLowEnergy = new TextField(Float.toString(Settings.HEALTH_REDUCTION_ON_LOW_ENERGY));
@@ -269,7 +269,7 @@ public class ContentBoxFactory {
         TextField textMatingDelay = new TextField(Float.toString(Settings.MATING_DELAY));
         Label labelVisionRange = new Label("Vision range");
         TextField textVisionRange = new TextField(Float.toString(Settings.VISION_RANGE));
-        Label labelFishGrowthTS = new Label("Fish Growth pr time step");
+        Label labelFishGrowthTS = new Label("Fish Growth per time step");
         TextField textFishGrowthTS = new TextField(Float.toString(Settings.FISH_GROWTH_RATE_PER_TIMESTEP));
         Label labelFishSizePenalty = new Label("Fish size penalty");
         TextField textFishSizePenalty = new TextField(Float.toString(Settings.FISH_SIZE_PENALTY));
@@ -325,12 +325,12 @@ public class ContentBoxFactory {
             }
         });
 
-        columnA.getChildren().addAll(labelEnergyEgg, labelHealth, labelMinMating, labelMaxDamage, labelCompatibilitySteepness, labelMutationAmount, labelNutritionSize, labelMatingEnergyUse, labelMinEnergyIncrease, labelTimeToHatch);
-        columnB.getChildren().addAll(textEnergyEgg, textHealth, textMinMating, textMaxDamage, textCompatibilitySteepness, textMutationAmount, textNutritionSize, textMatingEnergyUse, textMinEenergyIncrease, textTimeToHatch);
-        columnA.getChildren().addAll(labelEnergy, labelMaxSize, labelMinPredation, labelEnergyUseAttack, labelCompatibilityMidpoint, labelMutationGaussian, labelMinEnergyMating, labelHealthReducLowEnergy, labelEnergyHealthIncrease, labelCarcassDecay);
-        columnB.getChildren().addAll(textEnergy, textMaxSize, textMinPredation, textEnergyUseAttack, textCompatibilityMidpoint, textMutationGaussian, textMinEnergyMating, textHealthReducLowEnergy, textEnergyHealthIncrease, textCarcassDecay);
-        columnA.getChildren().addAll(labelMaxMoveToSpeed, labelEnergySpeed, labelMatingDelay, labelVisionRange, labelFishGrowthTS, labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
-        columnB.getChildren().addAll(textMaxMoveToSpeed, textEnergySpeed, textMatingDelay, textVisionRange, textFishGrowthTS, textFishSizePenalty, textFishSpeedPenalty, textFishHerbivorePenalty, textFishCarnivorePenalty, textFishAttackPenalty);
+        columnA.getChildren().addAll(labelFishGrowthTS, labelMaxSize, labelNutritionSize, labelEnergy, labelHealth, labelMinEnergyIncrease, labelEnergyHealthIncrease, labelHealthReducLowEnergy, labelMinPredation, labelEnergyUseAttack, labelMaxDamage, labelMaxMoveToSpeed, labelEnergySpeed, labelVisionRange);
+        columnB.getChildren().addAll(textFishGrowthTS, textMaxSize,  textNutritionSize, textEnergy, textHealth, textMinEenergyIncrease, textEnergyHealthIncrease, textHealthReducLowEnergy, textMinPredation, textEnergyUseAttack, textMaxDamage, textMaxMoveToSpeed, textEnergySpeed, textVisionRange);
+        columnA.getChildren().addAll(labelCompatibilitySteepness, labelCompatibilityMidpoint, labelMinMating, labelMatingEnergyUse, labelMinEnergyMating, labelMatingDelay, labelEnergyEgg, labelTimeToHatch, labelMutationAmount, labelMutationGaussian, labelCarcassDecay);
+        columnB.getChildren().addAll(textCompatibilitySteepness, textCompatibilityMidpoint, textMinMating, textMatingEnergyUse, textMinEnergyMating, textMatingDelay, textEnergyEgg, textTimeToHatch, textMutationAmount, textMutationGaussian, textCarcassDecay);
+        columnA.getChildren().addAll(labelFishSizePenalty, labelFishSpeedPenalty, labelFishHerbivorePenalty, labelFishCarnivorePenalty, labelFishAttackPenalty);
+        columnB.getChildren().addAll(textFishSizePenalty, textFishSpeedPenalty, textFishHerbivorePenalty, textFishCarnivorePenalty, textFishAttackPenalty);
 
 
         columnB.getChildren().add(saveButton);
@@ -346,15 +346,15 @@ public class ContentBoxFactory {
 
         mainContent.getChildren().addAll(columnA, columnB);
 
-        Label labelTravel = new Label("Vessels traveldistance");
+        Label labelTravel = new Label("Vessels travel distance");
         TextField textTravel = new TextField(Float.toString(Settings.VESSEL_TRAVEL_DISTANCE));
         Label labelMorphologyMin = new Label("Morphology Min");
         TextField textMorphologyMin = new TextField(Float.toString(Settings.MIN_MORPHOLOGY));
-        Label labelMorphologyMax = new Label("Max");
+        Label labelMorphologyMax = new Label("Morphology Max");
         TextField textMorphologyMax = new TextField(Float.toString(Settings.MAX_MORPHOLOGY));
         Label labelQuotasMin = new Label("Fishing quotas Min");
         TextField textQuotasMin = new TextField(Float.toString(Settings.FISHING_QUOTAS_MIN));
-        Label labelQuotasMax = new Label("Max");
+        Label labelQuotasMax = new Label("Fishing quotas Max");
         TextField textQuotasMax = new TextField(Float.toString(Settings.FISHING_QUOTAS_MAX));
         Label labelWidthSteepness = new Label("Steepness width");
         TextField textWidthSteepness = new TextField(Float.toString(Settings.WIDTH_STEEPNESS));
@@ -377,8 +377,8 @@ public class ContentBoxFactory {
         });
 
 
-        columnA.getChildren().addAll(labelMorphologyMin, labelQuotasMin, labelTravel, labelMorphologyMax, labelQuotasMax, labelWidthSteepness);
-        columnB.getChildren().addAll(textMorphologyMin, textQuotasMin, textTravel, textMorphologyMax, textQuotasMax, textWidthSteepness);
+        columnA.getChildren().addAll(labelTravel, labelMorphologyMin, labelMorphologyMax, labelQuotasMin, labelQuotasMax, labelWidthSteepness);
+        columnB.getChildren().addAll(textTravel, textMorphologyMin, textMorphologyMax, textQuotasMin, textQuotasMax, textWidthSteepness);
 
         columnB.getChildren().add(saveButton);
 
@@ -397,6 +397,8 @@ public class ContentBoxFactory {
         TextField textPlanktonGamma = new TextField(Float.toString(Settings.PLANKTON_GAMMA));
         Label labelFishGamma = new Label("Fish gamma");
         TextField textFishGamma = new TextField(Float.toString(Settings.FISH_GAMMA));
+        Label labelColourByTendency = new Label("Colour by tendency");
+        TextField textColourByTendency = new TextField(Float.toString(Settings.COLOR_BY_TENDENCY));
         Label labelFPS = new Label("Target FPS");
         TextField textFPS = new TextField(Float.toString(Settings.TARGET_FPS));
 
@@ -407,19 +409,15 @@ public class ContentBoxFactory {
             try {
                 Settings.PLANKTON_GAMMA = Float.parseFloat(textPlanktonGamma.getText());
                 Settings.FISH_GAMMA = Float.parseFloat(textFishGamma.getText());
+                Settings.COLOR_BY_TENDENCY = Float.parseFloat(textColourByTendency.getText());
                 Settings.TARGET_FPS = Float.parseFloat(textFPS.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
         });
 
-        columnA.getChildren().add(labelPlanktonGamma);
-        columnB.getChildren().add(textPlanktonGamma);
-        columnA.getChildren().add(labelFishGamma);
-        columnB.getChildren().add(textFishGamma);
-        columnA.getChildren().add(labelFPS);
-        columnB.getChildren().add(textFPS);
-
+        columnA.getChildren().addAll(labelPlanktonGamma, labelFishGamma, labelColourByTendency, labelFPS);
+        columnB.getChildren().addAll(textPlanktonGamma, textFishGamma, textColourByTendency, textFPS);
         columnB.getChildren().add(saveButton);
 
         interactionBox.setContent(mainContent);
@@ -437,6 +435,8 @@ public class ContentBoxFactory {
         TextField textMorphology = new TextField(Float.toString(Settings.MORPHOLOGY));
         Label labelQuotas = new Label("Quotas");
         TextField textQuotas = new TextField(Float.toString(Settings.QUOTAS));
+        Label labelVesselScale = new Label("Vessel scale");
+        TextField textVesselScale = new TextField(Float.toString(Settings.VESSEL_SCALE));
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
@@ -445,14 +445,15 @@ public class ContentBoxFactory {
             try {
                 Settings.MORPHOLOGY = Float.parseFloat(textMorphology.getText());
                 Settings.QUOTAS = Float.parseFloat(textQuotas.getText());
+                Settings.VESSEL_SCALE = Float.parseFloat(textVesselScale.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
         });
 
 
-        columnB.getChildren().addAll(textMorphology, textQuotas);
-        columnA.getChildren().addAll(labelMorphology, labelQuotas);
+        columnA.getChildren().addAll(labelMorphology, labelQuotas, labelVesselScale);
+        columnB.getChildren().addAll(textMorphology, textQuotas, textVesselScale);
 
         columnB.getChildren().add(saveButton);
 
@@ -502,6 +503,13 @@ public class ContentBoxFactory {
         TextField textFishLoad = new TextField(Float.toString(Settings.NUM_INITIAL_FISH));
         Label labelPlanktonLoad = new Label("Plankton load");
         TextField textPlanktonLoad = new TextField(Float.toString(Settings.LOAD_PLANKTON));
+        Label labelDataCollectorAppend = new Label("Data append delay");
+        TextField textDataCollectorAppend = new TextField(Float.toString(Settings.DATACOLLECTOR_APPEND_DELAY));
+
+        //Text too wide for data collector, so added a tooltip
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText("Data append delay");
+        labelDataCollectorAppend.setTooltip(tooltip);
 
         Button saveButton = new Button("Save");
         saveButton.getStyleClass().add("buttonContent");
@@ -510,13 +518,14 @@ public class ContentBoxFactory {
             try {
                 Settings.NUM_INITIAL_FISH = Float.parseFloat(textFishLoad.getText());
                 Settings.LOAD_PLANKTON = Float.parseFloat(textPlanktonLoad.getText());
+                Settings.DATACOLLECTOR_APPEND_DELAY = Float.parseFloat(textDataCollectorAppend.getText());
             } catch (NumberFormatException e) {
                 System.out.println(e.getMessage());
             }
         });
 
-        columnA.getChildren().addAll(labelFishLoad, labelPlanktonLoad);
-        columnB.getChildren().addAll(textFishLoad, textPlanktonLoad);
+        columnA.getChildren().addAll(labelFishLoad, labelPlanktonLoad, labelDataCollectorAppend);
+        columnB.getChildren().addAll(textFishLoad, textPlanktonLoad, textDataCollectorAppend);
 
         List<String> files = Settings.getFiles();
 

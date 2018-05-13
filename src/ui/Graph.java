@@ -16,11 +16,6 @@ public class Graph {
 
     private List<Double> xCoordinate = new ArrayList<>();
     private List<Double> yCoordinate = new ArrayList<>();
-    /*private int count = 1;
-
-    public void setCount(int count) {
-        this.count = count;
-    }*/
 
     public ObservableList<Series<Double, Double>> getChartData(int xChoice, int yChoice) {
 
