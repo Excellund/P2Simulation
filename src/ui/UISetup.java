@@ -42,12 +42,11 @@ public class UISetup {
         ContentArea graphAreaThree = new ContentArea(375, 500, dragListener);
 
         ContentBox interactionBox = factory.generateInteractionBox(375);
-        ContentBox spawnBox = factory.generateSpawnBox(375);
-        ContentBox launchBox = factory.generateLaunchBox(375);
-        ContentBox navigator = factory.generateNavigator(375, interactionBox, spawnBox, launchBox, areaTwo);
+        ContentBox navigator = factory.generateNavigator(375, interactionBox, areaTwo);
 
         Simulation simulation = new Simulation(750, 750);
         Engine engine = new Engine(simulation, canvas);
+        ContentBox statistics = engine.getStatisticsUI(375, dragListener);
 
         canvasContainer.setStyle("-fx-background-color:black");
         canvasContainer.getChildren().add(canvas);
@@ -61,7 +60,7 @@ public class UISetup {
         rowContainer.getChildren().addAll(areaOne, canvasContainer, areaTwo);
 
         setupMenuBar(primaryStage, navigator, areaOne, areaTwo, dragListener, simulation, engine, graphAreaOne, graphAreaTwo,
-                graphAreaThree, factory, interactionBox, root, toolbar, rowContainer);
+                graphAreaThree, factory, interactionBox, root, toolbar, rowContainer, statistics);
 
         //GUI style
         root.getStyleClass().add("box");
@@ -71,7 +70,7 @@ public class UISetup {
 
     private static void setupMenuBar(Stage primaryStage, ContentBox navigator, ContentArea areaOne, ContentArea areaTwo, DragListener dragListener, Simulation simulation,
                                      Engine engine, ContentArea graphAreaOne, ContentArea graphAreaTwo, ContentArea graphAreaThree, ContentBoxFactory factory,
-                                     ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer) {
+                                     ContentBox interactionBox, VBox root, Toolbar toolbar, HBox rowContainer, ContentBox statistics) {
 
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
@@ -82,8 +81,10 @@ public class UISetup {
         menuBar.getMenus().addAll(menuFile, menuEdit, menuView, menuTools);
 
         MenuItem itemNavigator = new MenuItem("Navigator");
+        MenuItem itemStatistics = new MenuItem("Statistics");
 
-        menuView.getItems().add(itemNavigator);
+
+        menuView.getItems().addAll(itemNavigator, itemStatistics);
 
         itemNavigator.setOnAction(event ->
         {
@@ -92,6 +93,13 @@ public class UISetup {
             }
 
             event.consume();
+        });
+
+        itemStatistics.setOnAction(event -> {
+            if (statistics.getParent() == null){
+                areaTwo.getChildren().add(engine.getStatisticsUI(375, dragListener));
+
+            }
         });
 
         areaOne.getChildren().add(navigator);
@@ -179,6 +187,8 @@ public class UISetup {
         });
         return graphContainer;
     }
+
+
 
     private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine) {
         MenuItem itemSaveSettings = new MenuItem("Save Settings");

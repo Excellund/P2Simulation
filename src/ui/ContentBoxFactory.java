@@ -31,7 +31,7 @@ public class ContentBoxFactory {
     }
 
     /*All inputs to navigation box*/
-    public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentBox spawnBox, ContentBox launchBox, ContentArea interactionBoxArea2) {
+    public ContentBox generateNavigator(double width, ContentBox interactionBox, ContentArea interactionBoxArea2) {
         ContentBox contentBox = new ContentBox("Navigator", width, dragListener);
         Node simLogo = new ImageView(new Image(getClass().getResourceAsStream("logo.png")));
         TreeItem<String> menuRoot = new TreeItem<>("Fish simulation", simLogo);
@@ -47,23 +47,8 @@ public class ContentBoxFactory {
 
         itemSettings.getChildren().addAll(itemSimulation, itemFish, itemFishery, itemGraph, itemGraphics);
 
-        //Categories for AddItems
-        Node insert = new ImageView(new Image(getClass().getResourceAsStream("insert.png")));
-        TreeItem<String> itemAddItems = new TreeItem<>("Add items", insert);
-        TreeItem<String> itemAddVessel = new TreeItem<>("Vessel");
-        TreeItem<String> itemAddPlankton = new TreeItem<>("Plankton");
-
-        itemAddItems.getChildren().addAll(itemAddVessel, itemAddPlankton);
-
-        //Categories for launch
-        Node time = new ImageView(new Image(getClass().getResourceAsStream("clock.png")));
-        TreeItem<String> itemLaunch = new TreeItem<>("Launch simulation", time);
-        TreeItem<String> itemStartLaunch = new TreeItem<>("New launch");
-
-        itemLaunch.getChildren().addAll(itemStartLaunch);
-
         //Categories for Navigator
-        menuRoot.getChildren().addAll(itemSettings, itemAddItems, itemLaunch);
+        menuRoot.getChildren().addAll(itemSettings);
 
         contentBox.setContent(menu);
 
@@ -102,35 +87,9 @@ public class ContentBoxFactory {
 
                         }
                         break;
-
-                    case "Add items":
-                        switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
-                            case "Vessel":
-                                spawnBoxSetContextVessel(spawnBox);
-                                spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
-                                break;
-
-                            case "Plankton":
-                                spawnBoxSetContextPlankton(spawnBox);
-                                spawnBoxChecker(spawnBox, interactionBoxArea2, menu);
-                                break;
-                        }
-                        break;
-
-                    case "Launch simulation":
-                        switch (menu.getSelectionModel().selectedItemProperty().getValue().getValue()) {
-                            case "New launch":
-                                launchBoxSetContextStart(launchBox);
-                                launchBoxChecker(launchBox, interactionBoxArea2, menu);
-                                break;
-
-                        }
-                        break;
-
                 }
             }
         });
-
 
         return contentBox;
     }
@@ -143,35 +102,11 @@ public class ContentBoxFactory {
         }
     }
 
-    public void spawnBoxChecker(ContentBox spawnBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
-        if (spawnBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
-            interactionBoxArea2.getChildren().add(spawnBox);
-        }
-    }
-
-    public void launchBoxChecker(ContentBox launchBox, ContentArea interactionBoxArea2, TreeView<String> menu) {
-        if (launchBox.getParent() == null && menu.getSelectionModel().selectedItemProperty().getValue().isLeaf()) {
-            interactionBoxArea2.getChildren().add(launchBox);
-        }
-    }
-
     //Generate the difference boxes
     public ContentBox generateInteractionBox(double width) {
         ContentBox interactionBox = new ContentBox("Interaction", width, dragListener);
 
         return interactionBox;
-    }
-
-    public ContentBox generateSpawnBox(double width) {
-        ContentBox spawnBox = new ContentBox("Spawn items", width, dragListener);
-
-        return spawnBox;
-    }
-
-    public ContentBox generateLaunchBox(double width) {
-        ContentBox launchBox = new ContentBox("Launch", width, dragListener);
-
-        return launchBox;
     }
 
     //Generate the contents for each categories in the difference choices the user has
@@ -461,90 +396,6 @@ public class ContentBoxFactory {
         columnB.getChildren().add(saveButton);
 
         interactionBox.setContent(mainContent);
-    }
-
-    public void spawnBoxSetContextPlankton(ContentBox interactionBox) {
-        interactionBox.getToolbar().setTitle("Spawn plankton");
-        HBox mainContent = new HBox(10);
-        VBox columnA = new VBox();
-        VBox columnB = new VBox(4);
-
-        mainContent.getChildren().addAll(columnA, columnB);
-
-        Label labelAddPlankton = new Label("Increase density");
-        TextField textAddPlankton = new TextField(Float.toString(Settings.ADD_PLANKTON));
-
-        Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event ->
-        {
-            try {
-                Settings.ADD_PLANKTON = Float.parseFloat(textAddPlankton.getText());
-            } catch (NumberFormatException e) {
-                System.out.println(e.getMessage());
-            }
-        });
-
-        columnA.getChildren().addAll(labelAddPlankton);
-        columnB.getChildren().addAll(textAddPlankton);
-
-        columnB.getChildren().add(saveButton);
-
-        interactionBox.setContent(mainContent);
-    }
-
-    public void launchBoxSetContextStart(ContentBox launchBox) {
-        HBox mainContent = new HBox(10);
-        VBox columnA = new VBox();
-        VBox columnB = new VBox(4);
-        VBox columnC = new VBox();
-        VBox columnD = new VBox(4);
-
-        mainContent.getChildren().addAll(columnA, columnB, columnC, columnD);
-
-        Label labelFishLoad = new Label("Fish load");
-        TextField textFishLoad = new TextField(Float.toString(Settings.NUM_INITIAL_FISH));
-        Label labelPlanktonLoad = new Label("Plankton load");
-        TextField textPlanktonLoad = new TextField(Float.toString(Settings.LOAD_PLANKTON));
-        Label labelDataCollectorAppend = new Label("Data append delay");
-        TextField textDataCollectorAppend = new TextField(Float.toString(Settings.DATACOLLECTOR_APPEND_DELAY));
-
-        //Text too wide for data collector, so added a tooltip
-        Tooltip tooltip = new Tooltip();
-        tooltip.setText("Data append delay");
-        labelDataCollectorAppend.setTooltip(tooltip);
-
-        Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("buttonContent");
-        saveButton.setOnAction(event ->
-        {
-            try {
-                Settings.NUM_INITIAL_FISH = Float.parseFloat(textFishLoad.getText());
-                Settings.LOAD_PLANKTON = Float.parseFloat(textPlanktonLoad.getText());
-                Settings.DATACOLLECTOR_APPEND_DELAY = Float.parseFloat(textDataCollectorAppend.getText());
-            } catch (NumberFormatException e) {
-                System.out.println(e.getMessage());
-            }
-        });
-
-        columnA.getChildren().addAll(labelFishLoad, labelPlanktonLoad, labelDataCollectorAppend);
-        columnB.getChildren().addAll(textFishLoad, textPlanktonLoad, textDataCollectorAppend);
-
-        List<String> files = Settings.getFiles();
-
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll(files);
-
-        Button launchSettings = new Button("Upload Settings");
-        launchSettings.getStyleClass().add("buttonContent");
-        launchSettings.setOnAction(event ->
-        {
-            Settings.fromFile(choiceBox.getValue());
-        });
-
-        columnC.getChildren().add(choiceBox);
-        columnD.getChildren().add(launchSettings);
-        launchBox.setContent(mainContent);
     }
 
 
