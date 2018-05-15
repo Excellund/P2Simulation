@@ -37,9 +37,9 @@ public class UISetup {
         Canvas canvas = new Canvas(750, 750);
         ContentArea areaOne = new ContentArea(375, 750, dragListener);
         ContentArea areaTwo = new ContentArea(375, 750, dragListener);
-        ContentArea graphAreaOne = new ContentArea(375, 500, dragListener);
-        ContentArea graphAreaTwo = new ContentArea(750, 500, dragListener);
-        ContentArea graphAreaThree = new ContentArea(375, 500, dragListener);
+        ContentArea graphAreaOne = new ContentArea(375, 1, dragListener);
+        ContentArea graphAreaTwo = new ContentArea(750, 1, dragListener);
+        ContentArea graphAreaThree = new ContentArea(375, 1, dragListener);
 
         ContentBox interactionBox = factory.generateInteractionBox(375);
         ContentBox navigator = factory.generateNavigator(375, interactionBox, areaTwo);
