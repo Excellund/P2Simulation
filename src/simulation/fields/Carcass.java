@@ -5,6 +5,8 @@ import simulation.SimulationSpace;
 import utils.Color;
 import utils.Vector;
 
+import java.util.Objects;
+
 public class Carcass implements Field {
     private int nutrition;
     private Vector position;
@@ -59,5 +61,20 @@ public class Carcass implements Field {
     @Override
     public void setPosition(Vector position) {
         this.position = position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Carcass carcass = (Carcass) o;
+        return nutrition == carcass.nutrition &&
+                Objects.equals(position, carcass.position);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(nutrition, position);
     }
 }

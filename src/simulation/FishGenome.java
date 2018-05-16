@@ -4,6 +4,7 @@ import utils.Color;
 import utils.CountingRandom;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -370,5 +371,31 @@ public class FishGenome {
 
     public FishGenome getParentGenomeB() {
         return parentGenomeB;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FishGenome that = (FishGenome) o;
+        return Float.compare(that.size, size) == 0 &&
+                Float.compare(that.speed, speed) == 0 &&
+                Float.compare(that.herbivoreEfficiency, herbivoreEfficiency) == 0 &&
+                Float.compare(that.carnivoreEfficiency, carnivoreEfficiency) == 0 &&
+                Float.compare(that.herbivoreTendency, herbivoreTendency) == 0 &&
+                Float.compare(that.predationTendency, predationTendency) == 0 &&
+                Float.compare(that.scavengeTendency, scavengeTendency) == 0 &&
+                Float.compare(that.schoolingTendency, schoolingTendency) == 0 &&
+                Float.compare(that.attackAbility, attackAbility) == 0 &&
+                Float.compare(that.spawnSize, spawnSize) == 0 &&
+                Objects.equals(color, that.color) &&
+                Objects.equals(parentGenomeA, that.parentGenomeA) &&
+                Objects.equals(parentGenomeB, that.parentGenomeB);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(size, speed, color, herbivoreEfficiency, carnivoreEfficiency, herbivoreTendency, predationTendency, scavengeTendency, schoolingTendency, attackAbility, spawnSize, parentGenomeA, parentGenomeB);
     }
 }
