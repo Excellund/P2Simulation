@@ -48,16 +48,28 @@ public class SnapshotTest {
 
     @Test
     public void saveSnapshot() {
-        assertTrue(Snapshot.saveSnapshot(path, snapshot));
+        try {
+            Snapshot.saveSnapshot(path, snapshot);
+        } catch (IOException e) {
+            fail("Failed to save snapshot");
+        }
     }
 
     @Test
     public void saveSnapshotException() {
-        assertFalse(Snapshot.saveSnapshot("snapshots", snapshot));
+        try {
+            Snapshot.saveSnapshot("snapshots", snapshot);
+            fail("Expected exception not thrown");
+        } catch (IOException e) {
+        }
     }
 
     @Test
     public void loadSnapshot() {
-        assertEquals(snapshot, Snapshot.loadSnapshot(path));
+        try {
+            assertEquals(snapshot, Snapshot.loadSnapshot(path));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
