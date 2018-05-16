@@ -11,6 +11,8 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Snapshot {
     private static final byte GROUP_SEPARATOR = 0x1D;
@@ -432,4 +434,38 @@ public class Snapshot {
     public long getCurrentTimeStep() {
         return currentTimeStep;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Snapshot snapshot = (Snapshot) o;
+        return width == snapshot.width &&
+                height == snapshot.height &&
+                numFish == snapshot.numFish &&
+                numFishEgg == snapshot.numFishEgg &&
+                numCarcass == snapshot.numCarcass &&
+                numVessels == snapshot.numVessels &&
+                randomSeed == snapshot.randomSeed &&
+                randomCounter == snapshot.randomCounter &&
+                currentTimeStep == snapshot.currentTimeStep &&
+                Arrays.equals(fish, snapshot.fish) &&
+                Arrays.equals(fishEggs, snapshot.fishEggs) &&
+                Arrays.equals(carcasses, snapshot.carcasses) &&
+                Arrays.equals(vessels, snapshot.vessels) &&
+                Arrays.equals(planktonDensities, snapshot.planktonDensities);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(width, height, numFish, numFishEgg, numCarcass, numVessels, randomSeed, randomCounter, currentTimeStep);
+        result = 31 * result + Arrays.hashCode(fish);
+        result = 31 * result + Arrays.hashCode(fishEggs);
+        result = 31 * result + Arrays.hashCode(carcasses);
+        result = 31 * result + Arrays.hashCode(vessels);
+        result = 31 * result + Arrays.hashCode(planktonDensities);
+        return result;
+    }
 }
+

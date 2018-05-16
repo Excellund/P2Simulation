@@ -58,6 +58,7 @@ public class SnapshotTest {
 
     @Test
     public void loadSnapshot() {
-        assertEquals(snapshot, Snapshot.loadSnapshot(path));
+        Snapshot other = Snapshot.loadSnapshot(path);
+        assertTrue(snapshot.equals(other));
     }
 }
