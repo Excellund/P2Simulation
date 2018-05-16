@@ -9,6 +9,7 @@ import utils.CountingRandom;
 import utils.Vector;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class Fish implements Field {
@@ -21,6 +22,27 @@ public class Fish implements Field {
     private FishGenome genome;
     private int matingTimer;
     private boolean isMature;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fish fish = (Fish) o;
+        return Float.compare(fish.health, health) == 0 &&
+                Float.compare(fish.energy, energy) == 0 &&
+                Float.compare(fish.size, size) == 0 &&
+                Float.compare(fish.speed, speed) == 0 &&
+                matingTimer == fish.matingTimer &&
+                isMature == fish.isMature &&
+                Objects.equals(position, fish.position) &&
+                Objects.equals(genome, fish.genome);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(position, health, energy, size, speed, genome, matingTimer, isMature);
+    }
 
     public Fish(FishGenome genome, Vector position) {
         this.genome = genome;

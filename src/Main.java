@@ -6,6 +6,9 @@ import simulation.Settings;
 import ui.UISetup;
 
 public class Main extends Application {
+
+    private static Stage primaryStage;
+
     public static void main(String[] args) {
         Settings.defaultAbbreviated();
         Settings.useAbbreviated();
@@ -15,10 +18,10 @@ public class Main extends Application {
 
     }
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         Scene scene = UISetup.getScene(primaryStage);
+        this.primaryStage = primaryStage;
 
         //initialize the main window
         scene.getStylesheets().add("body.css");
@@ -26,5 +29,9 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.show();
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

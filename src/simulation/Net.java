@@ -6,10 +6,7 @@ import utils.CountingRandom;
 import utils.Vector;
 import utils.VectorTransformer;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Net {
     private List<Fish> fish;
@@ -106,5 +103,22 @@ public class Net {
 
     public List<Fish> getFish() {
         return fish;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Net net = (Net) o;
+        return Float.compare(net.favoredMorphology, favoredMorphology) == 0 &&
+                Objects.equals(fish, net.fish) &&
+                Arrays.equals(entry, net.entry);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(fish, favoredMorphology);
+        result = 31 * result + Arrays.hashCode(entry);
+        return result;
     }
 }
