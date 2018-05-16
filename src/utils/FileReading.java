@@ -56,8 +56,6 @@ public class FileReading {
 
         //List of lists
         collectedLists();
-
-
     }
 
     public List<List> collectedLists() {
@@ -77,7 +75,6 @@ public class FileReading {
 
         return collectedList;
     }
-
     public List<List> getCollectedList() {
         return collectedList;
     }
