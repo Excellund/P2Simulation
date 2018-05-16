@@ -51,15 +51,15 @@ public class FishGenome {
 
     //Creates new genome from a mix of two others
     public FishGenome(FishGenome genomeA, FishGenome genomeB) {
-        float genomeArrayA[] = genomeA.getArray();
-        float genomeArrayB[] = genomeB.getArray();
-        float genomeArrayAA[] = genomeA.parentGenomeA.getArray();
-        float genomeArrayAB[] = genomeA.parentGenomeB.getArray();
-        float genomeArrayBA[] = genomeB.parentGenomeA.getArray();
-        float genomeArrayBB[] = genomeB.parentGenomeB.getArray();
+        float[] genomeArrayA = genomeA.getArray();
+        float[] genomeArrayB = genomeB.getArray();
+        float[] genomeArrayAA = genomeA.parentGenomeA.getArray();
+        float[] genomeArrayAB = genomeA.parentGenomeB.getArray();
+        float[] genomeArrayBA = genomeB.parentGenomeA.getArray();
+        float[] genomeArrayBB = genomeB.parentGenomeB.getArray();
 
         int numGenes = genomeArrayA.length;
-        float genomeResultArray[] = new float[numGenes];
+        float[] genomeResultArray = new float[numGenes];
 
         Random r = CountingRandom.getInstance();
 

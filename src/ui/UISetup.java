@@ -8,12 +8,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import simulation.Engine;
-import simulation.Settings;
-import simulation.Simulation;
-import simulation.Snapshot;
+import simulation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -291,8 +289,23 @@ public class UISetup {
                     }
                 }
 
-                Snapshot snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
-                simulation.applySnapshot(snapshot);
+                Snapshot snapshot = null;
+                try {
+                    snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
+                    simulation.applySnapshot(snapshot);
+                } catch (InvalidFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot load error");
+                    alert.setHeaderText("Invalid snapshot format");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot load error");
+                    alert.setHeaderText("Encountedred IO exception");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                }
             }
 
             engine.setIsPaused(pausedState);
@@ -325,7 +338,15 @@ public class UISetup {
                 }
 
                 Snapshot snapshot = new Snapshot(simulation);
-                Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
+                try {
+                    Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot save error");
+                    alert.setHeaderText("Encountered IO exception");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                }
             }
 
             engine.setIsPaused(pausedState);

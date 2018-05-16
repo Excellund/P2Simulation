@@ -458,7 +458,7 @@ public class Fish implements Field {
 
     private boolean[][] getSurroundingTileValidity(SimulationSpace space, int radius) {
         int seekSquareLength = radius * 2 + 1;
-        boolean validTiles[][] = new boolean[seekSquareLength][seekSquareLength];
+        boolean[][] validTiles = new boolean[seekSquareLength][seekSquareLength];
 
         for (int y = 0; y < seekSquareLength; y++) {
             for (int x = 0; x < seekSquareLength; x++) {
@@ -471,7 +471,7 @@ public class Fish implements Field {
 
     private float[][] calculateSurroundingTileRatings(SimulationSpace space, boolean[][] tileValid, int radius) {
         int seekSquareLength = radius * 2 + 1;
-        float tileRatings[][] = new float[seekSquareLength][seekSquareLength];
+        float[][] tileRatings = new float[seekSquareLength][seekSquareLength];
         Vector currentPosition;
 
         for (int y = 0; y < seekSquareLength; y++) {
@@ -510,8 +510,8 @@ public class Fish implements Field {
 
         //Find bounding box coordinates
         int numAreas = 4;
-        Vector mins[] = new Vector[4];
-        Vector maxs[] = new Vector[4];
+        Vector[] mins = new Vector[4];
+        Vector[] maxs = new Vector[4];
 
         mins[0] = min;
         maxs[0] = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
