@@ -74,9 +74,8 @@ public class UISetup {
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
-        Menu menuTools = new Menu("Tools");
 
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuView, menuTools);
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
         MenuItem itemNavigator = new MenuItem("Navigator");
         MenuItem itemStatistics = new MenuItem("Statistics");
