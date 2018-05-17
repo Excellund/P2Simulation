@@ -23,27 +23,6 @@ public class Fish implements Field {
     private int matingTimer;
     private boolean isMature;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Fish fish = (Fish) o;
-        return Float.compare(fish.health, health) == 0 &&
-                Float.compare(fish.energy, energy) == 0 &&
-                Float.compare(fish.size, size) == 0 &&
-                Float.compare(fish.speed, speed) == 0 &&
-                matingTimer == fish.matingTimer &&
-                isMature == fish.isMature &&
-                Objects.equals(position, fish.position) &&
-                Objects.equals(genome, fish.genome);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(position, health, energy, size, speed, genome, matingTimer, isMature);
-    }
-
     public Fish(FishGenome genome, Vector position) {
         this.genome = genome;
         this.position = position;
@@ -66,35 +45,27 @@ public class Fish implements Field {
         this.isMature = isMature;
     }
 
-    //How compatible a fish is with another. This determines the likelihood of them mating.
-    public float getCompatibility(Fish other) {
-        float genomeSimilarity = genome.calculateSimilarity(other.genome);
-
-        return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
-    }
-
     @Override
     public void update(SimulationSpace space) {
-        move(space); //move towards optimal tile
+        handleMovement(space); //Find and move towards optimal tile
+        handleInteraction(space); //Find and perform desired action with environment
 
-        Tile currentTile = space.getTile(position);
-
-        performAction(currentTile, space); //interact with environment
-
+        //Subtract passive energy loss
         energy -= size * Settings.FISH_SIZE_PENALTY +
                 speed * Settings.FISH_SPEED_PENALTY +
                 genome.getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
                 genome.getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
                 genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY;
 
+        //Handle growth and maturity
         if (size < genome.getSize()) {
             size += Settings.FISH_GROWTH_RATE_PER_TIMESTEP;
         } else if (!isMature) {
             isMature = true;
         }
 
-        if (energy <= 10) //maintain health based on energy level
-        {
+        //Maintain health based on energy level
+        if (energy <= 10) {
             health -= Settings.HEALTH_REDUCTION_ON_LOW_ENERGY;
         } else if (energy >= Settings.MIN_ENERGY_HEALTH_INCREASE) {
             health += Settings.ENERGY_HEALTH_INCREASE;
@@ -106,19 +77,25 @@ public class Fish implements Field {
 
         --matingTimer;
 
-        if (!isAlive()) //check whether fish should be removed
-        {
+        //Check whether fish should be removed
+        if (!isAlive()) {
             space.queueRemoveField(this);
         }
     }
 
-    private void performAction(Tile currentTile, SimulationSpace space) {
-        float energyQuotient = 1 - (energy / (size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS));
-        float planktonDesire = nearbyPlanktonRating(currentTile) * energyQuotient;
-        float matingDesire = nearbyMatingRating(currentTile);
-        float predationDesire = nearbyPredationRating(currentTile) * energyQuotient;
-        float scavengingDesire = nearbyScavengingRating(currentTile) * energyQuotient;
+    //Handles interaction on the current tile for the fish
+    private void handleInteraction(SimulationSpace space) {
+        Tile currentTile = space.getTile(position);
 
+        float energyQuotient = 1 - (energy / (size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS));
+
+        //Calculate desires
+        float planktonDesire = calculateTilePlanktonRating(currentTile) * energyQuotient;
+        float matingDesire = calculateTileMatingRating(currentTile);
+        float predationDesire = calculateTilePredationRating(currentTile) * energyQuotient;
+        float scavengingDesire = calculateTileScavengingRating(currentTile) * energyQuotient;
+
+        //Interact according to highest desire
         if (planktonDesire >= matingDesire && planktonDesire >= predationDesire && planktonDesire >= scavengingDesire) {
             interactWithPlankton(space);
         } else if (matingDesire >= planktonDesire && matingDesire >= predationDesire && matingDesire >= scavengingDesire) {
@@ -129,19 +106,26 @@ public class Fish implements Field {
             interactWithMostNutritious(currentTile.getFields(), space);
         }
 
+        //Limit energy
         if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
             energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
         }
     }
 
-    private void move(SimulationSpace space) {
-        int radius = (int) Settings.VISION_RANGE > 1 ? (int) Settings.VISION_RANGE - 1 : 1;
-        boolean[][] tileValid = getSurroundingTileValidity(space, radius);
-        float[][] tileRatings = calculateSurroundingTileRatings(space, tileValid, radius);
+    //Handles movement for the fish
+    private void handleMovement(SimulationSpace space) {
+        int visionRadius = (int) Settings.VISION_RANGE > 1 ? (int) Settings.VISION_RANGE - 1 : 1; //Ensure vision radius is a valid value
 
-        Vector newPos = findOptimalTile(tileRatings, tileValid, new Vector(0, 0), new Vector(radius * 2, radius * 2));
+        //Get tile ratings
+        boolean[][] tileValid = getSurroundingTileValidity(space, visionRadius);
+        float[][] tileRatings = calculateSurroundingTileRatings(space, tileValid, visionRadius);
 
-        newPos = Vector.subtract(newPos, new Vector(radius, radius));
+        Vector newPos = findOptimalTile(tileRatings, tileValid, new Vector(0, 0), new Vector(visionRadius * 2, visionRadius * 2));
+
+        //Subtract vision radius from the position vector to get a vector pointing to the optimal tile relative to the fish' position
+        newPos = Vector.subtract(newPos, new Vector(visionRadius, visionRadius));
+
+        //Get an absolute vector pointing to the optimal tile
         newPos = Vector.add(position, newPos);
         moveTowards(newPos, space);
     }
@@ -187,6 +171,13 @@ public class Fish implements Field {
         }
     }
 
+    //How compatible a fish is with another
+    public float getCompatibility(Fish other) {
+        float genomeSimilarity = genome.calculateSimilarity(other.genome);
+
+        return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
+    }
+
     private void interactWithWeakestFish(List<Field> fields, SimulationSpace space) {
         float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
@@ -215,6 +206,7 @@ public class Fish implements Field {
         float bestCompatibility = 0;
         Fish mostCompatible = null;
 
+        //Find most compatible
         for (Field currentField : fields) {
             if (currentField instanceof Fish && currentField != this) {
                 float currentCompatibility = getCompatibility((Fish) currentField);
@@ -226,37 +218,44 @@ public class Fish implements Field {
             }
         }
 
+        //Interact with most compatible fish, if exists
         if (mostCompatible != null) {
             interact(mostCompatible, space);
         }
     }
 
+    //Moves towards a tile based on the fish' speed
     private void moveTowards(Vector target, SimulationSpace space) {
         Vector newPosition = new Vector(position.x, position.y);
 
-        for (int i = 0; i < (1 + speed * Settings.MAX_MOVES_CORRESPONDING_TO_SPEED); ++i) {
+        float numMoves = (1 + speed * Settings.MAX_MOVES_CORRESPONDING_TO_SPEED);
+        for (int i = 0; i < numMoves; ++i) {
             if (newPosition.equals(target)) {
                 break;
             }
 
+            //Determine direction on x axis
             if (newPosition.x < target.x && newPosition.x < space.getWidth() - 1) {
                 ++newPosition.x;
             } else if (newPosition.x > target.x && newPosition.x > 0) {
                 --newPosition.x;
             }
 
+            //Determine direction on y axis
             if (newPosition.y < target.y && newPosition.y < space.getHeight() - 1) {
                 ++newPosition.y;
             } else if (newPosition.y > target.y && newPosition.y > 0) {
                 --newPosition.y;
             }
 
+            //Subtract energy for each move
             energy -= size * speed * Settings.ENERGY_SPEED_CORRELATION;
 
             if (energy < 0) {
                 energy = 0;
             }
         }
+
 
         space.moveField(newPosition, this);
     }
@@ -306,40 +305,45 @@ public class Fish implements Field {
         other.subtractHealth(damage);
     }
 
+    //Mates fish with other fish and creates offspring
     private void mate(Fish mate, SimulationSpace space) {
+        //Subtract energy from both fish
         this.energy -= Settings.MATING_ENERGY_CONSUMPTION * size;
         mate.energy -= Settings.MATING_ENERGY_CONSUMPTION * mate.getSize();
 
-        FishGenome offSpringGenome = new FishGenome(this.genome, mate.getGenome());
-
-        int numEggs = (int) ((Settings.MATING_ENERGY_CONSUMPTION * size + Settings.MATING_ENERGY_CONSUMPTION * mate.getSize()) / Settings.ENERGY_PER_EGG);
-
-        FishEgg offSpring = new FishEgg(position, offSpringGenome, numEggs);
-
+        //Reset mating timer
         matingTimer = (int) Settings.MATING_DELAY;
         mate.matingTimer = (int) Settings.MATING_DELAY;
 
-        space.queueAddField(offSpring);
+        //Create offspring
+        FishGenome offspringGenome = new FishGenome(this.genome, mate.getGenome());
+        int numEggs = (int) ((Settings.MATING_ENERGY_CONSUMPTION * size + Settings.MATING_ENERGY_CONSUMPTION * mate.getSize()) / Settings.ENERGY_PER_EGG);
+        FishEgg offspring = new FishEgg(position, offspringGenome, numEggs);
+
+        space.queueAddField(offspring);
     }
 
+    //Calculates the total rating for a tile
     private float calculateTileRating(Tile tile, Vector position, SimulationSpace space) {
         float rating = 0;
 
-        rating += nearbyPlanktonRating(tile);
-        rating += nearbyMatingRating(tile);
-        rating += nearbyScavengingRating(tile);
-        rating += nearbyPredationRating(tile);
-        rating += nearbySchoolingRating(position, space);
-        rating -= nearbyPredatorRating(tile);
+        rating += calculateTilePlanktonRating(tile);
+        rating += calculateTileMatingRating(tile);
+        rating += calculateTileScavengingRating(tile);
+        rating += calculateTilePredationRating(tile);
+        rating += calculateTileSchoolingRating(position, space);
+        rating -= calculateTilePredatorRating(tile);
 
         return rating;
     }
 
-    private float nearbyPlanktonRating(Tile tile) {
+    //Calculates plankton rating for a specific tile
+    private float calculateTilePlanktonRating(Tile tile) {
         return (tile.getMuDensity() / 1000000f) * genome.getHerbivoreTendency();
     }
 
-    private float nearbyScavengingRating(Tile tile) {
+    //Calculates scavenging rating for a specific tile
+    private float calculateTileScavengingRating(Tile tile) {
         float bestRating = 0;
 
         for (Field currentField : tile.getFields()) {
@@ -363,7 +367,8 @@ public class Fish implements Field {
         return bestRating;
     }
 
-    private float nearbyPredationRating(Tile tile) {
+    //Calculates predation rating for a specific tile (Based on own predation tendency)
+    private float calculateTilePredationRating(Tile tile) {
         float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
 
@@ -383,7 +388,8 @@ public class Fish implements Field {
         return bestRating;
     }
 
-    private float nearbySchoolingRating(Vector position, SimulationSpace space) {
+    //Calculates schooling rating for a specific tile
+    private float calculateTileSchoolingRating(Vector position, SimulationSpace space) {
         int radius = 5;
         float bestRating = 0;
         int offset = CountingRandom.getInstance().nextInt(3) - 1;
@@ -419,7 +425,8 @@ public class Fish implements Field {
         return bestRating * genome.getSchoolingTendency();
     }
 
-    private float nearbyMatingRating(Tile tile) {
+    //Calculates mating rating for a specific tile
+    private float calculateTileMatingRating(Tile tile) {
         float bestCompatibility = 0;
 
         if (energy >= Settings.MIN_ENERGY_MATING && matingTimer <= 0 && isMature) {
@@ -437,7 +444,8 @@ public class Fish implements Field {
         return bestCompatibility;
     }
 
-    private float nearbyPredatorRating(Tile tile) {
+    //Calculates predator rating for a specific tile (Based on predators on tile)
+    private float calculateTilePredatorRating(Tile tile) {
         float worstRating = 0;
 
         for (Field currentField : tile.getFields()) {
@@ -456,6 +464,7 @@ public class Fish implements Field {
         return worstRating / size;
     }
 
+    //Gets a 2 dimensional boolean array indicating whether nearby tiles are valid
     private boolean[][] getSurroundingTileValidity(SimulationSpace space, int radius) {
         int seekSquareLength = radius * 2 + 1;
         boolean[][] validTiles = new boolean[seekSquareLength][seekSquareLength];
@@ -469,6 +478,7 @@ public class Fish implements Field {
         return validTiles;
     }
 
+    //Calculates a 2 dimensional float array representing ratings of nearby tiles
     private float[][] calculateSurroundingTileRatings(SimulationSpace space, boolean[][] tileValid, int radius) {
         int seekSquareLength = radius * 2 + 1;
         float[][] tileRatings = new float[seekSquareLength][seekSquareLength];
@@ -486,6 +496,7 @@ public class Fish implements Field {
         return tileRatings;
     }
 
+    //Sums the values in a 2 dimensional array
     private float sumTiles(float[][] tiles, boolean tileValidity[][], Vector min, Vector max) {
         float sum = 0;
 
@@ -504,15 +515,18 @@ public class Fish implements Field {
         float dx = max.x - min.x;
         float dy = max.y - min.y;
 
+        //If min and max are equal there are no more sub-areas to calculate
         if (dx == 0 && dy == 0) {
             return min;
         }
 
-        //Find bounding box coordinates
         int numAreas = 4;
+
+        //Bounding boxes
         Vector[] mins = new Vector[4];
         Vector[] maxs = new Vector[4];
 
+        //Find bounding box coordinates
         mins[0] = min;
         maxs[0] = new Vector(min.x + (int) Math.floor(dx / 2), min.y + (int) Math.floor(dy / 2));
         mins[1] = new Vector(min.x + (int) Math.ceil(dy / 2), min.y);
@@ -528,30 +542,34 @@ public class Fish implements Field {
             sums[i] = sumTiles(tileRatings, tileValidity, mins[i], maxs[i]);
         }
 
-        int maxSumIndex = findMaxSumIndex(sums);
+        int maxSumIndex = findMaxIndex(sums);
 
         //Do function recursively at sub-area
         return findOptimalTile(tileRatings, tileValidity, mins[maxSumIndex], maxs[maxSumIndex]);
     }
 
-    private int findMaxSumIndex(float[] sums) {
-        //Find max value, starting at a random index.
+    //Finds the index containing the maximum value. The checks are done starting from a random index, to ensure a different direction is picked, in case all values are equal
+    private int findMaxIndex(float[] values) {
+        //Get random starting index
         Random random = CountingRandom.getInstance();
         int startIndex = random.nextInt(4);
+
         float maxSum = 0;
-        int numAreas = sums.length;
+        int numAreas = values.length;
         int maxSumIndex = startIndex;
 
+        //Iterate from chosen random starting index to end of array
         for (int i = startIndex; i < numAreas; i++) {
-            if (sums[i] > maxSum + 0.001) {
-                maxSum = sums[i];
+            if (values[i] > maxSum + 0.001) { //Add a small value to avoid precision errors
+                maxSum = values[i];
                 maxSumIndex = i;
             }
         }
 
+        //Iterate from 0 to chosen starting index
         for (int i = 0; i < startIndex; i++) {
-            if (sums[i] > maxSum + 0.001) {
-                maxSum = sums[i];
+            if (values[i] > maxSum + 0.001) { //Add a small value to avoid precision errors
+                maxSum = values[i];
                 maxSumIndex = i;
             }
         }
@@ -572,6 +590,7 @@ public class Fish implements Field {
 
     @Override
     public Color getColor() {
+        //Return based on settings (either color from genome or color from tendencies)
         if (Settings.COLOR_BY_TENDENCY < 1) {
             return genome.getColor();
         } else {
@@ -619,5 +638,26 @@ public class Fish implements Field {
 
     public void subtractHealth(float amount) {
         health -= amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fish fish = (Fish) o;
+        return Float.compare(fish.health, health) == 0 &&
+                Float.compare(fish.energy, energy) == 0 &&
+                Float.compare(fish.size, size) == 0 &&
+                Float.compare(fish.speed, speed) == 0 &&
+                matingTimer == fish.matingTimer &&
+                isMature == fish.isMature &&
+                Objects.equals(position, fish.position) &&
+                Objects.equals(genome, fish.genome);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(position, health, energy, size, speed, genome, matingTimer, isMature);
     }
 }

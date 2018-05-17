@@ -69,14 +69,14 @@ public class Simulation {
             for (int x = 0; x < space.getWidth(); ++x) {
                 Tile current = space.getTile(x, y);
                 if (current.getMuDensity() < Settings.MAX_PLANKTON) {
-                    current.addDensity(calculateTilePlanktonGrowth(current, new Vector(x, y)));
+                    current.addDensity(calculateTilePlanktonGrowth(new Vector(x, y)));
                     current.addDensity((int) (Settings.PLANKTON_GROWTH_PER_TIMESTEP / 400));
                 }
             }
         }
     }
 
-    private int calculateTilePlanktonGrowth(Tile tile, Vector position) {
+    private int calculateTilePlanktonGrowth(Vector position) {
         Vector min = new Vector(position.x - 1, position.y - 1);
         Vector max = new Vector(position.x + 1, position.y + 1);
         float sum = 0;

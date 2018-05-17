@@ -38,13 +38,14 @@ public class Snapshot {
     public Snapshot(Simulation sim) {
         width = sim.getSpace().getWidth();
         height = sim.getSpace().getHeight();
-        numFish = 0;
-        numFishEgg = 0;
-        numCarcass = 0;
         numVessels = sim.getVessels().size();
         randomSeed = CountingRandom.getInstance().getInitialSeed();
         randomCounter = CountingRandom.getInstance().getCounter();
         currentTimeStep = sim.getCurrentTimeStep();
+
+        numFish = 0;
+        numFishEgg = 0;
+        numCarcass = 0;
 
         //Get number of Fish, FishEggs, Carcasses
         for (Field field : sim.getSpace()) {
@@ -93,7 +94,7 @@ public class Snapshot {
 
     public static void saveSnapshot(String path, Snapshot snapshot) throws IOException {
         //Wrap stream in try-catch to handle automatic disposing of stream
-        try(OutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get(path)))) {
+        try (OutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get(path)))) {
             //Write header containing metadata
             writeInt(stream, snapshot.width);
             writeInt(stream, snapshot.height);
@@ -150,7 +151,7 @@ public class Snapshot {
         Snapshot snapshot = new Snapshot();
 
         //Wrap stream in try-catch to handle automatic disposing of stream
-        try(InputStream stream = new BufferedInputStream(Files.newInputStream(Paths.get(path)))) {
+        try (InputStream stream = new BufferedInputStream(Files.newInputStream(Paths.get(path)))) {
             //Read header containing metadata
             snapshot.width = readInt(stream);
             snapshot.height = readInt(stream);
@@ -190,7 +191,7 @@ public class Snapshot {
                 }
             }
 
-            //Ensure we're at a separation between two different data block
+            //Ensure we're at a separation between two different data blocks
             if (stream.read() != GROUP_SEPARATOR) {
                 throw new InvalidFormatException(3);
             }
@@ -235,7 +236,7 @@ public class Snapshot {
                 }
             }
 
-            //Ensure we're at a separation between two different data block
+            //Ensure we're at a separation between two different data blocks
             if (stream.read() != GROUP_SEPARATOR) {
                 throw new InvalidFormatException(6);
             }
@@ -246,31 +247,38 @@ public class Snapshot {
         return snapshot;
     }
 
+    //Writes a int to a stream
     private static void writeInt(OutputStream stream, int value) throws IOException {
         stream.write(ByteBuffer.allocate(Integer.BYTES).putInt(value).array());
     }
 
+    //Writes a long to a stream
     private static void writeLong(OutputStream stream, long value) throws IOException {
         stream.write(ByteBuffer.allocate(Long.BYTES).putLong(value).array());
     }
 
+    //Writes a float to a stream
     private static void writeFloat(OutputStream stream, float value) throws IOException {
         stream.write(ByteBuffer.allocate(Float.BYTES).putFloat(value).array());
     }
 
+    //Writes a double to a stream
     private static void writeDouble(OutputStream stream, double value) throws IOException {
         stream.write(ByteBuffer.allocate(Double.BYTES).putDouble(value).array());
     }
 
+    //Writes a boolean to a stream
     private static void writeBoolean(OutputStream stream, boolean value) throws IOException {
         stream.write(value ? 1 : 0);
     }
 
+    //Writes a Vector to a stream
     private static void writeVector(OutputStream stream, Vector vec) throws IOException {
         writeInt(stream, vec.x);
         writeInt(stream, vec.y);
     }
 
+    //Writes a FishGenome to a stream
     private static void writeFishGenome(OutputStream stream, FishGenome genome) throws IOException {
 
         //Write parent A genome
@@ -292,6 +300,7 @@ public class Snapshot {
         }
     }
 
+    //Writes a Fish to a stream
     private static void writeFish(OutputStream stream, Fish fish) throws IOException {
         writeVector(stream, fish.getPosition());
         writeFloat(stream, fish.getHealth());
@@ -303,6 +312,7 @@ public class Snapshot {
         writeBoolean(stream, fish.isMature());
     }
 
+    //Writes a FishEgg to a stream
     private static void writeFishEgg(OutputStream stream, FishEgg egg) throws IOException {
         writeVector(stream, egg.getPosition());
         writeInt(stream, egg.getNumEggs());
@@ -310,11 +320,13 @@ public class Snapshot {
         writeFishGenome(stream, egg.getGenome());
     }
 
+    //Writes a Carcass to a stream
     private static void writeCarcass(OutputStream stream, Carcass carcass) throws IOException {
         writeVector(stream, carcass.getPosition());
         writeInt(stream, carcass.getNutrition());
     }
 
+    //Writes a vessel to a stream
     private static void writeVessel(OutputStream stream, Vessel vessel) throws IOException {
         writeInt(stream, vessel.getQuota());
         writeVector(stream, vessel.getBow());
@@ -330,6 +342,7 @@ public class Snapshot {
         }
     }
 
+    //Reads a int from a stream
     private static int readInt(InputStream stream) throws IOException, InvalidFormatException {
         byte[] bytes = new byte[Integer.BYTES];
 
@@ -341,6 +354,7 @@ public class Snapshot {
         return buf.getInt(0);
     }
 
+    //Reads a long from a stream
     private static long readLong(InputStream stream) throws IOException, InvalidFormatException {
         byte[] bytes = new byte[Long.BYTES];
 
@@ -352,6 +366,7 @@ public class Snapshot {
         return buf.getLong(0);
     }
 
+    //Reads a float from a stream
     private static float readFloat(InputStream stream) throws IOException, InvalidFormatException {
         byte[] bytes = new byte[Float.BYTES];
 
@@ -363,6 +378,7 @@ public class Snapshot {
         return buf.getFloat(0);
     }
 
+    //Reads a double from a stream
     private static double readDouble(InputStream stream) throws IOException, InvalidFormatException {
         byte[] bytes = new byte[Double.BYTES];
 
@@ -374,6 +390,7 @@ public class Snapshot {
         return buf.getDouble(0);
     }
 
+    //Reads a boolean from a stream
     private static boolean readBoolean(InputStream stream) throws IOException, InvalidFormatException {
         int value = stream.read();
 
@@ -384,23 +401,28 @@ public class Snapshot {
         return value > 0;
     }
 
+    //Reads a Vector from a stream
     private static Vector readVector(InputStream stream) throws IOException, InvalidFormatException {
         return new Vector(readInt(stream), readInt(stream));
     }
 
+    //Reads a FishGenome from a stream
     private static FishGenome readFishGenome(InputStream stream) throws IOException, InvalidFormatException {
         float[] attributesParentA = new float[FishGenome.NUM_ATTRIBUTES];
         float[] attributesParentB = new float[FishGenome.NUM_ATTRIBUTES];
         float[] attributes = new float[FishGenome.NUM_ATTRIBUTES];
 
+        //Read parent a genome
         for (int i = 0; i < FishGenome.NUM_ATTRIBUTES; i++) {
             attributesParentA[i] = readFloat(stream);
         }
 
+        //Read parent b genome
         for (int i = 0; i < FishGenome.NUM_ATTRIBUTES; i++) {
             attributesParentB[i] = readFloat(stream);
         }
 
+        //Read genome
         for (int i = 0; i < FishGenome.NUM_ATTRIBUTES; i++) {
             attributes[i] = readFloat(stream);
         }
@@ -410,6 +432,7 @@ public class Snapshot {
         return new FishGenome(attributes, parentA, parentB);
     }
 
+    //Reads a Fish from a stream
     private static Fish readFish(InputStream stream) throws IOException, InvalidFormatException {
         Vector position = readVector(stream);
         float health = readFloat(stream);
@@ -423,6 +446,7 @@ public class Snapshot {
         return new Fish(position, health, energy, size, speed, genome, matingTimer, isMature);
     }
 
+    //Reads a FishEgg from a stream
     private static FishEgg readFishEgg(InputStream stream) throws IOException, InvalidFormatException {
         Vector position = readVector(stream);
         int numEggs = readInt(stream);
@@ -432,6 +456,7 @@ public class Snapshot {
         return new FishEgg(position, numEggs, timeBeforeHatch, genome);
     }
 
+    //Reads a Carcass from a stream
     private static Carcass readCarcass(InputStream stream) throws IOException, InvalidFormatException {
         Vector position = readVector(stream);
         int nutrition = readInt(stream);
@@ -439,6 +464,7 @@ public class Snapshot {
         return new Carcass(nutrition, position);
     }
 
+    //Reads a Vessel from a stream
     private static Vessel readVessel(InputStream stream) throws IOException, InvalidFormatException {
         int quota = readInt(stream);
         Vector bow = readVector(stream);
