@@ -1,6 +1,8 @@
 package simulation.fields;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import simulation.FishGenome;
 import simulation.Settings;
 import simulation.SimulationSpace;
@@ -8,7 +10,6 @@ import utils.Color;
 import utils.Vector;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

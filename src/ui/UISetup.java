@@ -93,7 +93,7 @@ public class UISetup {
         });
 
         itemStatistics.setOnAction(event -> {
-            if (statistics.getParent() == null){
+            if (statistics.getParent() == null) {
                 areaTwo.getChildren().add(engine.getStatisticsUI(375, dragListener));
 
             }
@@ -184,7 +184,6 @@ public class UISetup {
         });
         return graphContainer;
     }
-
 
 
     private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine) {

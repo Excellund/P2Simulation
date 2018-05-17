@@ -89,8 +89,8 @@ public class Settings {
         abbreviated.put("ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE", 0.02f);
         abbreviated.put("COMPATIBILITY_STEEPNESS", 40f);
         abbreviated.put("COMPATIBILITY_MIDPOINT", 0.75f);
-        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 8f);
-        abbreviated.put("MUTATION_GAUSSIAN_VARIANCE", 0.30f);
+        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 6f);
+        abbreviated.put("MUTATION_GAUSSIAN_VARIANCE", 0.20f);
         abbreviated.put("NUTRITION_PER_SIZE_POINT", 0.01f);
         abbreviated.put("MIN_ENERGY_MATING", 90f);
         abbreviated.put("MATING_ENERGY_CONSUMPTION", 140f);
@@ -99,18 +99,18 @@ public class Settings {
         abbreviated.put("HEALTH_REDUCTION_ON_LOW_ENERGY", 10f);
         abbreviated.put("MIN_ENERGY_HEALTH_INCREASE", 80f);
         abbreviated.put("ENERGY_HEALTH_INCREASE", 5f);
-        abbreviated.put("TIME_BEFORE_HATCH", 50f);
+        abbreviated.put("TIME_BEFORE_HATCH", 200f);
         abbreviated.put("CARCASS_DECAY_PER_TIMESTEP", 0.2f);
         abbreviated.put("MAX_MOVES_CORRESPONDING_TO_SPEED", 3f);
         abbreviated.put("ENERGY_SPEED_CORRELATION", 90f);
         abbreviated.put("MATING_DELAY", 600f);
         abbreviated.put("VISION_RANGE", 3f);
         abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.03f);
-        abbreviated.put("FISH_SIZE_PENALTY", 2.0f); //TODO: UI
-        abbreviated.put("FISH_SPEED_PENALTY", 2.0f); //TODO: UI
-        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 10.0f); //TODO: UI
-        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 2.0f); //TODO: UI
-        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 2.0f); //TODO: UI
+        abbreviated.put("FISH_SIZE_PENALTY", 0.5f);
+        abbreviated.put("FISH_SPEED_PENALTY", 3.0f);
+        abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 10.0f);
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 10.0f);
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 4.0f);
         abbreviated.put("COLOR_BY_TENDENCY", 1.0f);
 
         abbreviated.put("MAX_MORPHOLOGY", 0.8f);

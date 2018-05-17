@@ -42,7 +42,8 @@ public class Simulation {
 
             FishGenome genome = new FishGenome(initialGenome);
             genome.mutate();
-            Field fish = new Fish(genome, new Vector(posX, posY));
+            Fish fish = new Fish(genome, new Vector(posX, posY));
+            fish.addEnergy(500);
 
             space.addField(fish);
 

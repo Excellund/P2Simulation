@@ -75,6 +75,7 @@ public class FileReading {
 
         return collectedList;
     }
+
     public List<List> getCollectedList() {
         return collectedList;
     }

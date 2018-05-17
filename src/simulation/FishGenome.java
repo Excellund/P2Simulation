@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.fields.Fish;
 import utils.Color;
 import utils.CountingRandom;
 
@@ -242,25 +243,16 @@ public class FishGenome {
 
     //Removes unneeded references to grandgrandparents genomes in order to reclaim memory
     private void stripUnneededGenomeReferences() {
-        if (parentGenomeA != null) {
-            if (parentGenomeA.parentGenomeA != null) {
-                parentGenomeA.parentGenomeA.parentGenomeA = null;
-                parentGenomeA.parentGenomeA.parentGenomeB = null;
-            }
-            if (parentGenomeA.parentGenomeB != null) {
-                parentGenomeA.parentGenomeB.parentGenomeA = null;
-                parentGenomeA.parentGenomeB.parentGenomeB = null;
-            }
-        }
-        if (parentGenomeB != null) {
-            if (parentGenomeB.parentGenomeA != null) {
-                parentGenomeB.parentGenomeA.parentGenomeA = null;
-                parentGenomeB.parentGenomeA.parentGenomeB = null;
-            }
-            if (parentGenomeB.parentGenomeB != null) {
-                parentGenomeB.parentGenomeB.parentGenomeA = null;
-                parentGenomeB.parentGenomeB.parentGenomeB = null;
-            }
+        stripGenomeReference(parentGenomeA);
+        stripGenomeReference(parentGenomeB);
+    }
+
+    private void stripGenomeReference(FishGenome genome) {
+        if (genome != null) {
+            stripGenomeReference(genome.parentGenomeA);
+            stripGenomeReference(genome.parentGenomeB);
+            genome.parentGenomeA = null;
+            genome.parentGenomeB = null;
         }
     }
 

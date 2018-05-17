@@ -51,11 +51,11 @@ public class Fish implements Field {
         handleInteraction(space); //Find and perform desired action with environment
 
         //Subtract passive energy loss
-        energy -= size * Settings.FISH_SIZE_PENALTY +
-                speed * Settings.FISH_SPEED_PENALTY +
+        energy -= size *
+                (speed * Settings.FISH_SPEED_PENALTY +
                 genome.getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
                 genome.getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
-                genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY;
+                genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY);
 
         //Handle growth and maturity
         if (size < genome.getSize()) {
@@ -130,26 +130,32 @@ public class Fish implements Field {
         moveTowards(newPos, space);
     }
 
+    //Interacts with plankton on current tile
     private void interactWithPlankton(SimulationSpace space) {
         Tile tile = space.getTile(position);
 
         if (size * Settings.MAX_FISH_SIZE > (tile.getMuDensity() / 1000f)) {
-            energy += tile.getMuDensity() / 1000f;
+            addEnergy(tile.getMuDensity() / 1000f * genome.getHerbivoreEfficiency());
         } else {
-            energy += size * Settings.MAX_FISH_SIZE;
+            addEnergy(size * Settings.MAX_FISH_SIZE * genome.getHerbivoreEfficiency());
         }
 
         tile.subtractDensity((int) (size * Settings.MAX_FISH_SIZE * 1000f));
     }
 
+    //Interacts with most nutritious carcass or egg on current tile
     private void interactWithMostNutritious(List<Field> fields, SimulationSpace space) {
         float best = 0;
         Field mostNutritious = null;
 
+        //Find most nutritious
         for (Field currentField : fields) {
             if (currentField instanceof FishEgg) {
-                FishGenome eggGenome = ((FishEgg) currentField).getGenome();
-                float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize();
+                FishEgg egg = (FishEgg) currentField;
+                FishGenome eggGenome = egg.getGenome();
+
+                //TODO: make sure getCompatiblity is called correcly here
+                float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize() / getCompatibility(egg);
 
                 if (current > best) {
                     best = current;
@@ -172,10 +178,18 @@ public class Fish implements Field {
     }
 
     //How compatible a fish is with another
-    public float getCompatibility(Fish other) {
-        float genomeSimilarity = genome.calculateSimilarity(other.genome);
+    public float getCompatibility(FishGenome other) {
+        float genomeSimilarity = genome.calculateSimilarity(other);
 
         return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
+    }
+
+    public float getCompatibility(Fish other) {
+        return getCompatibility(other.genome);
+    }
+
+    public float getCompatibility(FishEgg other) {
+        return getCompatibility(other.getGenome());
     }
 
     private void interactWithWeakestFish(List<Field> fields, SimulationSpace space) {
@@ -255,7 +269,6 @@ public class Fish implements Field {
                 energy = 0;
             }
         }
-
 
         space.moveField(newPosition, this);
     }
@@ -575,6 +588,10 @@ public class Fish implements Field {
         }
 
         return maxSumIndex;
+    }
+
+    public void addEnergy(float amount) {
+        energy += amount;
     }
 
     @Override
