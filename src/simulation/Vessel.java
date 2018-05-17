@@ -18,7 +18,7 @@ public class Vessel {
     private double temporaryX;
     private double temporaryY;
 
-    public Vessel(Vector max) {
+    Vessel(Vector max) {
         //create a randomized vessel within specified bounds
         random = CountingRandom.getInstance();
 
@@ -37,23 +37,7 @@ public class Vessel {
         net = new Net(favoredMorphology);
     }
 
-    public Vessel(int quota, Vector max, float favoredMorphology) {
-        //create a vessel of predefined quota and selection
-        random = CountingRandom.getInstance();
-
-        this.max = max;
-        this.quota = quota;
-
-        bow = randomBow();
-        temporaryX = bow.x;
-        temporaryY = bow.y;
-        newSought();
-        stern = new Vector[2];
-        transform(bow, getOrientation());
-        net = new Net(favoredMorphology);
-    }
-
-    public Vessel(int quota, Vector bow, Vector sought, float favoredMorphology) {
+    Vessel(int quota, Vector bow, Vector sought, float favoredMorphology) {
         //create a vessel of predefined parameters
         this.quota = quota;
         this.bow = bow;
@@ -64,7 +48,7 @@ public class Vessel {
         net = new Net(favoredMorphology);
     }
 
-    public Vessel(int quota, Vector bow, Vector sought, Vector max, double temporaryX, double temporaryY, float netFavoredMorphology, Fish[] netFish) {
+    Vessel(int quota, Vector bow, Vector sought, Vector max, double temporaryX, double temporaryY, float netFavoredMorphology, Fish[] netFish) {
         //create a vessel with full control of vessel fields. This is used for snapshot functionality
         this.quota = quota;
         this.bow = bow;
@@ -215,10 +199,6 @@ public class Vessel {
 
     public Vector getBow() {
         return bow;
-    }
-
-    public Vector[] getStern() {
-        return stern;
     }
 
     public final Vector getSought() {

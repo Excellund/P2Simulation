@@ -13,14 +13,14 @@ public class Net {
     private float favoredMorphology;
     private final double[][] entry = {{-90, -90}, {-10, 10}};
 
-    public Net(float favoredMorphology) {
+    Net(float favoredMorphology) {
         //creates a net with a specified favored selection in terms of length
         this.favoredMorphology = favoredMorphology;
 
         fish = Collections.synchronizedList(new LinkedList<>());
     }
 
-    public Net(float favoredMorphology, Fish[] fish) {
+    Net(float favoredMorphology, Fish[] fish) {
         //creates a net with and initial population of fish.
         //This is used for snapshot functionality.
         this.favoredMorphology = favoredMorphology;

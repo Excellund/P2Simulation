@@ -6,7 +6,7 @@ import utils.Vector;
 
 public interface Field {
     default void update(SimulationSpace space) {
-        return;
+        //do nothing by default
     }
 
     boolean isAlive(); //Should the element still exist?

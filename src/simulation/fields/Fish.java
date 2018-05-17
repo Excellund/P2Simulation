@@ -53,9 +53,9 @@ public class Fish implements Field {
         //Subtract passive energy loss
         energy -= size *
                 (speed * Settings.FISH_SPEED_PENALTY +
-                genome.getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
-                genome.getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
-                genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY);
+                        genome.getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
+                        genome.getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
+                        genome.getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY);
 
         //Handle growth and maturity
         if (size < genome.getSize()) {
@@ -154,8 +154,8 @@ public class Fish implements Field {
                 FishEgg egg = (FishEgg) currentField;
                 FishGenome eggGenome = egg.getGenome();
 
-                //TODO: make sure getCompatiblity is called correcly here
-                float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize() / getCompatibility(egg);
+                float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize();
+                current *= 1 - getCompatibility(egg);
 
                 if (current > best) {
                     best = current;
@@ -275,7 +275,9 @@ public class Fish implements Field {
 
     private void interact(Field currentField, SimulationSpace space) {
         if (currentField instanceof FishEgg) {
-            energy += ((FishEgg) currentField).subtractEggs((int) (size * Settings.MAX_FISH_SIZE)) * Settings.ENERGY_PER_EGG * genome.getCarnivoreEfficiency();
+            int numEggsConsumed = ((FishEgg) currentField).subtractEggs((int) (size * Settings.MAX_FISH_SIZE));
+
+            addEnergy(numEggsConsumed * Settings.ENERGY_PER_EGG * genome.getCarnivoreEfficiency());
 
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
@@ -287,6 +289,7 @@ public class Fish implements Field {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
         } else if (currentField instanceof Fish) {  //future maintainability
+            //Ensure no new eggs or carcasses are places on top existing eggs or carcasses
             for (Field field : space.getTile(position).getFields()) {
                 if (!(field instanceof Fish)) {
                     return; //don't stack eggs or carcasses
@@ -295,7 +298,8 @@ public class Fish implements Field {
 
             float compatibility = getCompatibility((Fish) currentField);
 
-            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING && ((Fish) currentField).getEnergy() >= Settings.MIN_ENERGY_MATING) {
+            Fish currentFish = (Fish) currentField;
+            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING * size && currentFish.getEnergy() >= Settings.MIN_ENERGY_MATING * currentFish.size) {
                 if (matingTimer <= 0 && ((Fish) currentField).getMatingTimer() <= 0 && isMature && ((Fish) currentField).isMature()) {
                     mate((Fish) currentField, space);
                 }
@@ -405,12 +409,15 @@ public class Fish implements Field {
     private float calculateTileSchoolingRating(Vector position, SimulationSpace space) {
         int radius = 5;
         float bestRating = 0;
-        int offset = CountingRandom.getInstance().nextInt(3) - 1;
+        int offset = CountingRandom.getInstance().nextInt(3) - 1; //Do check at a small random offset to avoid patterns
 
         if (genome.getSchoolingTendency() >= 0.3) //schooling is very expensive, should be limited where it's possible
         {
+            //For efficiency purposes y is incremented by two every iteration
             for (int y = position.y - radius + offset; y <= position.y + radius + offset; y += 2) {
                 if (y >= 0 && y < space.getHeight()) {
+
+                    //For efficiency purposes x is incremented by two every iteration
                     for (int x = position.x - radius + offset; x <= position.x + radius + offset; x += 2) {
                         Vector currentPosition = new Vector(x, y);
 
@@ -442,7 +449,7 @@ public class Fish implements Field {
     private float calculateTileMatingRating(Tile tile) {
         float bestCompatibility = 0;
 
-        if (energy >= Settings.MIN_ENERGY_MATING && matingTimer <= 0 && isMature) {
+        if (energy >= Settings.MIN_ENERGY_MATING * size && matingTimer <= 0 && isMature) {
             for (Field currentField : tile.getFields()) {
                 if (currentField instanceof Fish && currentField != this) {
                     float tempCompatibility = getCompatibility((Fish) currentField);
@@ -484,6 +491,7 @@ public class Fish implements Field {
 
         for (int y = 0; y < seekSquareLength; y++) {
             for (int x = 0; x < seekSquareLength; x++) {
+                //Tiles are valid if they are within the bounds of the simulation
                 validTiles[y][x] = space.isWithinBounds(Vector.add(position, new Vector(x - radius, y - radius)));
             }
         }

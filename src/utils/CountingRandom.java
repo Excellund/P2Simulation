@@ -9,6 +9,12 @@ public class CountingRandom extends Random {
     private long initialSeed = 0;
     private long nextCounter = 0;
 
+    private CountingRandom() {
+        super();
+        initialSeed = nextLong();
+        setState(initialSeed, 0);
+    }
+
     //next is called by all of Randoms random functions to generate random values. The number of times it is called is therefore counted, in order to set the state later.
     @Override
     protected int next(int bits) {
@@ -18,7 +24,10 @@ public class CountingRandom extends Random {
 
     //Sets the random state of the simulation
     public void setState(long seed, long counter) {
-        setSeed(seed);
+        initialSeed = seed;
+        nextCounter = counter;
+
+        setSeed(seed); //Use setSeed function inherited from Random class
 
         for (long i = 0; i < counter; i++) {
             next(0);

@@ -37,7 +37,6 @@ public class DataCollector {
     private TextField eggField = new TextField("0");
     private TextField carcassField = new TextField("0");
 
-
     private String latestTimestep;
     private String latestBwd;
     private String latestMorphology;
@@ -51,7 +50,7 @@ public class DataCollector {
     private String latestFishEggs;
     private String latestCarcasses;
 
-    public DataCollector() {
+    DataCollector() {
         flushTimer = 100;
 
         int count = 1;
@@ -73,6 +72,7 @@ public class DataCollector {
     }
 
     public void append(SimulationSpace space, long timestep) {
+        //collects data from the input SimulationSpace and writes it to file
         ArrayList<Fish> fish = getFish(space);
         latestTimestep = String.valueOf(timestep);
         latestBwd = String.valueOf(averageBWD(fish));
@@ -114,19 +114,22 @@ public class DataCollector {
         builder.append('\n');
 
         try {
+            //try to output the collected data
             stream.write(builder.toString());
             --flushTimer;
 
             if (flushTimer == 0) {
+                //empty buffer and reset the flush timer
                 stream.flush();
                 flushTimer = 100;
             }
         } catch (IOException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 
     public void showLatestValues() {
+        //updates the statistics of the UI element (ContentBox)
         timestepField.setText(latestTimestep);
         bwdField.setText(latestBwd);
         morphologyField.setText(latestMorphology);
@@ -142,6 +145,7 @@ public class DataCollector {
     }
 
     public void dispose() {
+        //releases the output stream
         try {
             stream.close();
         } catch (IOException e) {
@@ -149,11 +153,23 @@ public class DataCollector {
         }
     }
 
+    private float biggestTypeQuotient(Fish fish) {
+        FishGenome genome = fish.getGenome();
+
+        float planktivore = genome.getHerbivoreTendency() * genome.getHerbivoreEfficiency();
+        float predator = genome.getPredationTendency() * genome.getCarnivoreEfficiency();
+        float scavenger = genome.getScavengeTendency() * genome.getCarnivoreEfficiency();
+
+        return planktivore > predator ? 0 : (predator > scavenger ? 1 : 2);
+    }
+
     private int carnivoreCount(ArrayList<Fish> fish) {
+        //returns an integer representing the population of carnivores
+        //in the specified list of fish
         int count = 0;
 
         for (Fish subject : fish) {
-            if (subject.getGenome().getPredationTendency() >= 0.5f) {
+            if (biggestTypeQuotient(subject) == 1) {
                 ++count;
             }
         }
@@ -162,10 +178,12 @@ public class DataCollector {
     }
 
     private int scavengerCount(ArrayList<Fish> fish) {
+        //returns an integer representing the population of scavengers
+        //in the specified list of fish
         int count = 0;
 
         for (Fish subject : fish) {
-            if (subject.getGenome().getScavengeTendency() >= 0.5f) {
+            if (biggestTypeQuotient(subject) == 2) {
                 ++count;
             }
         }
@@ -174,10 +192,12 @@ public class DataCollector {
     }
 
     private int planktivoreCount(ArrayList<Fish> fish) {
+        //returns an integer representing the population of planktivores
+        //in the specified list of fish
         int count = 0;
 
         for (Fish subject : fish) {
-            if (subject.getGenome().getHerbivoreTendency() >= 0.5f) {
+            if (biggestTypeQuotient(subject) == 0) {
                 ++count;
             }
         }
@@ -185,24 +205,28 @@ public class DataCollector {
         return count;
     }
 
-    private float averageBWD(ArrayList<Fish> fish) {
-        float sum = 0;
+    private double averageBWD(ArrayList<Fish> fish) {
+        //returns a double between 0 and 1 representing the average %BWD
+        //of the fish in the specified list of fish
+        double sum = 0;
 
         for (Fish subject : fish) {
-            float energyConsumption = subject.getSize() * Settings.FISH_SIZE_PENALTY +
+            double energyConsumption = subject.getSize() * Settings.FISH_SIZE_PENALTY +
                     subject.getSpeed() * Settings.FISH_SPEED_PENALTY +
                     subject.getGenome().getHerbivoreEfficiency() * Settings.FISH_HERBIVORE_EFFICIENCY_PENALTY +
                     subject.getGenome().getCarnivoreEfficiency() * Settings.FISH_CARNIVORE_EFFICIENCY_PENALTY +
                     subject.getGenome().getAttackAbility() * Settings.FISH_ATTACK_ABILITY_PENALTY +
                     subject.getSize() * subject.getSpeed() * Settings.ENERGY_SPEED_CORRELATION;
 
-            sum += energyConsumption / Math.pow((subject.getSize() * Settings.MAX_FISH_SIZE), 3) * 100;
+            sum += energyConsumption / Math.pow(((subject.getSize() + 1E-9) * Settings.MAX_FISH_SIZE), 3) * 100;
         }
 
         return sum / fish.size();
     }
 
     private long carcassCount(SimulationSpace space) {
+        //returns an integer representing the population of carcasses
+        //in the specified SimulationSpace
         long count = 0;
 
         for (Field field : space) {
@@ -215,6 +239,8 @@ public class DataCollector {
     }
 
     private long fishEggCount(SimulationSpace space) {
+        //returns an integer representing the population of eggs
+        //in the specified SimulationSpace
         long count = 0;
 
         for (Field field : space) {
@@ -227,6 +253,8 @@ public class DataCollector {
     }
 
     private double averagePlanktonDensity(SimulationSpace space) {
+        //returns a double representing the average plankton density
+        //in the specified SimulationSpace
         double sum = 0;
 
         for (int y = 0; y < space.getHeight(); ++y) {
@@ -239,6 +267,8 @@ public class DataCollector {
     }
 
     private ArrayList<Fish> getFish(SimulationSpace space) {
+        //Returns a list containing all unique fish
+        //in the specified SimulationSpace
         ArrayList<Fish> fish = new ArrayList<>();
 
         for (Field field : space) {
@@ -251,6 +281,8 @@ public class DataCollector {
     }
 
     private double averageSchoolingTendency(ArrayList<Fish> fish) {
+        //returns a double representing the average schooling tendency
+        //of the fish in the specified list
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -261,6 +293,8 @@ public class DataCollector {
     }
 
     private double averageMaxSpawning(ArrayList<Fish> fish) {
+        //returns a double representing the average spawn count
+        //of the fish in the specified list
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -271,6 +305,8 @@ public class DataCollector {
     }
 
     private double averageMorphology(ArrayList<Fish> fish) {
+        //returns a double representing the average length
+        //of the fish in the specified list
         double sum = 0;
 
         for (Fish subject : fish) {
@@ -281,6 +317,8 @@ public class DataCollector {
     }
 
     public ContentBox getStatisticsUI(double width, DragListener dragListener) {
+        //returns a ContentBox containing regularly updated TextFields
+        //showcasing the statistics of the last call to append()
         ContentBox contentBox = new ContentBox("Statistics", width, dragListener);
         VBox content = new VBox(1);
 
@@ -305,6 +343,7 @@ public class DataCollector {
     }
 
     private HBox getLine(String label, TextField field) {
+        //Returns an HBox containing the specified label and TextField
         HBox line = new HBox(2);
 
         Region spacer = new Region();

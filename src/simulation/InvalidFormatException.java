@@ -1,10 +1,9 @@
 package simulation;
 
 public class InvalidFormatException extends Exception {
+    private int errorCode;
 
-    int errorCode;
-
-    public InvalidFormatException(int errorCode) {
+    InvalidFormatException(int errorCode) {
         this.errorCode = errorCode;
     }
 

@@ -11,10 +11,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class FishEgg implements Field {
-    Vector position;
-    FishGenome genome;
-    int numEggs;
-    int timeBeforeHatch;
+    private Vector position;
+    private FishGenome genome;
+    private int numEggs;
+    private int timeBeforeHatch;
 
     public FishEgg(Vector position, FishGenome genome, int numEggs) {
         this.position = position;
@@ -33,6 +33,9 @@ public class FishEgg implements Field {
 
     @Override
     public void update(SimulationSpace space) {
+        //reduces the hatching timer
+        //if it is 0, each egg has a chance to hatch
+        //removes the object if no eggs remain
         if (timeBeforeHatch <= 0 && numEggs > 0) {
             Random r = CountingRandom.getInstance();
             int hatches = r.nextInt(numEggs) / 4;
@@ -57,6 +60,8 @@ public class FishEgg implements Field {
     }
 
     public int subtractEggs(int amount) {
+        //tries to subtract the specified amount of eggs
+        //returns the actual amount of subtracted eggs
         if (amount > numEggs) {
             int eggs = numEggs;
 

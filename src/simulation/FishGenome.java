@@ -1,6 +1,5 @@
 package simulation;
 
-import simulation.fields.Fish;
 import utils.Color;
 import utils.CountingRandom;
 

@@ -10,7 +10,7 @@ public class Tile {
     private List<Field> fields;
     private int muDensity;
 
-    public Tile(int muDensity) {
+    Tile(int muDensity) {
         //creates a new tile with a specified mu density
         this.muDensity = muDensity;
         fields = Collections.synchronizedList(new ArrayList<>());

@@ -62,11 +62,8 @@ public class Settings {
     //Spawn Vessel
     public static float MORPHOLOGY;
     public static float QUOTAS;
-    //Spawn Plankton
-    public static float ADD_PLANKTON;
     //Launch settings
     public static float NUM_INITIAL_FISH;
-    public static float LOAD_PLANKTON;
     //Graphics settings
     public static float PLANKTON_GAMMA;
     public static float FISH_GAMMA;
@@ -75,24 +72,25 @@ public class Settings {
     private static Map<String, Float> abbreviated = new HashMap<>();
 
     public static void defaultAbbreviated() {
-        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 1300f);
-        abbreviated.put("NUM_VESSELS", 3f);
+        //puts the default settings into the HashMap of settings
+        abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", 2000f);
+        abbreviated.put("NUM_VESSELS", 1f);
         abbreviated.put("MAX_PLANKTON", 140000f);
         abbreviated.put("INITIAL_MAX_PLANKTON_DENSITY", 300000f);
         abbreviated.put("DATACOLLECTOR_APPEND_DELAY", 100f);
 
         abbreviated.put("MAX_FISH_SIZE", 100f);
-        abbreviated.put("ENERGY_PER_EGG", 3f);
+        abbreviated.put("ENERGY_PER_EGG", 2.0f);
         abbreviated.put("MIN_COMPATIBILITY_MATING", 0.8f);
         abbreviated.put("MIN_PREDATION_TENDENCY", 0.2f);
         abbreviated.put("MAX_ATTACK_DAMAGE", 20f);
         abbreviated.put("ENERGY_CONSUMPTION_PER_ATTACK_DAMAGE", 0.02f);
         abbreviated.put("COMPATIBILITY_STEEPNESS", 40f);
         abbreviated.put("COMPATIBILITY_MIDPOINT", 0.75f);
-        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 6f);
-        abbreviated.put("MUTATION_GAUSSIAN_VARIANCE", 0.20f);
+        abbreviated.put("EXPECTED_MUTATION_AMOUNT", 8f);
+        abbreviated.put("MUTATION_GAUSSIAN_VARIANCE", 0.30f);
         abbreviated.put("NUTRITION_PER_SIZE_POINT", 0.01f);
-        abbreviated.put("MIN_ENERGY_MATING", 90f);
+        abbreviated.put("MIN_ENERGY_MATING", 190f);
         abbreviated.put("MATING_ENERGY_CONSUMPTION", 140f);
         abbreviated.put("HEALTH_POINTS_PER_SIZE_POINTS", 1f);
         abbreviated.put("ENERGY_POINTS_PER_SIZE_POINTS", 2f);
@@ -105,16 +103,16 @@ public class Settings {
         abbreviated.put("ENERGY_SPEED_CORRELATION", 90f);
         abbreviated.put("MATING_DELAY", 600f);
         abbreviated.put("VISION_RANGE", 3f);
-        abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.03f);
-        abbreviated.put("FISH_SIZE_PENALTY", 0.5f);
-        abbreviated.put("FISH_SPEED_PENALTY", 3.0f);
+        abbreviated.put("FISH_GROWTH_RATE_PER_TIMESTEP", 0.01f);
+        abbreviated.put("FISH_SIZE_PENALTY", 2.0f);
+        abbreviated.put("FISH_SPEED_PENALTY", 2.0f);
         abbreviated.put("FISH_HERBIVORE_EFFICIENCY_PENALTY", 10.0f);
-        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 10.0f);
-        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 4.0f);
+        abbreviated.put("FISH_CARNIVORE_EFFICIENCY_PENALTY", 2.0f);
+        abbreviated.put("FISH_ATTACK_ABILITY_PENALTY", 2.0f);
         abbreviated.put("COLOR_BY_TENDENCY", 1.0f);
 
-        abbreviated.put("MAX_MORPHOLOGY", 0.8f);
-        abbreviated.put("MIN_MORPHOLOGY", 0.1f);
+        abbreviated.put("MAX_MORPHOLOGY", 0.5f);
+        abbreviated.put("MIN_MORPHOLOGY", 0.5f);
         abbreviated.put("FISHING_QUOTAS_MIN", 300f);
         abbreviated.put("FISHING_QUOTAS_MAX", 3000f);
         abbreviated.put("VESSEL_TRAVEL_DISTANCE", 600f);
@@ -124,10 +122,7 @@ public class Settings {
         abbreviated.put("MORPHOLOGY", 0.5f);
         abbreviated.put("QUOTAS", 1500f);
 
-        abbreviated.put("ADD_PLANKTON", 100000f);
-
         abbreviated.put("NUM_INITIAL_FISH", 3000f);
-        abbreviated.put("LOAD_PLANKTON", 200000f);
 
         abbreviated.put("PLANKTON_GAMMA", 1.0f);
         abbreviated.put("FISH_GAMMA", 1.0f);
@@ -135,6 +130,7 @@ public class Settings {
     }
 
     public static void useAbbreviated() {
+        //sets all the settings to the ones contained in the HashMap of settings
         PLANKTON_GROWTH_PER_TIMESTEP = abbreviated.get("PLANKTON_GROWTH_PER_TIMESTEP");
         NUM_VESSELS = abbreviated.get("NUM_VESSELS");
         MAX_PLANKTON = abbreviated.get("MAX_PLANKTON");
@@ -185,10 +181,7 @@ public class Settings {
         MORPHOLOGY = abbreviated.get("MORPHOLOGY");
         QUOTAS = abbreviated.get("QUOTAS");
 
-        ADD_PLANKTON = abbreviated.get("ADD_PLANKTON");
-
         NUM_INITIAL_FISH = abbreviated.get("NUM_INITIAL_FISH");
-        LOAD_PLANKTON = abbreviated.get("LOAD_PLANKTON");
 
         PLANKTON_GAMMA = abbreviated.get("PLANKTON_GAMMA");
         FISH_GAMMA = abbreviated.get("FISH_GAMMA");
@@ -196,7 +189,8 @@ public class Settings {
 
     }
 
-    public static void getAbbreviated() {
+    private static void getAbbreviated() {
+        //puts the current settings into the HashMap of settings
         abbreviated.put("PLANKTON_GROWTH_PER_TIMESTEP", PLANKTON_GROWTH_PER_TIMESTEP);
         abbreviated.put("NUM_VESSELS", NUM_VESSELS);
         abbreviated.put("MAX_PLANKTON", MAX_PLANKTON);
@@ -246,10 +240,7 @@ public class Settings {
         abbreviated.put("MORPHOLOGY", MORPHOLOGY);
         abbreviated.put("QUOTAS", QUOTAS);
 
-        abbreviated.put("ADD_PLANKTON", ADD_PLANKTON);
-
         abbreviated.put("NUM_INITIAL_FISH", NUM_INITIAL_FISH);
-        abbreviated.put("LOAD_PLANKTON", LOAD_PLANKTON);
 
         abbreviated.put("PLANKTON_GAMMA", PLANKTON_GAMMA);
         abbreviated.put("FISH_GAMMA", FISH_GAMMA);
@@ -257,6 +248,7 @@ public class Settings {
     }
 
     public static void toFile(String name) {
+        //writes the current settings to file using the specified name
         Path path = Paths.get("settings/");
 
         getAbbreviated();
@@ -279,6 +271,7 @@ public class Settings {
     }
 
     public static void fromFile(String name) {
+        //reads settings from the file pointed to by the specified name
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("settings/" + name + ".profile"), "utf-8"))) {
             while (reader.ready()) {
                 String[] elements = reader.readLine().split("=");
@@ -297,6 +290,7 @@ public class Settings {
     }
 
     public static ArrayList<String> getFiles() {
+        //returns a list containing all the profiles
         Path directory = Paths.get("settings/");
         ArrayList<String> files = new ArrayList<>();
 

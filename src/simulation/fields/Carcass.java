@@ -17,6 +17,9 @@ public class Carcass implements Field {
     }
 
     public int consume(int amount) {
+        //tries to consume the specified amount of energy.
+        //Returns the actual consumed amount of energy.
+
         if (amount > nutrition) {
             int energy = nutrition;
 
@@ -36,11 +39,15 @@ public class Carcass implements Field {
 
     @Override
     public void update(SimulationSpace space) {
+        //subtracts energy from the carcass.
+        //Removes the carcass from the SimulationSpace
+        //if no nutrients are left.
+
+        nutrition -= Settings.CARCASS_DECAY_PER_TIMESTEP;
+
         if (!isAlive()) {
             space.queueRemoveField(this);
         }
-
-        nutrition -= Settings.CARCASS_DECAY_PER_TIMESTEP;
     }
 
     @Override

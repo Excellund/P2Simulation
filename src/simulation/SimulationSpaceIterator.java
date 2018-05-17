@@ -7,9 +7,9 @@ import java.util.ListIterator;
 
 public class SimulationSpaceIterator implements ListIterator<Field> {
 
-    ListIterator<Field> iterator;
-    SimulationSpace space;
-    Field currentElement = null;
+    private ListIterator<Field> iterator;
+    private SimulationSpace space;
+    private Field currentElement = null;
 
     SimulationSpaceIterator(SimulationSpace space, List<Field> activeFields) {
         this.space = space;
