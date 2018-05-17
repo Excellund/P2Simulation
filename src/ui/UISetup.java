@@ -8,12 +8,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import simulation.Engine;
-import simulation.Settings;
-import simulation.Simulation;
-import simulation.Snapshot;
+import simulation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,9 +35,9 @@ public class UISetup {
         Canvas canvas = new Canvas(750, 750);
         ContentArea areaOne = new ContentArea(375, 750, dragListener);
         ContentArea areaTwo = new ContentArea(375, 750, dragListener);
-        ContentArea graphAreaOne = new ContentArea(375, 500, dragListener);
-        ContentArea graphAreaTwo = new ContentArea(750, 500, dragListener);
-        ContentArea graphAreaThree = new ContentArea(375, 500, dragListener);
+        ContentArea graphAreaOne = new ContentArea(375, 250, dragListener);
+        ContentArea graphAreaTwo = new ContentArea(750, 250, dragListener);
+        ContentArea graphAreaThree = new ContentArea(375, 250, dragListener);
 
         ContentBox interactionBox = factory.generateInteractionBox(375);
         ContentBox navigator = factory.generateNavigator(375, interactionBox, areaTwo);
@@ -76,8 +74,9 @@ public class UISetup {
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
+        Menu menuTools = new Menu("Tools");
 
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuView, menuTools);
 
         MenuItem itemNavigator = new MenuItem("Navigator");
         MenuItem itemStatistics = new MenuItem("Statistics");
@@ -290,8 +289,23 @@ public class UISetup {
                     }
                 }
 
-                Snapshot snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
-                simulation.applySnapshot(snapshot);
+                Snapshot snapshot = null;
+                try {
+                    snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
+                    simulation.applySnapshot(snapshot);
+                } catch (InvalidFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot load error");
+                    alert.setHeaderText("Invalid snapshot format");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot load error");
+                    alert.setHeaderText("Encountedred IO exception");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                }
             }
 
             engine.setIsPaused(pausedState);
@@ -324,7 +338,15 @@ public class UISetup {
                 }
 
                 Snapshot snapshot = new Snapshot(simulation);
-                Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
+                try {
+                    Snapshot.saveSnapshot(file.getAbsolutePath(), snapshot);
+                } catch (IOException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Snapshot save error");
+                    alert.setHeaderText("Encountered IO exception");
+                    alert.setContentText(e.getMessage());
+                    alert.showAndWait();
+                }
             }
 
             engine.setIsPaused(pausedState);
