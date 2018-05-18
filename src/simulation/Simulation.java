@@ -27,6 +27,7 @@ public class Simulation {
     private void initialize(int width, int height) {
         space = new SimulationSpace(width, height);
         vessels = new ArrayList<>();
+        currentTimeStep = 0;
 
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {

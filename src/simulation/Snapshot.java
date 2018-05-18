@@ -17,16 +17,17 @@ import java.util.Objects;
 public class Snapshot {
     private static final byte GROUP_SEPARATOR = 0x1D;
     private static final byte RECORD_SEPARATOR = 0x1E;
+    private static final byte FIELD_FISH_SPECIFIER = 0x01;
+    private static final byte FIELD_FISH_EGG_SPECIFIER = 0x02;
+    private static final byte FIELD_CARCASS_SPECIFIER = 0x03;
 
     private int width, height;
-    private int numFish, numFishEgg, numCarcass, numVessels;
+    private int numFields, numVessels;
     private long randomSeed;
     private long randomCounter;
     private long currentTimeStep;
 
-    private Fish[] fish;
-    private FishEgg[] fishEggs;
-    private Carcass[] carcasses;
+    private Field[] fields;
     private Vessel[] vessels;
 
     private int[][] planktonDensities;
@@ -43,42 +44,15 @@ public class Snapshot {
         randomCounter = CountingRandom.getInstance().getCounter();
         currentTimeStep = sim.getCurrentTimeStep();
 
-        numFish = 0;
-        numFishEgg = 0;
-        numCarcass = 0;
-
-        //Get number of Fish, FishEggs, Carcasses
-        for (Field field : sim.getSpace()) {
-            if (field instanceof Fish) {
-                numFish++;
-            } else if (field instanceof FishEgg) {
-                numFishEgg++;
-            } else if (field instanceof Carcass) {
-                numCarcass++;
-            }
-        }
+        numFields = sim.getSpace().getNumActiveFields();
 
         //Assign space to the Fish, FishEggs, Carcasses
-        fish = new Fish[numFish];
-        fishEggs = new FishEgg[numFishEgg];
-        carcasses = new Carcass[numCarcass];
+        fields = new Field[numFields];
         vessels = new Vessel[sim.getVessels().size()];
 
-        //Populate the arrays
-        int countFish = 0;
-        int countFishEgg = 0;
-        int countCarcass = 0;
-        for (Field field : sim.getSpace()) {
-            if (field instanceof Fish) {
-                fish[countFish] = (Fish) field;
-                countFish++;
-            } else if (field instanceof FishEgg) {
-                fishEggs[countFishEgg] = (FishEgg) field;
-                countFishEgg++;
-            } else if (field instanceof Carcass) {
-                carcasses[countCarcass] = (Carcass) field;
-                countCarcass++;
-            }
+        //Populate the array
+        for (int i = 0; i < numFields; i++) {
+            fields[i] = sim.getSpace().getActiveFields().get(i);
         }
 
         sim.getVessels().toArray(vessels);
@@ -98,9 +72,7 @@ public class Snapshot {
             //Write header containing metadata
             writeInt(stream, snapshot.width);
             writeInt(stream, snapshot.height);
-            writeInt(stream, snapshot.numFish);
-            writeInt(stream, snapshot.numFishEgg);
-            writeInt(stream, snapshot.numCarcass);
+            writeInt(stream, snapshot.numFields);
             writeInt(stream, snapshot.numVessels);
             writeLong(stream, snapshot.randomSeed);
             writeLong(stream, snapshot.randomCounter);
@@ -115,23 +87,9 @@ public class Snapshot {
             }
             stream.write(GROUP_SEPARATOR);
 
-            //Write fish
-            for (Fish fish : snapshot.fish) {
-                writeFish(stream, fish);
-                stream.write(RECORD_SEPARATOR);
-            }
-            stream.write(GROUP_SEPARATOR);
-
-            //Write fishEggs
-            for (FishEgg egg : snapshot.fishEggs) {
-                writeFishEgg(stream, egg);
-                stream.write(RECORD_SEPARATOR);
-            }
-            stream.write(GROUP_SEPARATOR);
-
-            //Write carcasses
-            for (Carcass carcass : snapshot.carcasses) {
-                writeCarcass(stream, carcass);
+            //Write fields
+            for (Field field : snapshot.fields) {
+                writeField(stream, field);
                 stream.write(RECORD_SEPARATOR);
             }
             stream.write(GROUP_SEPARATOR);
@@ -155,9 +113,7 @@ public class Snapshot {
             //Read header containing metadata
             snapshot.width = readInt(stream);
             snapshot.height = readInt(stream);
-            snapshot.numFish = readInt(stream);
-            snapshot.numFishEgg = readInt(stream);
-            snapshot.numCarcass = readInt(stream);
+            snapshot.numFields = readInt(stream);
             snapshot.numVessels = readInt(stream);
             snapshot.randomSeed = readLong(stream);
             snapshot.randomCounter = readLong(stream);
@@ -181,43 +137,13 @@ public class Snapshot {
                 throw new InvalidFormatException(2);
             }
 
-            //Read fish
-            snapshot.fish = new Fish[snapshot.numFish];
-            for (int i = 0; i < snapshot.numFish; i++) {
-                snapshot.fish[i] = readFish(stream);
+            //Read fields
+            snapshot.fields = new Field[snapshot.numFields];
+            for (int i = 0; i < snapshot.numFields; i++) {
+                snapshot.fields[i] = readField(stream);
 
                 if (stream.read() != RECORD_SEPARATOR) {
                     throw new InvalidFormatException(21);
-                }
-            }
-
-            //Ensure we're at a separation between two different data blocks
-            if (stream.read() != GROUP_SEPARATOR) {
-                throw new InvalidFormatException(3);
-            }
-
-            //Read fish eggs
-            snapshot.fishEggs = new FishEgg[snapshot.numFishEgg];
-            for (int i = 0; i < snapshot.numFishEgg; i++) {
-                snapshot.fishEggs[i] = readFishEgg(stream);
-
-                if (stream.read() != RECORD_SEPARATOR) {
-                    throw new InvalidFormatException(31);
-                }
-            }
-
-            //Ensure we're at a separation between two different data blocks
-            if (stream.read() != GROUP_SEPARATOR) {
-                throw new InvalidFormatException(4);
-            }
-
-            //Read carcasses
-            snapshot.carcasses = new Carcass[snapshot.numCarcass];
-            for (int i = 0; i < snapshot.numCarcass; i++) {
-                snapshot.carcasses[i] = readCarcass(stream);
-
-                if (stream.read() != RECORD_SEPARATOR) {
-                    throw new InvalidFormatException(41);
                 }
             }
 
@@ -324,6 +250,19 @@ public class Snapshot {
     private static void writeCarcass(OutputStream stream, Carcass carcass) throws IOException {
         writeVector(stream, carcass.getPosition());
         writeInt(stream, carcass.getNutrition());
+    }
+
+    private static void writeField(OutputStream stream, Field field) throws IOException {
+        if (field instanceof Fish) {
+            stream.write(FIELD_FISH_SPECIFIER);
+            writeFish(stream, (Fish) field);
+        } else if (field instanceof FishEgg) {
+            stream.write(FIELD_FISH_EGG_SPECIFIER);
+            writeFishEgg(stream, (FishEgg) field);
+        } else if (field instanceof Carcass) {
+            stream.write(FIELD_CARCASS_SPECIFIER);
+            writeCarcass(stream, (Carcass) field);
+        }
     }
 
     //Writes a vessel to a stream
@@ -464,6 +403,26 @@ public class Snapshot {
         return new Carcass(nutrition, position);
     }
 
+    private static Field readField(InputStream stream) throws IOException, InvalidFormatException {
+        int fieldSpecifier = stream.read();
+
+        if (fieldSpecifier == -1) {
+            throw new InvalidFormatException(7);
+        }
+
+        switch (fieldSpecifier) {
+            case FIELD_FISH_SPECIFIER:
+                return readFish(stream);
+            case FIELD_FISH_EGG_SPECIFIER:
+                return readFishEgg(stream);
+            case FIELD_CARCASS_SPECIFIER:
+                return readCarcass(stream);
+        }
+
+        return null;
+    }
+
+
     //Reads a Vessel from a stream
     private static Vessel readVessel(InputStream stream) throws IOException, InvalidFormatException {
         int quota = readInt(stream);
@@ -501,16 +460,8 @@ public class Snapshot {
         return randomCounter;
     }
 
-    public Fish[] getFish() {
-        return fish;
-    }
-
-    public FishEgg[] getFishEggs() {
-        return fishEggs;
-    }
-
-    public Carcass[] getCarcasses() {
-        return carcasses;
+    public Field[] getFields() {
+        return fields;
     }
 
     public Vessel[] getVessels() {
@@ -532,16 +483,12 @@ public class Snapshot {
         Snapshot snapshot = (Snapshot) o;
         return width == snapshot.width &&
                 height == snapshot.height &&
-                numFish == snapshot.numFish &&
-                numFishEgg == snapshot.numFishEgg &&
-                numCarcass == snapshot.numCarcass &&
+                numFields == snapshot.numFields &&
                 numVessels == snapshot.numVessels &&
                 randomSeed == snapshot.randomSeed &&
                 randomCounter == snapshot.randomCounter &&
                 currentTimeStep == snapshot.currentTimeStep &&
-                Arrays.equals(fish, snapshot.fish) &&
-                Arrays.equals(fishEggs, snapshot.fishEggs) &&
-                Arrays.equals(carcasses, snapshot.carcasses) &&
+                Arrays.equals(fields, snapshot.fields) &&
                 Arrays.equals(vessels, snapshot.vessels) &&
                 Arrays.equals(planktonDensities, snapshot.planktonDensities);
     }
@@ -549,10 +496,8 @@ public class Snapshot {
     @Override
     public int hashCode() {
 
-        int result = Objects.hash(width, height, numFish, numFishEgg, numCarcass, numVessels, randomSeed, randomCounter, currentTimeStep);
-        result = 31 * result + Arrays.hashCode(fish);
-        result = 31 * result + Arrays.hashCode(fishEggs);
-        result = 31 * result + Arrays.hashCode(carcasses);
+        int result = Objects.hash(width, height, numFields, numVessels, randomSeed, randomCounter, currentTimeStep);
+        result = 31 * result + Arrays.hashCode(fields);
         result = 31 * result + Arrays.hashCode(vessels);
         result = 31 * result + Arrays.hashCode(planktonDensities);
         return result;

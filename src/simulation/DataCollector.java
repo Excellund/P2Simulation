@@ -71,8 +71,7 @@ public class DataCollector {
         }
     }
 
-    public void append(SimulationSpace space, long timestep) {
-        //collects data from the input SimulationSpace and writes it to file
+    public void calculateLatest(SimulationSpace space, long timestep) {
         ArrayList<Fish> fish = getFish(space);
         latestTimestep = String.valueOf(timestep);
         latestBwd = String.valueOf(averageBWD(fish));
@@ -86,6 +85,12 @@ public class DataCollector {
         latestPlanktivores = String.valueOf(planktivoreCount(fish));
         latestFishEggs = String.valueOf(fishEggCount(space));
         latestCarcasses = String.valueOf(carcassCount(space));
+    }
+
+    public void append(SimulationSpace space, long timestep) {
+        //collects data from the input SimulationSpace and writes it to file
+        calculateLatest(space, timestep);
+
         StringBuilder builder = new StringBuilder();
 
         builder.append(latestTimestep);

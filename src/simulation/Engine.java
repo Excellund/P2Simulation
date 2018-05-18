@@ -278,4 +278,8 @@ public class Engine implements Runnable {
         //collected by the DataCollector
         return dataCollector.getStatisticsUI(width, dragListener);
     }
+
+    public void updateStatistics() {
+        dataCollector.calculateLatest(simulation.getSpace(), simulation.getCurrentTimeStep());
+    }
 }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import utils.Color;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static simulation.Settings.*;
@@ -25,7 +27,7 @@ public class FishGenomeTest {
         genome = new FishGenome();
         genomeCopy = new FishGenome(genome);
         genomeCrossOver = new FishGenome(new FishGenome(), new FishGenome());
-        float[] genomeArray = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 255f, 255f, 255f};
+        float[] genomeArray = {0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 255f, 255f, 255f};
         genomeFromArray = new FishGenome(genomeArray, new FishGenome(), new FishGenome());
         genomeSpecificAttributes = new FishGenome(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 0.11f, new Color(255, 255, 255), new FishGenome(), new FishGenome());
     }
@@ -144,5 +146,29 @@ public class FishGenomeTest {
     @Test
     public void parentGenomeBClass() {
         assertEquals(FishGenome.class, genomeSpecificAttributes.getParentGenomeB().getClass());
+    }
+
+    @Test
+    public void cloneConstructor() {
+        FishGenome genome1 = genome;
+        FishGenome genome2 = new FishGenome(genome);
+
+        assertEquals(genome1, genome2);
+    }
+
+    @Test
+    public void toArrayTest() {
+        float[] genomeArray1 = genome.getArray();
+        float[] genomeArray2 = new FishGenome(genome).getArray();
+
+        assertTrue(Arrays.equals(genomeArray1, genomeArray2));
+    }
+
+    @Test
+    public void FromArrayTest() {
+        FishGenome genome1 = genome;
+        FishGenome genome2 = new FishGenome(genome.getArray(), genome.getParentGenomeA(), genome.getParentGenomeB());
+
+        assertTrue(Arrays.equals(genome1.getArray(), genome2.getArray()));
     }
 }

@@ -25,7 +25,7 @@ public class CountingRandom extends Random {
     //Sets the random state of the simulation
     public void setState(long seed, long counter) {
         initialSeed = seed;
-        nextCounter = counter;
+        nextCounter = 0;
 
         setSeed(seed); //Use setSeed function inherited from Random class
 

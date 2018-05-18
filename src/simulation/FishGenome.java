@@ -132,8 +132,8 @@ public class FishGenome {
         setGenes(
                 genome[0],
                 genome[1],
-                genome[3],
                 genome[2],
+                genome[3],
                 genome[4],
                 genome[5],
                 genome[6],

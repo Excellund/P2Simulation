@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import simulation.*;
+import utils.CountingRandom;
 
 import java.io.File;
 import java.io.IOException;
@@ -200,9 +201,10 @@ public class UISetup {
         loadSnapshot(itemLoadSnapshot, primaryStage, simulation, engine);
 
         MenuItem itemRestartSimulation = new MenuItem("Restart simulation");
+        MenuItem itemUpdateStatistics = new MenuItem("Update statistics");
         MenuItem itemTogglePauseSimulation = new MenuItem("Toggle pause");
 
-        menuEdit.getItems().addAll(itemTogglePauseSimulation, itemRestartSimulation);
+        menuEdit.getItems().addAll(itemTogglePauseSimulation, itemUpdateStatistics, itemRestartSimulation);
 
         itemRestartSimulation.setOnAction(event -> {
             Alert confimation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -228,6 +230,7 @@ public class UISetup {
             }
         });
 
+        itemUpdateStatistics.setOnAction(event -> engine.updateStatistics());
         itemTogglePauseSimulation.setOnAction(event -> engine.togglePause());
     }
 
