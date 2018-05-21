@@ -8,8 +8,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import simulation.*;
-import utils.CountingRandom;
+import simulation.Engine;
+import simulation.Settings;
+import simulation.Simulation;
+import simulation.Snapshot;
+import simulation.exceptions.InvalidFormatException;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,7 +96,8 @@ public class UISetup {
             event.consume();
         });
 
-        itemStatistics.setOnAction(event -> {
+        itemStatistics.setOnAction(event ->
+        {
             if (statistics.getParent() == null) {
                 areaTwo.getChildren().add(engine.getStatisticsUI(375, dragListener));
 
@@ -206,7 +210,8 @@ public class UISetup {
 
         menuEdit.getItems().addAll(itemTogglePauseSimulation, itemUpdateStatistics, itemRestartSimulation);
 
-        itemRestartSimulation.setOnAction(event -> {
+        itemRestartSimulation.setOnAction(event ->
+        {
             Alert confimation = new Alert(Alert.AlertType.CONFIRMATION);
             confimation.setTitle("Restart simulation");
             confimation.setHeaderText("Confirm simulation restart");
@@ -235,19 +240,22 @@ public class UISetup {
     }
 
     private static void saveSettings(MenuItem itemSaveSettings) {
-        itemSaveSettings.setOnAction(event -> {
+        itemSaveSettings.setOnAction(event ->
+        {
             TextInputDialog saveSettings = new TextInputDialog();
             saveSettings.setTitle("Save Settings");
             saveSettings.setContentText("Save as");
             Optional<String> result = saveSettings.showAndWait();
-            result.ifPresent(file -> {
+            result.ifPresent(file ->
+            {
                 Settings.toFile(file);
             });
         });
     }
 
     private static void loadSettings(MenuItem itemLoadSettings) {
-        itemLoadSettings.setOnAction(event -> {
+        itemLoadSettings.setOnAction(event ->
+        {
             List<String> files = Settings.getFiles();
             if (files.size() == 0) {
                 Settings.defaultAbbreviated();

@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Fish implements Field {
-
     private Vector position;
     private float health;
     private float energy;
@@ -154,6 +153,7 @@ public class Fish implements Field {
                 FishEgg egg = (FishEgg) currentField;
                 FishGenome eggGenome = egg.getGenome();
 
+                //calculate nutrients of egg
                 float current = size * genome.getCarnivoreEfficiency() * eggGenome.getSize();
                 current *= 1 - getCompatibility(egg);
 
@@ -162,6 +162,7 @@ public class Fish implements Field {
                     mostNutritious = currentField;
                 }
             } else if (currentField instanceof Carcass) {
+                //calculate nutrients of carcass
                 float carcassEnergy = ((Carcass) currentField).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
                 float current = carcassEnergy * size * genome.getCarnivoreEfficiency();
 
@@ -173,12 +174,13 @@ public class Fish implements Field {
         }
 
         if (mostNutritious != null) {
+            //interact with the most nutritious if it exists
             interact(mostNutritious, space);
         }
     }
 
     //How compatible a fish is with another
-    public float getCompatibility(FishGenome other) {
+    private float getCompatibility(FishGenome other) {
         float genomeSimilarity = genome.calculateSimilarity(other);
 
         return (float) (1 / (1 + Math.pow((float) Math.E, -Settings.COMPATIBILITY_STEEPNESS * (genomeSimilarity - Settings.COMPATIBILITY_MIDPOINT))));
@@ -188,11 +190,13 @@ public class Fish implements Field {
         return getCompatibility(other.genome);
     }
 
-    public float getCompatibility(FishEgg other) {
+    private float getCompatibility(FishEgg other) {
         return getCompatibility(other.getGenome());
     }
 
     private void interactWithWeakestFish(List<Field> fields, SimulationSpace space) {
+        //finds the weakest fish in the specified list of Fields
+        //and interacts with it. Should only be used for predators.
         float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
         Fish weakestFish = null;
@@ -201,6 +205,7 @@ public class Fish implements Field {
             if (currentField instanceof Fish && currentField != this) {
                 Fish other = (Fish) currentField;
 
+                //rate the current fish in terms of its health points and compatibility
                 float currentRating = 1 - (other.getSize() * (other.getHealth() / healthQuotient));
                 currentRating *= 1 - getCompatibility(other);
 
@@ -212,17 +217,22 @@ public class Fish implements Field {
         }
 
         if (weakestFish != null) {
+            //interact with the weakest fish if it exists
             interact(weakestFish, space);
         }
     }
 
     private void interactWithMostCompatible(List<Field> fields, SimulationSpace space) {
+        //finds the most compatible fish in the specified list of Fields
+        //and interacts with it. If a fish is sufficiently compatible,
+        //this will mean mating.
         float bestCompatibility = 0;
         Fish mostCompatible = null;
 
         //Find most compatible
         for (Field currentField : fields) {
             if (currentField instanceof Fish && currentField != this) {
+                //calculate the compatibility
                 float currentCompatibility = getCompatibility((Fish) currentField);
 
                 if (currentCompatibility > bestCompatibility) {
@@ -270,10 +280,15 @@ public class Fish implements Field {
             }
         }
 
+        //update the position of the fish on the SimulationSpace
         space.moveField(newPosition, this);
     }
 
     private void interact(Field currentField, SimulationSpace space) {
+        //interacts with the specified Field.
+        //If it is a fish egg, it will be scavenged if the eggs' genome is not sufficiently compatible.
+        //If it is a carcass it will be scavenged.
+        //If it is another fish, either predation or mating will be performed based on the compatibility.
         if (currentField instanceof FishEgg) {
             int numEggsConsumed = ((FishEgg) currentField).subtractEggs((int) (size * Settings.MAX_FISH_SIZE));
 
@@ -283,7 +298,8 @@ public class Fish implements Field {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
             }
         } else if (currentField instanceof Carcass) {
-            energy += ((Carcass) currentField).consume((int) (size * Settings.MAX_FISH_SIZE)) * genome.getCarnivoreEfficiency();
+            energy += ((Carcass) currentField).consume((int) (size * Settings.MAX_FISH_SIZE)) *
+                    genome.getCarnivoreEfficiency();
 
             if (energy > size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS) {
                 energy = size * Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS;
@@ -299,8 +315,10 @@ public class Fish implements Field {
             float compatibility = getCompatibility((Fish) currentField);
 
             Fish currentFish = (Fish) currentField;
-            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING * size && currentFish.getEnergy() >= Settings.MIN_ENERGY_MATING * currentFish.size) {
-                if (matingTimer <= 0 && ((Fish) currentField).getMatingTimer() <= 0 && isMature && ((Fish) currentField).isMature()) {
+            if (compatibility >= Settings.MIN_COMPATIBILITY_MATING && energy >= Settings.MIN_ENERGY_MATING * size &&
+                    currentFish.getEnergy() >= Settings.MIN_ENERGY_MATING * currentFish.size) {
+                if (matingTimer <= 0 && ((Fish) currentField).getMatingTimer() <= 0 &&
+                        isMature && ((Fish) currentField).isMature()) {
                     mate((Fish) currentField, space);
                 }
             } else if (genome.getPredationTendency() >= Settings.MIN_PREDATION_TENDENCY) {
@@ -310,6 +328,8 @@ public class Fish implements Field {
     }
 
     private void attack(Fish other, SimulationSpace space) {
+        //attacks the specified Fish based on attack damage
+        //and subtracts energy based on the damage dealt.
         float damage = genome.getAttackAbility() * Settings.MAX_ATTACK_DAMAGE;
 
         if (other.getHealth() <= damage) {
@@ -359,12 +379,15 @@ public class Fish implements Field {
         return (tile.getMuDensity() / 1000000f) * genome.getHerbivoreTendency();
     }
 
-    //Calculates scavenging rating for a specific tile
     private float calculateTileScavengingRating(Tile tile) {
+        //returns the scavenging rating for a specific tile.
+        //Only one Field will be considered.
+        //The rating is based on the best Field on the specified Tile.
         float bestRating = 0;
 
         for (Field currentField : tile.getFields()) {
             if (currentField instanceof FishEgg) {
+                //calculate the rating based on the egg and the scavenge tendency
                 FishGenome genome = ((FishEgg) currentField).getGenome();
                 float currentRating = size * genome.getScavengeTendency() * genome.getSize();
 
@@ -372,6 +395,7 @@ public class Fish implements Field {
                     bestRating = currentRating;
                 }
             } else if (currentField instanceof Carcass) {
+                //calculate the rating based on the carcass and the scavenge tendency
                 float carcassEnergy = ((Carcass) currentField).getNutrition() / (Settings.MAX_FISH_SIZE * Settings.ENERGY_POINTS_PER_SIZE_POINTS);
                 float currentRating = carcassEnergy * size * genome.getScavengeTendency();
 
@@ -384,15 +408,16 @@ public class Fish implements Field {
         return bestRating;
     }
 
-    //Calculates predation rating for a specific tile (Based on own predation tendency)
     private float calculateTilePredationRating(Tile tile) {
+        //Returns the predation rating for a specific tile (Based on own predation tendency)
+        //The rating only considers the weakest Fish on the specified Tile.
         float bestRating = 0;
         float healthQuotient = Settings.MAX_FISH_SIZE * Settings.HEALTH_POINTS_PER_SIZE_POINTS;
 
         for (Field currentField : tile.getFields()) {
             if (currentField instanceof Fish && currentField != this) {
                 Fish other = (Fish) currentField;
-
+                //calculates the rating of the Fish based on its health and compatibility
                 float currentRating = 1 - (other.getSize() * (other.getHealth() / healthQuotient));
                 currentRating *= 1 - getCompatibility(other);
 
@@ -445,13 +470,15 @@ public class Fish implements Field {
         return bestRating * genome.getSchoolingTendency();
     }
 
-    //Calculates mating rating for a specific tile
     private float calculateTileMatingRating(Tile tile) {
+        //Returns the mating rating for a specific tile.
+        //The rating only considers the most compatible Fish on the specified Tile.
         float bestCompatibility = 0;
 
         if (energy >= Settings.MIN_ENERGY_MATING * size && matingTimer <= 0 && isMature) {
             for (Field currentField : tile.getFields()) {
                 if (currentField instanceof Fish && currentField != this) {
+                    //Calculate compatibility
                     float tempCompatibility = getCompatibility((Fish) currentField);
 
                     if (tempCompatibility > bestCompatibility) {
@@ -464,15 +491,17 @@ public class Fish implements Field {
         return bestCompatibility;
     }
 
-    //Calculates predator rating for a specific tile (Based on predators on tile)
     private float calculateTilePredatorRating(Tile tile) {
+        //Returns the predator rating for a specific tile (Based on predators on tile).
+        //The rating only considers the most dangerous predator on the specified Tile.
         float worstRating = 0;
 
         for (Field currentField : tile.getFields()) {
             if (currentField instanceof Fish && currentField != this) {
                 Fish temp = (Fish) currentField;
                 float compatibility = getCompatibility(temp);
-                float currentRating = temp.getGenome().getPredationTendency() * temp.getGenome().getAttackAbility(); //danger level
+                //calculate the danger level based on the Fish' predation tendency, attack damage and compatibility
+                float currentRating = temp.getGenome().getPredationTendency() * temp.getGenome().getAttackAbility();
                 currentRating *= 1 - compatibility;
 
                 if (currentRating > worstRating) {
@@ -499,8 +528,9 @@ public class Fish implements Field {
         return validTiles;
     }
 
-    //Calculates a 2 dimensional float array representing ratings of nearby tiles
     private float[][] calculateSurroundingTileRatings(SimulationSpace space, boolean[][] tileValid, int radius) {
+        //Calculates a 2 dimensional float array representing ratings of nearby tiles.
+        //A Tile is valid if it is within the bounds of the SimulationSpace.
         int seekSquareLength = radius * 2 + 1;
         float[][] tileRatings = new float[seekSquareLength][seekSquareLength];
         Vector currentPosition;
@@ -517,8 +547,8 @@ public class Fish implements Field {
         return tileRatings;
     }
 
-    //Sums the values in a 2 dimensional array
     private float sumTiles(float[][] tiles, boolean tileValidity[][], Vector min, Vector max) {
+        //Returns the sum of the values in the specified two dimensional array.
         float sum = 0;
 
         for (int y = min.y; y <= max.y; y++) {
@@ -533,6 +563,8 @@ public class Fish implements Field {
     }
 
     private Vector findOptimalTile(float[][] tileRatings, boolean tileValidity[][], Vector min, Vector max) {
+        //Finds and returns a vector pointing to the most optimal Tile recursively.
+        //The most optimal Tile is the best Tile in the best area.
         float dx = max.x - min.x;
         float dy = max.y - min.y;
 

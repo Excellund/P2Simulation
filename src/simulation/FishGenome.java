@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.exceptions.InvalidAttributeException;
 import utils.Color;
 import utils.CountingRandom;
 

@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.exceptions.InvalidFormatException;
 import simulation.fields.Carcass;
 import simulation.fields.Field;
 import simulation.fields.Fish;
@@ -100,8 +101,6 @@ public class Snapshot {
                 stream.write(RECORD_SEPARATOR);
             }
             stream.write(GROUP_SEPARATOR);
-        } catch (IOException e) {
-            throw e;
         }
     }
 
@@ -166,8 +165,6 @@ public class Snapshot {
             if (stream.read() != GROUP_SEPARATOR) {
                 throw new InvalidFormatException(6);
             }
-        } catch (IOException e) {
-            throw e;
         }
 
         return snapshot;

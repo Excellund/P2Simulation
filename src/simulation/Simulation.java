@@ -20,11 +20,14 @@ public class Simulation {
     }
 
     public void restart() {
+        //stops the current instance of the simulation and starts a new run
         CountingRandom.getInstance().setState(System.nanoTime(), 0);
         initialize(space.getWidth(), space.getHeight());
     }
 
     private void initialize(int width, int height) {
+        //initializes the simulation by creating the SimulationSpace
+        //and filling it with the appropriate vessels and fish
         space = new SimulationSpace(width, height);
         vessels = new ArrayList<>();
         currentTimeStep = 0;
@@ -49,7 +52,7 @@ public class Simulation {
             space.addField(fish);
 
             if (i % 500 == 0) {
-                initialGenome = new FishGenome();
+                initialGenome = new FishGenome(); //create a new fish genome for every 500 fish
             }
         }
 
@@ -61,12 +64,17 @@ public class Simulation {
     }
 
     private void updateFields() {
+        //calls the update method for each Field in the SimulationSpace.
+        //Update performs the actions the given Field should carry out every timestep.
         for (Field field : space) {
             field.update(space);
         }
     }
 
     private void updatePlankton() {
+        //Increases the plankton density in the SimulationSpace.
+        //Each tile has its own corresponding density, which will be increased
+        //based on the density of its neighbors.
         for (int y = 0; y < space.getHeight(); ++y) {
             for (int x = 0; x < space.getWidth(); ++x) {
                 Tile current = space.getTile(x, y);
@@ -79,6 +87,9 @@ public class Simulation {
     }
 
     private int calculateTilePlanktonGrowth(Vector position) {
+        //returns an integer representing the amount of mu density
+        //the Tile at the specified position should grow on a timestep,
+        //based on its neighbors.
         Vector min = new Vector(position.x - 1, position.y - 1);
         Vector max = new Vector(position.x + 1, position.y + 1);
         float sum = 0;
@@ -97,6 +108,10 @@ public class Simulation {
     }
 
     private void updateVessels() {
+        //maintains the population of vessels in the Simulation.
+        //If a vessel has used its quota, it will be replaced by a new vessel.
+        //Otherwise, the timestep method is called, which carries out procedures
+        //a vessel should perform each timestep.
         ListIterator<Vessel> iterator = vessels.listIterator();
 
         while (iterator.hasNext()) {
@@ -115,6 +130,8 @@ public class Simulation {
     }
 
     public void timeStep() {
+        //calls all the update methods that carry out procedures
+        //necessary to each timestep.
         updateFields();
         updatePlankton();
         updateVessels();
@@ -137,6 +154,9 @@ public class Simulation {
     }
 
     public void applySnapshot(Snapshot snapshot) {
+        //overwrites the current instance of the Simulation
+        //with the specified snapshot,
+        //replacing the SimulationSpace and vessels.
         CountingRandom.getInstance().setState(snapshot.getRandomSeed(), snapshot.getRandomCounter());
         currentTimeStep = snapshot.getCurrentTimeStep();
 

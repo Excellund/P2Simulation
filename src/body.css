@@ -16,7 +16,7 @@
     -fx-background-radius: 0 0 0 0;
 }
 
-#button.content-box-factory:hover{
+#button.content-box-factory:hover {
     -fx-text-fill: white;
 }
 
@@ -41,9 +41,10 @@
     -fx-background-radius: 0 0 0 0;
 }
 
-.tree-cell > .tree-disclosure-node > .arrow  {
+.tree-cell > .tree-disclosure-node > .arrow {
     -fx-background-color: white;
 }
+
 .tree-cell:expanded > .tree-disclosure-node > .arrow {
     -fx-background-color: white;
 }
@@ -91,16 +92,16 @@
     -fx-background-radius: 0 0 0 0;
 }
 
-.button:hover{
+.button:hover {
     -fx-background-color: #0ba1da;
     -fx-background-insets: 0 0 -1 0, 0, 1, 2;
     -fx-background-radius: 1px, 1px, 1px, 1px;
-    -fx-text-fill:white;
+    -fx-text-fill: white;
     -fx-alignment: CENTER;
     -fx-content-display: LEFT;
 }
 
-.content-box-factory:hover{
+.content-box-factory:hover {
     -fx-background-color: #4d5058;
 }
 
