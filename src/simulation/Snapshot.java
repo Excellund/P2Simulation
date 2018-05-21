@@ -70,10 +70,26 @@ public class Snapshot {
     public static void saveSnapshot(String path, Snapshot snapshot) throws IOException {
         //Wrap stream in try-catch to handle automatic disposing of stream
         try (OutputStream stream = new BufferedOutputStream(Files.newOutputStream(Paths.get(path)))) {
+            int numFish = 0;
+            int numFishEgg = 0;
+            int numCarcass = 0;
+
+            for (Field field : snapshot.getFields()) {
+                if (field instanceof Fish) {
+                    numFish++;
+                } else if (field instanceof FishEgg) {
+                    numFish++;
+                } else if (field instanceof Carcass) {
+                    numCarcass++;
+                }
+            }
+
             //Write header containing metadata
             writeInt(stream, snapshot.width);
             writeInt(stream, snapshot.height);
-            writeInt(stream, snapshot.numFields);
+            writeInt(stream, numFish);
+            writeInt(stream, numFishEgg);
+            writeInt(stream, numCarcass);
             writeInt(stream, snapshot.numVessels);
             writeLong(stream, snapshot.randomSeed);
             writeLong(stream, snapshot.randomCounter);
@@ -112,11 +128,17 @@ public class Snapshot {
             //Read header containing metadata
             snapshot.width = readInt(stream);
             snapshot.height = readInt(stream);
-            snapshot.numFields = readInt(stream);
+
+            int numFish = readInt(stream);
+            int numFishEgg = readInt(stream);
+            int numCarcass = readInt(stream);
+            snapshot.numFields = numFish + numFishEgg + numCarcass;
+
             snapshot.numVessels = readInt(stream);
             snapshot.randomSeed = readLong(stream);
             snapshot.randomCounter = readLong(stream);
-            snapshot.currentTimeStep = readLong(stream); //Replace with "snapshot.currentTimeStep = 0;" for old snapshot files
+            snapshot.currentTimeStep = readLong(stream);
+
 
             //Ensure we're at a separation between two different data blocks
             if (stream.read() != GROUP_SEPARATOR) {
