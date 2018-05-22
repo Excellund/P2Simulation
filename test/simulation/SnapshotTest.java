@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,12 +24,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SnapshotTest {
 
-    Simulation simulation;
-    Snapshot snapshot;
-    String path;
+    private static Simulation simulation;
+    private static Snapshot snapshot;
+    private static String path;
 
-    @BeforeEach
-    public void beforeEach() {
+    @BeforeAll
+    public static void beforeAll() {
         Settings.defaultAbbreviated();
         Settings.useAbbreviated();
         Settings.toFile("default");

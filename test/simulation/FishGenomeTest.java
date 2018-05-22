@@ -145,4 +145,9 @@ public class FishGenomeTest {
     public void parentGenomeBClass() {
         assertEquals(FishGenome.class, genomeSpecificAttributes.getParentGenomeB().getClass());
     }
+
+    @Test
+    public void equality() {
+        genome.equals(genomeCopy);
+    }
 }
