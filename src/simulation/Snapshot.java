@@ -1,6 +1,6 @@
 package simulation;
 
-import simulation.exceptions.InvalidFormatException;
+import exceptions.InvalidFormatException;
 import simulation.fields.Carcass;
 import simulation.fields.Field;
 import simulation.fields.Fish;

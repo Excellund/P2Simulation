@@ -44,6 +44,13 @@ public class FishTest {
     }
 
     @Test
+    public void getColor() {
+        FishGenome testFishGenome = fish.getGenome();
+        Color testColor = new Color(testFishGenome.getPredationTendency(), testFishGenome.getHerbivoreTendency(), testFishGenome.getScavengeTendency());
+        assertEquals(testColor, fish.getColor());
+    }
+
+    @Test
     public void isAlive() {
         assertTrue(fish.isAlive());
     }

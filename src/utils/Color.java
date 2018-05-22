@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Objects;
+
 public class Color {
     private int intRepresentation;
 
@@ -64,5 +66,19 @@ public class Color {
 
     public static float getGammaCorrected(float col, float gamma) {
         return (float) Math.pow(col, gamma);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Color color = (Color) o;
+        return intRepresentation == color.intRepresentation;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(intRepresentation);
     }
 }

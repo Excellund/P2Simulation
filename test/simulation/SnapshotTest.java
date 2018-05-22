@@ -1,6 +1,6 @@
 package simulation;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import simulation.fields.Carcass;
 import simulation.fields.Fish;
@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class SnapshotTest {
 
-    Simulation simulation;
-    Snapshot snapshot;
-    String path;
+    private static Simulation simulation;
+    private static Snapshot snapshot;
+    private static String path;
 
-    @BeforeEach
-    public void beforeEach() {
+    @BeforeAll
+    public static void beforeAll() {
         Settings.defaultAbbreviated();
         Settings.useAbbreviated();
         Settings.toFile("default");
