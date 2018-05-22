@@ -1,4 +1,4 @@
-package exceptions;
+package simulation.exceptions;
 
 public class InvalidFormatException extends Exception {
     private int errorCode;

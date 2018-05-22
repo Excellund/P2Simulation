@@ -3,7 +3,10 @@ package simulation;
 import simulation.fields.Field;
 import utils.Vector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class SimulationSpace implements Iterable<Field> {
     private Tile[][] tiles;
@@ -45,9 +48,6 @@ public class SimulationSpace implements Iterable<Field> {
 
     //Moves a field within the simulation to a specific tile position
     public void moveField(Vector tilePos, Field field) {
-        if (!activeFields.contains(field)) {
-            // TODO: Exception
-        }
         Vector oldPos = field.getPosition();
         field.setPosition(tilePos);
         tiles[oldPos.y][oldPos.x].removeField(field);
@@ -80,7 +80,7 @@ public class SimulationSpace implements Iterable<Field> {
         fieldsRemoveQueue.clear();
     }
 
-    //Returns a iterator to iterate all active fields in the simulation
+    //Returns an iterator to iterate all active fields in the simulation
     @Override
     public Iterator<Field> iterator() {
         return new SimulationSpaceIterator(this, activeFields);
@@ -109,9 +109,13 @@ public class SimulationSpace implements Iterable<Field> {
             }
         }
 
-        activeFields.addAll(Arrays.asList(snapshot.getFish()));
-        activeFields.addAll(Arrays.asList(snapshot.getFishEggs()));
-        activeFields.addAll(Arrays.asList(snapshot.getCarcasses()));
+        activeFields.addAll(Arrays.asList(snapshot.getFields()));
+
+        //Add fields to tiles
+        for (Field field : activeFields) {
+            Vector fieldPos = field.getPosition();
+            tiles[fieldPos.y][fieldPos.x].addField(field);
+        }
     }
 
     //Getters

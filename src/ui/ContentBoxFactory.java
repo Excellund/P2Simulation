@@ -16,8 +16,6 @@ import javafx.scene.layout.VBox;
 import simulation.Settings;
 import utils.GraphSettings;
 
-import java.util.List;
-
 
 public class ContentBoxFactory {
     private DragListener dragListener;
@@ -406,7 +404,7 @@ public class ContentBoxFactory {
         grid.setVgap(10);
 
         //ChoiceBox choices
-        ObservableList<String> options = FXCollections.observableArrayList("Time Step", "Avg. BWD%", "Avg. Morphology", "Avg. Max Spawning",
+        ObservableList<String> options = FXCollections.observableArrayList("Timestep", "Avg. BWD%", "Avg. Morphology", "Avg. Max Spawning",
                 "Avg. Plankton Density", "Avg. Schooling Tendency", "Number of Fish",
                 "Number of Carnivores", "Number of Planktivores", "Number of Scavengers",
                 "Number of Eggs", "Number of Carcass");

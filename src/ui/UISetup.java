@@ -9,7 +9,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import simulation.*;
+import simulation.Engine;
+import simulation.Settings;
+import simulation.Simulation;
+import simulation.Snapshot;
+import simulation.exceptions.InvalidFormatException;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,9 +79,8 @@ public class UISetup {
         Menu menuFile = new Menu("File");
         Menu menuEdit = new Menu("Edit");
         Menu menuView = new Menu("View");
-        Menu menuTools = new Menu("Tools");
 
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuView, menuTools);
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
         MenuItem itemNavigator = new MenuItem("Navigator");
         MenuItem itemStatistics = new MenuItem("Statistics");
@@ -94,8 +97,9 @@ public class UISetup {
             event.consume();
         });
 
-        itemStatistics.setOnAction(event -> {
-            if (statistics.getParent() == null){
+        itemStatistics.setOnAction(event ->
+        {
+            if (statistics.getParent() == null) {
                 areaTwo.getChildren().add(engine.getStatisticsUI(375, dragListener));
 
             }
@@ -188,7 +192,6 @@ public class UISetup {
     }
 
 
-
     private static void setOnFileAction(Menu menuFile, Stage primaryStage, Menu menuEdit, Simulation simulation, Engine engine) {
         MenuItem itemSaveSettings = new MenuItem("Save Settings");
         MenuItem itemLoadSettings = new MenuItem("Load Settings");
@@ -203,11 +206,13 @@ public class UISetup {
         loadSnapshot(itemLoadSnapshot, primaryStage, simulation, engine);
 
         MenuItem itemRestartSimulation = new MenuItem("Restart simulation");
+        MenuItem itemUpdateStatistics = new MenuItem("Update statistics");
         MenuItem itemTogglePauseSimulation = new MenuItem("Toggle pause");
 
-        menuEdit.getItems().addAll(itemTogglePauseSimulation, itemRestartSimulation);
+        menuEdit.getItems().addAll(itemTogglePauseSimulation, itemUpdateStatistics, itemRestartSimulation);
 
-        itemRestartSimulation.setOnAction(event -> {
+        itemRestartSimulation.setOnAction(event ->
+        {
             Alert confimation = new Alert(Alert.AlertType.CONFIRMATION);
             confimation.setTitle("Restart simulation");
             confimation.setHeaderText("Confirm simulation restart");
@@ -231,23 +236,27 @@ public class UISetup {
             }
         });
 
+        itemUpdateStatistics.setOnAction(event -> engine.updateStatistics());
         itemTogglePauseSimulation.setOnAction(event -> engine.togglePause());
     }
 
     private static void saveSettings(MenuItem itemSaveSettings) {
-        itemSaveSettings.setOnAction(event -> {
+        itemSaveSettings.setOnAction(event ->
+        {
             TextInputDialog saveSettings = new TextInputDialog();
             saveSettings.setTitle("Save Settings");
             saveSettings.setContentText("Save as");
             Optional<String> result = saveSettings.showAndWait();
-            result.ifPresent(file -> {
+            result.ifPresent(file ->
+            {
                 Settings.toFile(file);
             });
         });
     }
 
     private static void loadSettings(MenuItem itemLoadSettings) {
-        itemLoadSettings.setOnAction(event -> {
+        itemLoadSettings.setOnAction(event ->
+        {
             List<String> files = Settings.getFiles();
             if (files.size() == 0) {
                 Settings.defaultAbbreviated();

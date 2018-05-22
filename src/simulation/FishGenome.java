@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.exceptions.InvalidAttributeException;
 import utils.Color;
 import utils.CountingRandom;
 
@@ -12,17 +13,17 @@ public class FishGenome {
     public static final int NUM_ATTRIBUTES = 13;
 
     //All attributes (genes) will have values between 0 and 1
-    private float size;
-    private float speed;
-    private Color color;
+    private float size; //Max size of fish
+    private float speed; //Speed of fish
+    private Color color; //Color of fish
 
-    private float herbivoreEfficiency;
-    private float carnivoreEfficiency;
+    private float herbivoreEfficiency; //Determines how much energy is gained from eating plankton
+    private float carnivoreEfficiency; //Determines how much energy is gained from eating fish
 
-    private float herbivoreTendency;
-    private float predationTendency;
-    private float scavengeTendency;
-    private float schoolingTendency;
+    private float herbivoreTendency; //Tendency to seek plankton
+    private float predationTendency; //Tendency to attack other fish
+    private float scavengeTendency; //Tendency to eat dead fish
+    private float schoolingTendency; //Tendency to shcool
 
     private float attackAbility; //Amount of damage capable of doing to other fish.
 
@@ -122,13 +123,18 @@ public class FishGenome {
         stripUnneededGenomeReferences();
     }
 
-    // Create new genome from array of genes
+    //Create new genome from array of genes
     public FishGenome(float[] genome, FishGenome parentGenomeA, FishGenome parentGenomeB) {
+        //Throw an exception if genome array is an invalid size
+        if (genome.length != NUM_ATTRIBUTES) {
+            throw new InvalidAttributeException();
+        }
+
         setGenes(
                 genome[0],
                 genome[1],
-                genome[3],
                 genome[2],
+                genome[3],
                 genome[4],
                 genome[5],
                 genome[6],
@@ -141,7 +147,7 @@ public class FishGenome {
         );
     }
 
-    // Copies other genome.
+    //Copies other genome
     public FishGenome(FishGenome other) {
         setGenes(
                 other.size,
@@ -166,7 +172,7 @@ public class FishGenome {
 
         float[] attributes = getArray();
 
-        // Generate number of mutations to perform based on a poisson distribution
+        //Generate number of mutations to perform based on a poisson distribution
         int numMutations = generatePoissonDistributedNumber((int) Settings.EXPECTED_MUTATION_AMOUNT);
 
         //Ensure there are no more mutations than number of attributes
@@ -174,18 +180,18 @@ public class FishGenome {
             numMutations = attributes.length;
         }
 
-        // Select attributes to mutate.
+        //Select attributes to mutate.
         Set<Integer> mutationIndices = new HashSet<>();
         while (mutationIndices.size() < numMutations) {
             mutationIndices.add(r.nextInt(attributes.length));
         }
 
-        // Mutate attributes
+        //Mutate attributes
         for (int index : mutationIndices) {
-            // Normal distribution
+            //Mutate using a normal distribution
             attributes[index] += r.nextGaussian() * Settings.MUTATION_GAUSSIAN_VARIANCE;
 
-            // Make sure attributes are within bounds
+            //Make sure attributes are within bounds
             if (attributes[index] < 0) {
                 attributes[index] = 0;
             } else if (attributes[index] > 1) {
@@ -196,8 +202,8 @@ public class FishGenome {
         setAttributes(attributes);
     }
 
-    // Java implementation of Donald Knuth's algorithm to generate random Poisson-distributed number, as described in his book "The Art of Computer Programming, Volume 2"
-    // Algorithm also described on wikipedia: https://en.wikipedia.org/wiki/Poisson_distribution#Generating_Poisson-distributed_random_variables
+    //Java implementation of Donald Knuth's algorithm to generate a random Poisson-distributed number, as described in his book "The Art of Computer Programming, Volume 2"
+    //Algorithm also described on wikipedia: https://en.wikipedia.org/wiki/Poisson_distribution#Generating_Poisson-distributed_random_variables
     private int generatePoissonDistributedNumber(int lambda) {
         Random rand = CountingRandom.getInstance();
 
@@ -214,10 +220,10 @@ public class FishGenome {
         return k - 1;
     }
 
-    // Returns the similarity of two genomes. Return a value between 0 and 1.
+    //Returns the similarity of two genomes. Return a value between 0 and 1.
     public float calculateSimilarity(FishGenome other) {
-        // Genomes similarity will be defined as 1 - d where d is the distance between two points in an n-dimensional space where n is the number of genes in a genome.
-        // Each element of the two points refer to the value of the gene in the genome
+        //Genomes similarity will be defined as 1 - d where d is the distance between two points in an n-dimensional space where n is the number of genes in a genome.
+        //Each element of the two points refer to the value of the gene in the genome
 
         float[] genomeA = this.getArray();
         float[] genomeB = other.getArray();
@@ -235,27 +241,18 @@ public class FishGenome {
         return 1 - distance; //Subtract the distance from 1 to find the similarity instead of the difference
     }
 
-    // Removes unneeded references to grandgrandparents genomes in order to reclaim memory
+    //Removes unneeded references to grandgrandparents genomes in order to reclaim memory
     private void stripUnneededGenomeReferences() {
-        if (parentGenomeA != null) {
-            if (parentGenomeA.parentGenomeA != null) {
-                parentGenomeA.parentGenomeA.parentGenomeA = null;
-                parentGenomeA.parentGenomeA.parentGenomeB = null;
-            }
-            if (parentGenomeA.parentGenomeB != null) {
-                parentGenomeA.parentGenomeB.parentGenomeA = null;
-                parentGenomeA.parentGenomeB.parentGenomeB = null;
-            }
-        }
-        if (parentGenomeB != null) {
-            if (parentGenomeB.parentGenomeA != null) {
-                parentGenomeB.parentGenomeA.parentGenomeA = null;
-                parentGenomeB.parentGenomeA.parentGenomeB = null;
-            }
-            if (parentGenomeB.parentGenomeB != null) {
-                parentGenomeB.parentGenomeB.parentGenomeA = null;
-                parentGenomeB.parentGenomeB.parentGenomeB = null;
-            }
+        stripGenomeReference(parentGenomeA);
+        stripGenomeReference(parentGenomeB);
+    }
+
+    private void stripGenomeReference(FishGenome genome) {
+        if (genome != null) {
+            stripGenomeReference(genome.parentGenomeA);
+            stripGenomeReference(genome.parentGenomeB);
+            genome.parentGenomeA = null;
+            genome.parentGenomeB = null;
         }
     }
 
@@ -298,8 +295,6 @@ public class FishGenome {
 
         );
     }
-
-    //access private fields:
 
     // Getters
     // Get genome represented as a float array in order to make it easier to iterate attributes
