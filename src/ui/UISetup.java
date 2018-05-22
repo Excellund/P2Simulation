@@ -1,6 +1,5 @@
 package ui;
 
-import exceptions.InvalidFormatException;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -220,7 +219,7 @@ public class UISetup {
 
             Optional<ButtonType> result = confimation.showAndWait();
 
-            if (result.get() == ButtonType.OK) {
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 boolean pausedState = engine.isPaused();
                 engine.setIsPaused(true);
 
@@ -247,10 +246,7 @@ public class UISetup {
             saveSettings.setTitle("Save Settings");
             saveSettings.setContentText("Save as");
             Optional<String> result = saveSettings.showAndWait();
-            result.ifPresent(file ->
-            {
-                Settings.toFile(file);
-            });
+            result.ifPresent(file -> Settings.toFile(file));
         });
     }
 
@@ -299,7 +295,7 @@ public class UISetup {
                     }
                 }
 
-                Snapshot snapshot = null;
+                Snapshot snapshot;
                 try {
                     snapshot = Snapshot.loadSnapshot(file.getAbsolutePath());
                     simulation.applySnapshot(snapshot);
