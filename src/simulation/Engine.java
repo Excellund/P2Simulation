@@ -240,7 +240,7 @@ public class Engine implements Runnable {
 
             isProcessing = true;
 
-            simulation.timeStep(); //update plankton density and fields
+            simulation.timestep(); //update plankton density and fields
 
             if (simulation.getCurrentTimeStep() % ((int) Settings.DATACOLLECTOR_APPEND_DELAY) == 0) {
                 dataCollector.append(simulation.getSpace(), simulation.getCurrentTimeStep()); //write the current statistics to file

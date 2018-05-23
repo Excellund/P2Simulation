@@ -117,7 +117,7 @@ public class Simulation {
         while (iterator.hasNext()) {
             Vessel vessel = iterator.next();
 
-            vessel.timeStep(space);
+            vessel.timestep(space);
 
             if (vessel.quotaIsSpent()) {
                 iterator.remove();
@@ -129,7 +129,7 @@ public class Simulation {
         }
     }
 
-    public void timeStep() {
+    public void timestep() {
         //calls all the update methods that carry out procedures
         //necessary to each timestep.
         updateFields();

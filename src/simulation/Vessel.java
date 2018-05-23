@@ -155,12 +155,12 @@ public class Vessel {
         return quota <= 0;
     }
 
-    public void timeStep(SimulationSpace space) {
+    public void timestep(SimulationSpace space) {
         //should be called once each time-step.
         //moves the vessel closer to the sought point
         //and refers the time-step call to the vessel's corresponding net
         move();
-        net.timeStep(getDirection(), bow, stern, space);
+        net.timestep(getDirection(), bow, stern, space);
     }
 
     private void move() {

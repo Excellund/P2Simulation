@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FileReading {
 
-    private List<Double> timeStep = new ArrayList<>();
+    private List<Double> timestep = new ArrayList<>();
     private List<Double> avgBWD = new ArrayList<>();
     private List<Double> avgMorph = new ArrayList<>();
     private List<Double> avgMaxSpawning = new ArrayList<>();
@@ -39,7 +39,7 @@ public class FileReading {
                 String[] splitted = line.split(",");
 
                 //Put data in each of their lists
-                timeStep.add(Double.parseDouble(splitted[0]));
+                timestep.add(Double.parseDouble(splitted[0]));
                 avgBWD.add(Double.parseDouble(splitted[1]));
                 avgMorph.add(Double.parseDouble(splitted[2]));
                 avgMaxSpawning.add(Double.parseDouble(splitted[3]));
@@ -60,7 +60,7 @@ public class FileReading {
 
     public List<List> collectedLists() {
 
-        collectedList.add(timeStep);
+        collectedList.add(timestep);
         collectedList.add(avgBWD);
         collectedList.add(avgMorph);
         collectedList.add(avgMaxSpawning);

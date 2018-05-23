@@ -33,9 +33,9 @@ public class VesselTest {
     }
 
     @Disabled
-    public void timeStep() {
+    public void timestep() {
         double oldX = vessel.getTemporaryX(), oldY = vessel.getTemporaryY();
-        vessel.timeStep(space);
+        vessel.timestep(space);
         //assertTrue(vessel.getTemporaryX());
     }
 
