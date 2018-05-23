@@ -58,8 +58,11 @@ public class SnapshotTest {
     @Test
     public void loadSnapshot() {
         try {
+            saveSnapshot();
+
             Snapshot snapshot1 = snapshot;
             Snapshot snapshot2 = Snapshot.loadSnapshot(path);
+
             assertEquals(snapshot1, snapshot2);
         } catch (Exception e) {
             e.printStackTrace();

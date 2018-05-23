@@ -57,8 +57,6 @@ public class FishTest {
 
     @Test
     public void getEnergy() {
-        assertEquals(3, fish.getEnergy());
+        assertEquals(Settings.ENERGY_PER_EGG, fish.getEnergy());
     }
-
-
 }

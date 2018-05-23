@@ -112,7 +112,7 @@ public class Net {
         Net net = (Net) o;
         return Float.compare(net.favoredMorphology, favoredMorphology) == 0 &&
                 Objects.equals(fish, net.fish) &&
-                Arrays.equals(entry, net.entry);
+                Arrays.deepEquals(entry, net.entry);
     }
 
     @Override

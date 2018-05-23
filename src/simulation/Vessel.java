@@ -4,6 +4,9 @@ import simulation.fields.Fish;
 import utils.CountingRandom;
 import utils.Vector;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static utils.VectorTransformer.*;
 
 public class Vessel {
@@ -44,7 +47,7 @@ public class Vessel {
         this.sought = sought;
 
         stern = new Vector[2];
-        transform(bow, getDirection());
+        transform(bow, getOrientation());
         net = new Net(favoredMorphology);
     }
 
@@ -59,7 +62,7 @@ public class Vessel {
 
         random = CountingRandom.getInstance();
         stern = new Vector[2];
-        transform(bow, getDirection());
+        transform(bow, getOrientation());
 
         this.net = new Net(netFavoredMorphology, netFish);
     }
@@ -215,5 +218,29 @@ public class Vessel {
 
     public double getTemporaryY() {
         return temporaryY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vessel vessel = (Vessel) o;
+        return quota == vessel.quota &&
+                Double.compare(vessel.temporaryX, temporaryX) == 0 &&
+                Double.compare(vessel.temporaryY, temporaryY) == 0 &&
+                Objects.equals(net, vessel.net) &&
+                Arrays.equals(stern, vessel.stern) &&
+                Objects.equals(bow, vessel.bow) &&
+                Objects.equals(sought, vessel.sought) &&
+                Objects.equals(max, vessel.max) &&
+                Objects.equals(random, vessel.random);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(quota, net, bow, sought, max, direction, random, temporaryX, temporaryY);
+        result = 31 * result + Arrays.hashCode(stern);
+        return result;
     }
 }

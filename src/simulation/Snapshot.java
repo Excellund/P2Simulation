@@ -509,7 +509,7 @@ public class Snapshot {
                 currentTimeStep == snapshot.currentTimeStep &&
                 Arrays.equals(fields, snapshot.fields) &&
                 Arrays.equals(vessels, snapshot.vessels) &&
-                Arrays.equals(planktonDensities, snapshot.planktonDensities);
+                Arrays.deepEquals(planktonDensities, snapshot.planktonDensities);
     }
 
     @Override
